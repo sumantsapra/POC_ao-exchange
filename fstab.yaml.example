@@ -1,0 +1,12 @@
+# Copy this file to fstab.yaml after the content repository exists.
+# Document Authoring (recommended for this microsite):
+mountpoints:
+  /:
+    url: https://content.da.live/REPLACE_ORG/ao-exchange/
+    type: markup
+
+# SharePoint example:
+# mountpoints:
+#   /:
+#     url: https://TENANT.sharepoint.com/:f:/r/sites/AOExchange/Shared%20Documents/site
+#     type: onedrive

@@ -1,0 +1,134 @@
+:root {
+  --navy: #000c3c;
+  --cyan: #00afff;
+  --ink: #000c3c;
+  --muted: #3b3b3b;
+  --line: rgba(255, 255, 255, 0.55);
+  --pill: rgba(246, 246, 246, 0.78);
+  --font-display: "Sequel Sans", "Anybody", "Arial Narrow", Impact, sans-serif;
+  --font-ui: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --nav-height: 96px;
+  --page-pad: 60px;
+  --max: 1200px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #fff;
+  background-color: var(--navy);
+  background-image:
+    linear-gradient(180deg, rgba(0, 12, 60, 0.35), rgba(0, 12, 60, 0.72)),
+    url("/media/hero-bg.png");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center top;
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+}
+
+body:not(.appear) {
+  display: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 0;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+main {
+  display: block;
+}
+
+.section {
+  padding: 0 var(--page-pad);
+}
+
+.section > div {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.button-wrapper {
+  margin: 0;
+}
+
+a.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 28px;
+  border-radius: 30px;
+  background: var(--cyan);
+  color: #fff;
+  font-family: var(--font-display);
+  font-stretch: 150%;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+main.error {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+main.error h1 {
+  font-stretch: 150%;
+  font-size: clamp(64px, 12vw, 120px);
+  letter-spacing: 0.04em;
+}
+
+main.error h2 {
+  margin-top: 8px;
+  font-weight: 500;
+  font-stretch: 125%;
+}
+
+main.error .button-wrapper {
+  margin-top: 28px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --page-pad: 20px;
+  }
+
+  body {
+    background-attachment: scroll;
+    font-size: 16px;
+  }
+}

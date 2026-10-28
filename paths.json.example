@@ -1,0 +1,9 @@
+{
+  "mappings": [
+    "/content/ao-exchange/:/",
+    "/content/dam/ao-exchange/:/media/"
+  ],
+  "includes": [
+    "/content/ao-exchange/"
+  ]
+}

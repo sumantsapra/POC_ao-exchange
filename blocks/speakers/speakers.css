@@ -1,0 +1,98 @@
+.speakers-container {
+  padding-top: 140px;
+  padding-bottom: 12px;
+}
+
+.speakers-heading h2,
+.speakers-note h2 {
+  font-stretch: 150%;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.speakers-heading {
+  margin: 12px 0 28px;
+}
+
+.speakers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px 42px;
+  margin-bottom: 56px;
+}
+
+.speaker-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 4px;
+}
+
+.speaker-name {
+  margin-top: 16px;
+  font-stretch: 150%;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.speaker-virtual,
+.speaker-role,
+.speaker-org {
+  margin-top: 8px;
+  font-stretch: 125%;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+.speaker-virtual,
+.speaker-org {
+  text-transform: uppercase;
+}
+
+.speaker-role {
+  color: var(--cyan);
+}
+
+.speaker-bio {
+  margin-top: 12px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-stretch: 100%;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.speaker-bio + .speaker-bio {
+  margin-top: 12px;
+}
+
+.speakers-note {
+  margin: 12px 0 36px;
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .speakers-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .speakers-container {
+    padding-top: 110px;
+  }
+
+  .speakers-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}

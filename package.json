@@ -1,0 +1,23 @@
+{
+  "name": "ao-exchange",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AO Exchange microsite for Adobe Edge Delivery Services",
+  "type": "module",
+  "scripts": {
+    "preview": "node tools/preview.mjs",
+    "start": "aem up",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"blocks/**/*.css\" \"styles/*.css\""
+  },
+  "devDependencies": {
+    "@adobe/aem-cli": "^16.15.0",
+    "@babel/eslint-parser": "7.29.9",
+    "eslint": "8.57.1",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.32.0",
+    "stylelint": "17.16.0",
+    "stylelint-config-standard": "40.0.0"
+  },
+  "license": "Apache-2.0"
+}

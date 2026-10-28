@@ -1,0 +1,88 @@
+.hero-container {
+  padding-top: 150px;
+  padding-bottom: 28px;
+}
+
+.hero-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-wordmark img {
+  width: min(340px, 46vw);
+  height: auto;
+  margin-bottom: 8px;
+  opacity: 0.92;
+}
+
+.hero-wordmark h1 {
+  font-stretch: 150%;
+  font-size: clamp(40px, 6.4vw, 79px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.hero-facts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 48px;
+}
+
+.hero-fact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px 8px;
+  border-right: 1px solid var(--line);
+  text-align: center;
+}
+
+.hero-fact:last-child {
+  border-right: 0;
+}
+
+.hero-fact .icon img {
+  width: 42px;
+  height: 42px;
+}
+
+.hero-fact h2 {
+  font-stretch: 125%;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  text-transform: none;
+}
+
+@media (max-width: 1100px) {
+  .hero-facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 0;
+  }
+
+  .hero-fact {
+    border-right: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-container {
+    padding-top: 108px;
+  }
+
+  .hero-facts {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    margin-top: 36px;
+  }
+
+  .hero-fact h2 {
+    font-size: 20px;
+  }
+}

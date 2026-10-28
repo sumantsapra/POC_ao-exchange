@@ -1,0 +1,136 @@
+header .nav-pill {
+  position: fixed;
+  z-index: 20;
+  top: 22px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  width: min(1320px, calc(100% - 48px));
+  min-height: 67px;
+  padding: 8px 12px 8px 18px;
+  border-radius: 48px;
+  background: var(--pill);
+  backdrop-filter: blur(16px);
+  transform: translateX(-50%);
+}
+
+header .nav-brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  margin-right: auto;
+}
+
+header .nav-brand img {
+  display: block;
+  width: 75px;
+  height: 37px;
+  object-fit: contain;
+}
+
+header .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 28px;
+}
+
+header .nav-links a {
+  color: var(--ink);
+  font-stretch: 125%;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+header .nav-links a[aria-current="page"] {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+header .nav-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+header .nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 191px;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 30px;
+  background: var(--cyan);
+  color: #fff;
+  font-stretch: 150%;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+header .nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  margin-left: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+header .nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin: 6px auto;
+  background: var(--ink);
+}
+
+@media (max-width: 900px) {
+  header .nav-pill {
+    width: calc(100% - 24px);
+    top: 12px;
+    flex-wrap: wrap;
+    padding-right: 8px;
+  }
+
+  header .nav-links,
+  header .nav-cta {
+    display: none;
+  }
+
+  header .nav-pill.is-open .nav-links,
+  header .nav-pill.is-open .nav-cta {
+    display: flex;
+  }
+
+  header .nav-pill.is-open .nav-links {
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    order: 3;
+    margin: 8px 0 12px;
+    padding: 8px 8px 0;
+  }
+
+  header .nav-pill.is-open .nav-dot {
+    display: none;
+  }
+
+  header .nav-pill.is-open .nav-cta {
+    order: 4;
+    margin: 0 8px 12px;
+  }
+
+  header .nav-toggle {
+    display: block;
+  }
+}
