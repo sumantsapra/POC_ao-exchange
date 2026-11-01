@@ -67,6 +67,20 @@ export function decorateMain(main) {
 }
 
 /**
+ * Chapter pages open with a title section without an image, so the LCP image is the first image
+ * of the next section: load it eagerly and at high priority instead of lazily.
+ * @param {Element} main The main element
+ */
+function prioritizeLcpImage(main) {
+  const [first, second] = main.querySelectorAll(':scope > .section');
+  if (!first || !second || first.querySelector('img')) return;
+  const img = second.querySelector('img');
+  if (!img) return;
+  img.loading = 'eager';
+  img.fetchPriority = 'high';
+}
+
+/**
  * Loads everything needed for the first view.
  * @param {Document} doc The document
  */
@@ -76,6 +90,7 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
+    prioritizeLcpImage(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }

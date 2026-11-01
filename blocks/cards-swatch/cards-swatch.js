@@ -137,6 +137,9 @@ export default function decorate(block) {
   });
 
   ul.querySelectorAll('picture > img').forEach((img) => {
+    // the swatch name is already in the tile heading: an alt repeating it is redundant
+    const name = img.closest('li')?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent.trim();
+    if (name && img.alt.trim().toLowerCase() === name.toLowerCase()) img.alt = '';
     const url = new URL(img.src, window.location.href);
     if (url.origin !== window.location.origin || /\.svg$/i.test(url.pathname)) return;
     img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
