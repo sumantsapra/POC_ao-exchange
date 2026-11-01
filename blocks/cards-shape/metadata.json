@@ -1,0 +1,18 @@
+{
+  "variantName": "cards-shape",
+  "baseBlock": "cards",
+  "canonicalModel": "collection",
+  "visualCharacteristics": "Small centred graphic icons in a 5-column unpainted grid",
+  "contentPattern": "28 shape icon tiles (image only, 5 per row)",
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One row per shape. Cell 1: the shape image. Cell 2 (optional): shape name shown under the icon. 5 per row on desktop, 3 on mobile.",
+  "reuseGuidance": "Brand shape / icon libraries",
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

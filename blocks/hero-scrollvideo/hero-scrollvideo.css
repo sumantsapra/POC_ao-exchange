@@ -1,0 +1,285 @@
+/*
+ * hero-scrollvideo: pinned "Hits Different" lockup on a #0078ff panel.
+ * The JS sets --hero-scrollvideo-progress (0..1) over a 12-viewport track; every scroll-linked
+ * value below is a piecewise-linear function of that progress, timed from the source
+ * (f = viewports scrolled into the block, progress = f / 11):
+ *   f 1.25-1.5 before caption reveal, f 2-2.5 after caption reveal, f 4-5 video card rises,
+ *   f 5-6 card scales to full bleed, f 7-8 captions fade, f 8-9 video leaves upwards while
+ *   the outro caption scrolls in and parks under the title.
+ */
+main .hero-scrollvideo {
+  --hero-scrollvideo-length: 12;
+  --hero-scrollvideo-inset: 5px;
+
+  margin-inline: calc(var(--hero-scrollvideo-inset) - var(--page-gutter))
+    calc(var(--hero-scrollvideo-inset) - var(--page-gutter-end));
+  border-radius: 10px;
+  background-color: var(--ao-hits-different-blue);
+  color: var(--ao-white);
+}
+
+/* tall track; the stage stays pinned while the track scrolls past */
+main .hero-scrollvideo .hero-scrollvideo-track {
+  position: relative;
+  height: calc(var(--hero-scrollvideo-length) * 100vh);
+}
+
+main .hero-scrollvideo .hero-scrollvideo-stage {
+  --hsv-p: var(--hero-scrollvideo-progress, 0);
+
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* video card: 40% of a 103% x 105% frame, rises in, scales to full bleed, then leaves upwards */
+main .hero-scrollvideo .hero-scrollvideo-media {
+  --hsv-in: clamp(0, (0.4545 - var(--hsv-p)) * 11, 1);
+  --hsv-grow: clamp(0, (var(--hsv-p) - 0.4545) * 11, 1);
+  --hsv-out: clamp(0, (var(--hsv-p) - 0.7273) * 11, 1);
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 103%;
+  height: 105%;
+  border-radius: 10px;
+  overflow: hidden;
+  transform: translate(-50%, -50%)
+    translateY(calc(var(--hsv-in) * 1500px - var(--hsv-out) * 2500px))
+    scale(calc(0.4 + 0.6 * var(--hsv-grow)));
+  will-change: transform;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-media video,
+main .hero-scrollvideo .hero-scrollvideo-media picture,
+main .hero-scrollvideo .hero-scrollvideo-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* lockup: before / title / after stacked; the outro shares the after row */
+main .hero-scrollvideo .hero-scrollvideo-lockup {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-title {
+  position: relative;
+  z-index: 2;
+  grid-area: 2 / 1;
+  max-width: 1130px;
+  margin: 18px 0 32px;
+  color: var(--ao-white);
+  font-family: "Sequel 100 Wide 66", var(--display-font-family);
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 47px;
+  text-transform: uppercase;
+
+  /* the source sets "Hits " with a trailing space, so the first line sits left of centre */
+  text-indent: -0.4em;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-before {
+  grid-area: 1 / 1;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-after {
+  grid-area: 3 / 1;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-pair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* the outro parks in the after row without adding to its height */
+main .hero-scrollvideo .hero-scrollvideo-outro {
+  grid-area: 3 / 1;
+  align-self: start;
+  height: 0;
+  margin-top: 39px;
+  transform: translateY(calc(clamp(0, (0.8182 - var(--hsv-p)) * 11, 1) * 100vh));
+}
+
+/* captions reveal from the divider line, then fade while the video is full bleed */
+main .hero-scrollvideo :is(.hero-scrollvideo-before, .hero-scrollvideo-after) {
+  overflow: hidden;
+  opacity: clamp(0, (0.7273 - var(--hsv-p)) * 11, 1);
+}
+
+main .hero-scrollvideo .hero-scrollvideo-before .hero-scrollvideo-pair {
+  transform: translateY(calc(clamp(0, (0.1364 - var(--hsv-p)) * 44, 1) * 100%));
+}
+
+main .hero-scrollvideo .hero-scrollvideo-after .hero-scrollvideo-pair {
+  transform: translateY(calc(clamp(0, (0.2273 - var(--hsv-p)) * 22, 1) * -100%));
+}
+
+/* 108px divider: under the before caption, above the after and outro captions */
+main .hero-scrollvideo .hero-scrollvideo-pair::before,
+main .hero-scrollvideo .hero-scrollvideo-before .hero-scrollvideo-pair::after {
+  content: "";
+  display: block;
+  width: 108px;
+  height: 1px;
+  background-color: var(--ao-white);
+}
+
+main .hero-scrollvideo .hero-scrollvideo-pair::before {
+  margin-bottom: 10px;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-before .hero-scrollvideo-pair::before {
+  content: none;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-before .hero-scrollvideo-pair::after {
+  margin-top: 7px;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-pair p {
+  margin: 0;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-eyebrow {
+  color: var(--ao-lime);
+  font-family: var(--display-font-light);
+  font-size: 13px;
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 20.8px;
+  text-transform: uppercase;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-eyebrow strong {
+  font-weight: inherit;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-caption {
+  color: var(--ao-white);
+  font-family: var(--body-font-family);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15.6px;
+  letter-spacing: -0.24px;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-before .hero-scrollvideo-caption {
+  max-width: 190px;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-after .hero-scrollvideo-caption {
+  max-width: 131px;
+}
+
+main .hero-scrollvideo .hero-scrollvideo-outro .hero-scrollvideo-caption {
+  max-width: 183px;
+}
+
+/* reduced motion: JS adds .is-static; everything stacked and visible */
+main .hero-scrollvideo.is-static .hero-scrollvideo-track {
+  height: auto;
+}
+
+main .hero-scrollvideo.is-static .hero-scrollvideo-stage {
+  position: relative;
+  flex-direction: column;
+  gap: 40px;
+  height: auto;
+  padding: 80px 24px;
+}
+
+main .hero-scrollvideo.is-static .hero-scrollvideo-media {
+  position: relative;
+  top: auto;
+  left: auto;
+  order: 1;
+  width: min(581px, 100%);
+  height: auto;
+  aspect-ratio: 581 / 378;
+  transform: none;
+}
+
+main .hero-scrollvideo.is-static :is(.hero-scrollvideo-before, .hero-scrollvideo-after),
+main .hero-scrollvideo.is-static .hero-scrollvideo-pair {
+  opacity: 1;
+  transform: none;
+}
+
+main .hero-scrollvideo.is-static .hero-scrollvideo-outro {
+  grid-area: 4 / 1;
+  height: auto;
+  margin-top: 40px;
+  transform: none;
+}
+
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main .hero-scrollvideo {
+    --hero-scrollvideo-inset: 15px;
+  }
+
+  main .hero-scrollvideo .hero-scrollvideo-title {
+    margin: 18px 0 82px;
+    font-size: 90px;
+    line-height: 87px;
+  }
+
+  main .hero-scrollvideo .hero-scrollvideo-outro {
+    margin-top: 4px;
+  }
+
+  main .hero-scrollvideo .hero-scrollvideo-caption {
+    font-size: 18px;
+    line-height: 23.4px;
+    letter-spacing: -0.36px;
+  }
+
+  /* source breaks this caption after "feeling."; 300px keeps its three-line height */
+  main .hero-scrollvideo .hero-scrollvideo-before .hero-scrollvideo-caption {
+    max-width: 300px;
+  }
+
+  main .hero-scrollvideo :is(.hero-scrollvideo-after, .hero-scrollvideo-outro) .hero-scrollvideo-caption {
+    max-width: 281px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .hero-scrollvideo .hero-scrollvideo-title {
+    margin: 28px 0 31px;
+    font-size: 130px;
+    line-height: 108px;
+  }
+
+  main .hero-scrollvideo .hero-scrollvideo-outro {
+    margin-top: 15px;
+  }
+
+  /* source breaks this caption after "feeling." (705px box); 430px reproduces the break */
+  main .hero-scrollvideo .hero-scrollvideo-before .hero-scrollvideo-caption {
+    max-width: 430px;
+  }
+
+  main .hero-scrollvideo :is(.hero-scrollvideo-after, .hero-scrollvideo-outro) .hero-scrollvideo-caption {
+    max-width: 508px;
+  }
+}

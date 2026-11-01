@@ -1,0 +1,24 @@
+{
+  "variantName": "accordion-photo",
+  "baseBlock": "accordion",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Pinned full-viewport panel; numbered list of titles, one expanded at a time by scroll, its photo as the full-bleed backdrop",
+    "purpose": "Principles/values lists where each item has a backdrop image"
+  },
+  "contentPattern": {
+    "summary": "4 principles (Openness, Breakthrough thinking, Connection, Passion), each with description and full-bleed backdrop photo; one active at a time, advanced by scroll",
+    "structure": "cell 1 = item title; cell 2 = backdrop picture followed by the description paragraph(s). The block adds the 01., 02. ... numbers"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Pinned full-viewport panel, one viewport of scroll per item; scroll position selects the active item (expanded, its photo as backdrop). Clicking a title activates it and scrolls to its slice. Reduced motion: no pinning, click-to-activate only.",
+  "reuseGuidance": "Principles/values lists where each item has a backdrop image",
+  "sourceUrl": "https://aobrandplaybook.com.au/",
+  "sectionMetadata": [
+    {
+      "anchor": "brandvoice",
+      "nav-label": "Brand values"
+    }
+  ]
+}

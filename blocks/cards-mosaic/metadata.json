@@ -1,0 +1,18 @@
+{
+  "variantName": "cards-mosaic",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Image-only masonry collage, 5 columns of rounded photos with mixed heights",
+    "purpose": "Photo collages / brand-in-use galleries"
+  },
+  "contentPattern": {
+    "summary": "15 photos in a 5-column masonry collage",
+    "structure": "cell 1 = photo; cell 2 = optional text (usually empty, shown as a caption if present)"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Image-only masonry collage: 5 columns on desktop, 3 on tablet, 2 on mobile; row spans computed from each image aspect ratio, source order kept.",
+  "reuseGuidance": "Photo collages / brand-in-use galleries",
+  "sourceUrl": "https://aobrandplaybook.com.au/"
+}

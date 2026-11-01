@@ -1,0 +1,118 @@
+/* columns-tiles: tall brand tiles (logo + label), values measured from aobrandplaybook.com.au #howeplay */
+main .columns-tiles {
+  position: relative;
+  z-index: 19; /* source tiles sit above the fixed section nav */
+
+  /* full-bleed: the source row spans the viewport and pads itself */
+  margin-inline: calc(-1 * var(--page-gutter)) calc(-1 * var(--page-gutter-end));
+}
+
+main .columns-tiles .columns-tiles-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-sizing: border-box;
+  height: 81vh;
+  padding: 0 5px 5px;
+}
+
+main .columns-tiles .columns-tiles-tile {
+  flex: 1 0 0;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 30px 30px 10px;
+  overflow: hidden;
+  border: 1px solid var(--ao-navy);
+  border-radius: 10px;
+  background-color: var(--ao-royal-blue);
+  text-align: center;
+}
+
+main .columns-tiles .columns-tiles-tile-2 {
+  gap: 0;
+  background-color: var(--ao-hits-different-blue);
+}
+
+main .columns-tiles .columns-tiles-logo {
+  flex: none;
+  height: 20%;
+}
+
+main .columns-tiles .columns-tiles-tile-2 .columns-tiles-logo {
+  height: 82px;
+}
+
+main .columns-tiles .columns-tiles-logo picture {
+  display: block;
+  height: 100%;
+}
+
+main .columns-tiles .columns-tiles-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+main .columns-tiles .columns-tiles-label p {
+  margin: 0;
+  color: var(--ao-process-blue);
+  font-family: var(--display-font-family);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 0.8em;
+  text-align: center;
+  text-transform: uppercase;
+  font-synthesis: none;
+}
+
+main .columns-tiles .columns-tiles-tile-2 .columns-tiles-label p {
+  color: var(--ao-lime);
+}
+
+/*
+ * The source keeps the tiles at full height (no scroll collapse), so the
+ * --columns-tiles-collapse value set by the block JS is intentionally not applied.
+ */
+
+/* breakpoint-exception: the source (Framer) switches from stacked to side-by-side tiles at 810px */
+@media (width >= 810px) {
+  main .columns-tiles .columns-tiles-row {
+    flex-direction: row;
+    gap: 20px;
+    height: 100vh;
+    padding: 10px 21px 20px;
+  }
+
+  main .columns-tiles .columns-tiles-tile {
+    gap: 10px;
+    padding: 30px;
+  }
+
+  main .columns-tiles .columns-tiles-tile-2 {
+    gap: 0;
+  }
+
+  main .columns-tiles .columns-tiles-tile-2 .columns-tiles-logo {
+    height: 159px;
+  }
+}
+
+/* desktop: the tiles pin to the viewport for one screen of scrolling */
+@media (width >= 1200px) {
+  main .columns-tiles {
+    height: 200vh;
+  }
+
+  main .columns-tiles .columns-tiles-row {
+    position: sticky;
+    top: 0;
+    padding: 10px 21px 0;
+  }
+}

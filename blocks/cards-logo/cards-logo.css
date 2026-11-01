@@ -1,0 +1,172 @@
+/* cards-logo: logo versions centred on rounded tiles with an optional caption.
+ * Source switches tile size at 810px (mapped to 900px) and to a multi-column grid at 1200px. */
+
+main .cards-logo > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+
+main .cards-logo > ul > li {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+}
+
+/* tile: logo centred at its natural size */
+main .cards-logo .cards-logo-card-image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 250px;
+  border-radius: 10px;
+  background-color: var(--cards-logo-tile-background, #fff);
+  overflow: hidden;
+}
+
+main .cards-logo .cards-logo-card-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid #ededed;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+main .cards-logo .cards-logo-card-image picture {
+  display: block;
+  max-width: 100%;
+}
+
+main .cards-logo .cards-logo-card-image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* authored tile colour ("Background: Navy" line): set as --cards-logo-tile-background by the block;
+   the source keeps the light #ededed keyline on coloured tiles too */
+
+/* reverse (white) logo with no tile colour: tile shows the section colour with a white keyline */
+main .cards-logo .cards-logo-card-light .cards-logo-card-image {
+  background-color: transparent;
+}
+
+main .cards-logo .cards-logo-card-light .cards-logo-card-image::after {
+  border-color: #fff;
+}
+
+/* caption */
+main .cards-logo .cards-logo-card-body {
+  margin: 0;
+  color: inherit;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-s);
+  font-weight: 400;
+  line-height: var(--heading-line-height-s);
+  font-synthesis: none;
+}
+
+main .cards-logo .cards-logo-card-body > * {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+/* inline SVG artwork (/logos core logo versions) */
+main .cards-logo.cards-logo-vector > ul {
+  gap: 80px;
+}
+
+main .cards-logo.cards-logo-vector .cards-logo-card-image img {
+  width: 185px;
+}
+
+/* 4+ items: edge-to-edge logo-on-colour images (AO LIVE primary logo) */
+main .cards-logo.cards-logo-cols-4 > ul {
+  gap: 40px 10px;
+}
+
+main .cards-logo.cards-logo-cols-4 .cards-logo-card-image {
+  display: block;
+  height: auto;
+  background-color: transparent;
+}
+
+main .cards-logo.cards-logo-cols-4 .cards-logo-card-image::after {
+  content: none;
+}
+
+main .cards-logo.cards-logo-cols-4 .cards-logo-card-image img {
+  width: 100%;
+  height: 158px;
+  object-fit: cover;
+}
+
+/* an authored tile colour always paints the tile */
+main .cards-logo .cards-logo-card-coloured .cards-logo-card-image {
+  background-color: var(--cards-logo-tile-background);
+}
+
+/* "Background: None": the logo sits straight on the section colour, no tile or keyline */
+main .cards-logo .cards-logo-card-plain .cards-logo-card-image {
+  background-color: transparent;
+}
+
+main .cards-logo .cards-logo-card-plain .cards-logo-card-image::after {
+  content: none;
+}
+
+@media (width >= 900px) {
+  main .cards-logo .cards-logo-card-image {
+    height: 350px;
+  }
+
+  main .cards-logo.cards-logo-vector {
+    padding-bottom: 40px;
+  }
+
+  main .cards-logo.cards-logo-vector .cards-logo-card-image img {
+    width: 172px;
+  }
+
+  main .cards-logo.cards-logo-cols-4 > ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  main .cards-logo.cards-logo-cols-4 .cards-logo-card-image {
+    height: auto;
+    border-radius: 0;
+  }
+
+  main .cards-logo.cards-logo-cols-4 .cards-logo-card-image img {
+    height: auto;
+    aspect-ratio: 320 / 220;
+  }
+}
+
+@media (width >= 1200px) {
+  main .cards-logo > ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  main .cards-logo.cards-logo-cols-3 > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  main .cards-logo.cards-logo-cols-4 > ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  main .cards-logo.cards-logo-cols-4 .cards-logo-card-image img {
+    height: 158px;
+    aspect-ratio: auto;
+  }
+}

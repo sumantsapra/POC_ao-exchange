@@ -1,0 +1,28 @@
+{
+  "status": "success",
+  "url": "https://aobrandplaybook.com.au/typography",
+  "path": "typography",
+  "timestamp": "2026-11-01T10:58:14.231Z",
+  "title": "AO Brand Playbook",
+  "template": "guideline-chapter",
+  "blocks": [
+    "video-autoplay",
+    "columns-typeface",
+    "columns-typeface",
+    "columns-typeface",
+    "columns-typeface",
+    "columns-typeface",
+    "video-autoplay",
+    "cards-contrast"
+  ],
+  "detection": [
+    "video-autoplay:fallback",
+    "columns-typeface:mapped",
+    "columns-typeface:mapped",
+    "columns-typeface:mapped",
+    "columns-typeface:mapped",
+    "columns-typeface:fallback",
+    "video-autoplay:fallback",
+    "cards-contrast:fallback"
+  ]
+}

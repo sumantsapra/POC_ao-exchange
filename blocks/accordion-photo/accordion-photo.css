@@ -1,0 +1,282 @@
+/* accordion-photo: pinned photo panel with a numbered list of principles (values from aobrandplaybook.com.au #brandvoice) */
+
+/* mobile: the panel is inset 5px from the viewport edges */
+main .accordion-photo {
+  margin-inline: calc(5px - var(--page-gutter)) calc(5px - var(--page-gutter-end));
+}
+
+/* mobile: the source pins the panel for one extra viewport only */
+main .accordion-photo .accordion-photo-track {
+  position: relative;
+  height: 200vh;
+}
+
+main .accordion-photo .accordion-photo-panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: #fff;
+}
+
+main .accordion-photo .accordion-photo-backdrops {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+main .accordion-photo .accordion-photo-backdrop {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* mobile shows the first photo only */
+main .accordion-photo .accordion-photo-backdrop:first-child {
+  opacity: 1;
+}
+
+main .accordion-photo .accordion-photo-backdrop picture,
+main .accordion-photo .accordion-photo-backdrop img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* navy tint over the photo */
+main .accordion-photo .accordion-photo-backdrops::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(0 12 61 / 64%);
+}
+
+/* content column: eyebrow pill + items */
+main .accordion-photo .accordion-photo-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 340px;
+}
+
+/* eyebrow: lime pill, centred above the items on mobile (source: Sequel 100 Wide 65 7/11.2, 5px 30px, radius 21px) */
+main .accordion-photo .accordion-photo-eyebrow {
+  align-self: center;
+  margin: 0 0 9px;
+  padding: 5px 30px;
+  border-radius: 21px;
+  background-color: var(--ao-lime);
+  color: var(--ao-navy);
+  font-family: var(--display-font-light);
+  font-size: 7px;
+  line-height: 11.2px;
+  text-transform: uppercase;
+  font-synthesis: none;
+}
+
+main .accordion-photo .accordion-photo-items {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  width: 100%;
+}
+
+main .accordion-photo .accordion-photo-item {
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid #fff;
+}
+
+main .accordion-photo .accordion-photo-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+main .accordion-photo .accordion-photo-number {
+  color: var(--ao-lime);
+  font-family: var(--display-font-light);
+  font-size: 14px;
+  line-height: 19.6px;
+  font-synthesis: none;
+  text-align: center;
+}
+
+main .accordion-photo .accordion-photo-label,
+main .accordion-photo .accordion-photo-label p {
+  margin: 0;
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-size: 20px;
+  line-height: 20px;
+  font-synthesis: none;
+}
+
+main .accordion-photo .accordion-photo-number,
+main .accordion-photo .accordion-photo-label {
+  transition: opacity 0.3s ease;
+}
+
+/* mobile lists every principle open, like the source */
+main .accordion-photo .accordion-photo-body,
+main .accordion-photo .accordion-photo-body[hidden] {
+  display: block;
+  margin-top: 8px;
+  padding-bottom: 10px;
+}
+
+main .accordion-photo .accordion-photo-body p {
+  margin: 0;
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 15px;
+  line-height: 19.5px;
+  letter-spacing: -0.3px;
+}
+
+main .accordion-photo.is-static .accordion-photo-track {
+  height: auto;
+}
+
+main .accordion-photo.is-static .accordion-photo-panel {
+  position: relative;
+  min-height: 100vh;
+  height: auto;
+}
+
+/* breakpoint-exception: the source (Framer) switches to the desktop accordion at 810px */
+@media (width >= 810px) {
+  main .accordion-photo {
+    margin-inline: calc(15px - var(--page-gutter)) calc(15px - var(--page-gutter-end));
+  }
+
+  /* one viewport of scroll per item */
+  main .accordion-photo .accordion-photo-track {
+    height: calc(var(--accordion-photo-count, 1) * 100vh);
+  }
+
+  main .accordion-photo .accordion-photo-panel {
+    padding-inline-start: 100px;
+  }
+
+  main .accordion-photo .accordion-photo-backdrop:first-child {
+    opacity: 0;
+  }
+
+  main .accordion-photo .accordion-photo-backdrop.is-active {
+    opacity: 1;
+  }
+
+  main .accordion-photo .accordion-photo-backdrops::after {
+    background: rgb(0 12 61 / 40%);
+  }
+
+  /* 813px column centred in the panel; the list itself is 699px wide */
+  main .accordion-photo .accordion-photo-content {
+    flex: 0 0 813px;
+    max-width: none;
+    padding: 0 114px 0 0;
+  }
+
+  /* pill aligned with the item numbers, 21px above the first one (13/20.8, 5.6px 16px) */
+  main .accordion-photo .accordion-photo-eyebrow {
+    align-self: flex-start;
+    margin-bottom: 11px;
+    padding: 5.6px 16px;
+    font-size: 13px;
+    line-height: 20.8px;
+  }
+
+  main .accordion-photo .accordion-photo-items {
+    gap: 11px;
+    padding: 0;
+  }
+
+  /* number column sized by its widest content; body text aligns with the title */
+  main .accordion-photo .accordion-photo-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+    padding: 10px 0 0;
+  }
+
+  main .accordion-photo .accordion-photo-title {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: start;
+    gap: 0 10px;
+  }
+
+  main .accordion-photo .accordion-photo-label {
+    padding-bottom: 10px;
+  }
+
+  main .accordion-photo .accordion-photo-label,
+  main .accordion-photo .accordion-photo-label p {
+    font-size: 50px;
+    line-height: 50px;
+  }
+
+  main .accordion-photo .accordion-photo-item:not(.is-active) .accordion-photo-number,
+  main .accordion-photo .accordion-photo-item:not(.is-active) .accordion-photo-label {
+    opacity: 0.6;
+  }
+
+  main .accordion-photo .accordion-photo-title:hover .accordion-photo-number,
+  main .accordion-photo .accordion-photo-title:hover .accordion-photo-label {
+    opacity: 1;
+  }
+
+  main .accordion-photo .accordion-photo-body {
+    grid-column: 2;
+    margin-top: 0;
+  }
+
+  main .accordion-photo .accordion-photo-body[hidden] {
+    display: none;
+  }
+
+  main .accordion-photo .accordion-photo-body p {
+    width: 80%;
+    font-size: 25px;
+    line-height: 32.5px;
+    letter-spacing: -0.5px;
+  }
+}
+
+@media (width >= 1200px) {
+  /* --page-gutter is 0 here; set the start edge directly so calc() never sees a unitless 0 */
+  main .accordion-photo {
+    margin-inline-start: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main .accordion-photo .accordion-photo-backdrop,
+  main .accordion-photo .accordion-photo-number,
+  main .accordion-photo .accordion-photo-label {
+    transition: none;
+  }
+}

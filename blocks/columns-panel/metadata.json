@@ -1,0 +1,25 @@
+{
+  "variantName": "columns-panel",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": "Images side by side inside a dark rounded showcase panel",
+  "contentPattern": "3 shape-masked portrait images in a navy rounded panel | 5 event poster images (Peggy Gou, Reneé Rapp, Spacey Jane, The Kid LAROI, The Veronicas + Sofi Tukker) in a navy rounded panel",
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One row, one image per cell (any count; every cell gets equal width). The panel background comes from --columns-panel-background (set by the design pass / section style). 2 per row on mobile.",
+  "reuseGuidance": "Masked imagery, poster rows, asset showcases",
+  "usageTracking": {
+    "pagesUsing": [
+      "/logos"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  },
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "variantName": "cards-logo",
+  "baseBlock": "cards",
+  "canonicalModel": "collection",
+  "visualCharacteristics": "Edge-to-edge logo-on-colour image tiles in a 4-column grid with small gaps",
+  "contentPattern": "8 logo-version tiles (image only, 4 per row, 2 rows)",
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One row per logo version. Cell 1: the logo tile image. Cell 2 (optional): a version label shown under the tile. 4 per row on desktop, 2 on mobile.",
+  "reuseGuidance": "Logo version/lockup grids on sub-brand guides and the logos chapter",
+  "usageTracking": {
+    "pagesUsing": [
+      "/logos"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  },
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "variantName": "cards-swatch",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Square solid-colour tiles in a 3-column grid; colour name and Hex/RGB/CMYK/PMS values bottom-left; Copy HEX pill top-right; optional texture image fill",
+    "purpose": "colour palette swatches painted from their Hex value with a Copy HEX control"
+  },
+  "contentPattern": {
+    "summary": "6 colour swatch tiles with Hex/RGB/CMYK/PMS and Copy HEX | 3 swatch tiles: Navy Blue, Royal Blue, Special Finish (texture image, name only) | 3 swatch tiles: White, Black, Ruby Red | sub-brand-guide: 5 swatches: Navy Blue, Royal Blue, Process Blue, Bright Blue, Lime | 5 swatches: Golden Hour, Mint, Pink Lemonade, Watermelon, Purple Sunset",
+    "structure": "one row per swatch; cell 1 optional texture image (leave empty for flat colours); cell 2 colour name as h3, then paragraphs \"Hex: 0091D2\", \"RGB: 0/145/210\", \"CMYK: 100/15/0/0\", \"Pms: Process Blue C/U\" (omit values for special-finish tiles)"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Colour palette grids. One row per swatch: optional texture image cell, then a text cell with the colour name (h3) and \"Hex:\", \"RGB:\", \"CMYK:\", \"Pms:\" paragraphs. The tile is painted from the Hex value, text switches light/dark by luminance, and a \"Copy HEX\" button copies the hex. Leave values out (name only) and add an image for special-finish tiles. Works for 3-6 tiles.",
+  "reuseGuidance": "Any palette/swatch grid on guideline chapters (colour, sub-brand core palettes)",
+  "sourceUrl": "https://aobrandplaybook.com.au/colour",
+  "alsoUsedOn": [
+    "https://aobrandplaybook.com.au/ao-live"
+  ],
+  "blockContent": {
+    "baseBlock": "cards",
+    "source": "get_block_examples /block-collection/cards (2-column model: image cell + text cell)",
+    "rows": [
+      {
+        "row": "each subsequent row = one swatch",
+        "cells": [
+          "Cell 1 (image, optional): texture image for special-finish tiles (e.g. Special Finish foil); empty for flat colours",
+          "Cell 2 (text): colour name as heading (h3), then one paragraph per value as 'Hex: 0091D2', 'RGB: 0/145/210', 'CMYK: 100/15/0/0', 'Pms: Process Blue C/U'"
+        ]
+      }
+    ],
+    "behaviour": "Block code reads the Hex value to paint the tile, chooses light/dark text by luminance, and adds the 'Copy HEX' copy-to-clipboard control. Tiles without values (Special Finish) show only the name over the image.",
+    "example": [
+      [
+        "",
+        "<h3>Process Blue</h3><p>Hex: 0091D2</p><p>RGB: 0/145/210</p><p>CMYK: 100/15/0/0</p><p>Pms: Process Blue C/U</p>"
+      ],
+      [
+        "<img special-finish texture>",
+        "<h3>Special Finish</h3>"
+      ]
+    ]
+  },
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

@@ -1,0 +1,71 @@
+/*
+ * cards-principle: /tone-of-voice writing principles.
+ * Source (Framer "Some pointers 2 cols"): #f8f8f8 cards, 10px radius, content centred vertically.
+ *   375: one per row, 327x250, 20px padding, title Sharp Sans No2 Bold 25/25.
+ *   1440: 2 x 2, 570x350, 40px gaps, 50px side padding, title 50/50, copy Poppins 18/28.
+ */
+main .cards-principle > ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+main .cards-principle .cards-principle-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 250px;
+  margin: 0;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+}
+
+main .cards-principle .cards-principle-card-body > * {
+  margin: 0;
+}
+
+main .cards-principle .cards-principle-card-body > :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--heading-color);
+  font-family: var(--heading-font-family);
+  font-size: 25px;
+  line-height: 25px;
+}
+
+main .cards-principle .cards-principle-card-body > * + * {
+  margin-top: 10px;
+}
+
+main .cards-principle .cards-principle-card-body > p {
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: var(--body-line-height-m);
+}
+
+@media (width >= 900px) {
+  main .cards-principle > ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+  }
+
+  main .cards-principle .cards-principle-card {
+    min-height: 350px;
+    padding: 40px 50px;
+  }
+
+  main .cards-principle .cards-principle-card-body > :is(h1, h2, h3, h4, h5, h6) {
+    font-size: 40px;
+    line-height: 40px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .cards-principle .cards-principle-card-body > :is(h1, h2, h3, h4, h5, h6) {
+    font-size: 50px;
+    line-height: 50px;
+  }
+}

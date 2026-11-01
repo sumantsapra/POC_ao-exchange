@@ -1,0 +1,34 @@
+{
+  "status": "success",
+  "url": "https://aobrandplaybook.com.au/ao-ballpark",
+  "path": "ao-ballpark",
+  "timestamp": "2026-11-01T10:58:29.372Z",
+  "title": "AO Brand Playbook",
+  "template": "sub-brand-guide",
+  "blocks": [
+    "hero-banner",
+    "columns-text-image",
+    "columns-text-image",
+    "columns-text-image",
+    "columns-text-image",
+    "cards-framed",
+    "columns-typeface",
+    "columns-typeface",
+    "cards-swatch",
+    "columns-photos",
+    "columns-photos"
+  ],
+  "detection": [
+    "hero-banner:fallback",
+    "columns-text-image:fallback",
+    "columns-text-image:fallback",
+    "columns-text-image:fallback",
+    "columns-text-image:fallback",
+    "cards-framed:fallback",
+    "columns-typeface:fallback",
+    "columns-typeface:fallback",
+    "cards-swatch:fallback",
+    "columns-photos:fallback",
+    "columns-photos:fallback"
+  ]
+}

@@ -1,60 +1,66 @@
-footer {
-  padding: 48px var(--page-pad) 28px;
-  color: #f6f6f6;
+/* AO Playbook footer: navy band with the AO + Tennis lockup and the legal text
+   small screens: stacked; >= 810px: lockup and text side by side */
+footer .footer {
+  background: #000c3d;
+  color: #fff;
 }
 
-footer .footer-bar,
-footer .footer-legal {
-  max-width: var(--max);
-  margin-right: auto;
-  margin-left: auto;
-}
-
-footer .footer-bar {
+footer .footer-inner {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 80px;
+  box-sizing: border-box;
+  padding: 40px 24px 64px;
 }
 
-footer .footer-bar img {
+footer .footer-brand p {
+  margin: 0;
+}
+
+footer .footer-brand img {
   display: block;
-  width: 76px;
-  height: auto;
+  width: 148px;
+  height: 50px;
+  object-fit: contain;
 }
 
-footer .footer-social {
-  display: flex;
-  gap: 18px;
+footer .footer-text {
+  width: 80%;
+  font-family: var(--font-ui);
 }
 
-footer .footer-social a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-}
-
-footer .footer-social img {
-  width: 22px;
-  height: 22px;
-}
-
-footer .footer-legal {
-  margin-top: 72px;
-  font-family: var(--font-mono);
-  font-size: 8px;
-  font-stretch: 100%;
+footer .footer-text p {
+  margin: 0;
+  font-size: 12px;
   font-weight: 400;
-  letter-spacing: 0.14em;
-  text-align: center;
-  text-transform: uppercase;
+  line-height: 18px;
 }
 
-@media (max-width: 767px) {
-  footer .footer-legal {
-    margin-top: 40px;
-    letter-spacing: 0.08em;
+footer .footer-text p + p {
+  width: fit-content;
+  margin-top: 10px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 12.8px;
+}
+
+/* breakpoint-exception: the source (Framer) footer switches to its row layout at 810px */
+@media (width >= 810px) {
+  footer .footer-inner {
+    flex-direction: row;
+    min-height: 139px;
+    padding: 40px 30px;
+  }
+
+  /* text column takes 80% of the space left after the lockup (148px) and the 80px gap */
+  footer .footer-text {
+    width: calc((100% - 228px) * 0.8);
+  }
+}
+
+@media (width >= 1200px) {
+  footer .footer-text {
+    width: calc((100% - 228px) * 0.5);
   }
 }

@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "url": "https://aobrandplaybook.com.au/",
+  "path": "index",
+  "timestamp": "2026-11-01T10:57:09.794Z",
+  "title": "AO Brand Playbook",
+  "template": "homepage",
+  "blocks": [
+    "hero-slideshow",
+    "carousel-stack",
+    "accordion-photo",
+    "hero-scrollvideo",
+    "cards-mosaic",
+    "columns-tiles",
+    "cards-linklist"
+  ]
+}

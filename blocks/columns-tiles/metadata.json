@@ -1,0 +1,18 @@
+{
+  "variantName": "columns-tiles",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Two tall rounded brand-colour tiles side by side, each with a logo and label at the bottom",
+    "purpose": "Paired brand pillars / masterbrand vs campaign tiles"
+  },
+  "contentPattern": {
+    "summary": "2 tall coloured tiles side by side: AO logo + 'Who we are'; Hits Different lockup + 'How we play'",
+    "structure": "one row; each cell = one tile with a logo picture and a label paragraph. No links. Tiles get order classes columns-tiles-tile-1, columns-tiles-tile-2 for colour"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Paired tall brand tiles that collapse into ~40px bars as the block scrolls from 75% to 15% of the viewport height. Reduced motion: tiles stay full height.",
+  "reuseGuidance": "Paired brand pillars / masterbrand vs campaign tiles",
+  "sourceUrl": "https://aobrandplaybook.com.au/"
+}

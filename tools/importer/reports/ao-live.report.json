@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "url": "https://aobrandplaybook.com.au/ao-live",
+  "path": "ao-live",
+  "timestamp": "2026-11-01T10:58:23.902Z",
+  "title": "AO Brand Playbook",
+  "template": "sub-brand-guide",
+  "blocks": [
+    "hero-banner",
+    "video-autoplay",
+    "cards-logo",
+    "cards-tone",
+    "columns-typeface",
+    "video-autoplay",
+    "cards-swatch",
+    "cards-swatch",
+    "cards-contrast",
+    "cards-shape",
+    "columns-panel",
+    "columns-panel",
+    "columns-photos"
+  ],
+  "detection": [
+    "hero-banner:mapped",
+    "video-autoplay:mapped",
+    "cards-logo:mapped",
+    "cards-tone:mapped",
+    "columns-typeface:mapped",
+    "video-autoplay:mapped",
+    "cards-swatch:mapped",
+    "cards-swatch:mapped",
+    "cards-contrast:mapped",
+    "cards-shape:mapped",
+    "columns-panel:mapped",
+    "columns-panel:mapped",
+    "columns-photos:mapped"
+  ]
+}

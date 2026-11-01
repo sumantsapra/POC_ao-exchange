@@ -1,0 +1,214 @@
+/* cards-mosaic: photo collage on a fixed grid, mirroring the source (Framer) tile placement.
+   Tiles follow the authored order; spans/placements below match the 15-tile homepage collage. */
+
+/* mobile: 2 columns x 25 rows (675px tall, 4px gap), explicit placement */
+main .cards-mosaic .cards-mosaic-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(25, minmax(0, 1fr));
+  gap: 4px;
+  height: 675px;
+}
+
+main .cards-mosaic .cards-mosaic-item {
+  --tile-zoom: 1;
+  --tile-x: 0%;
+  --tile-y: 0%;
+
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* 1px navy frame drawn over the photo (source ::after overlay) */
+main .cards-mosaic .cards-mosaic-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--ao-navy);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+main .cards-mosaic .cards-mosaic-image {
+  position: absolute;
+  inset: 0;
+}
+
+main .cards-mosaic .cards-mosaic-image picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+main .cards-mosaic .cards-mosaic-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  transform: translate(var(--tile-x), var(--tile-y)) scale(var(--tile-zoom));
+}
+
+/* optional caption (not used by the homepage collage) */
+main .cards-mosaic .cards-mosaic-body {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  padding: 8px 12px;
+  color: var(--light-color);
+}
+
+/* tile backgrounds and image crops (source values) */
+main .cards-mosaic .cards-mosaic-item:nth-child(1) {
+  --tile-zoom: 1.13;
+
+  background-color: var(--ao-royal-blue);
+  grid-area: 1 / 1 / span 3 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(2) {
+  display: none;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(3) {
+  --tile-zoom: 1.55;
+  --tile-x: 11%;
+  --tile-y: 41%;
+
+  background-color: var(--ao-bright-blue);
+  grid-area: 10 / 1 / span 3 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(4) {
+  grid-area: 4 / 2 / span 5 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(5) {
+  --tile-zoom: 1.24;
+  --tile-y: -18.8%;
+
+  background-color: var(--ao-navy);
+  grid-area: 1 / 2 / span 3 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(6) {
+  grid-area: 13 / 1 / span 5 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(7) {
+  grid-area: 18 / 1 / span 4 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(8) {
+  grid-area: 14 / 2 / span 4 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(8) img {
+  object-position: 41.3% 44.1%;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(9) {
+  grid-area: 9 / 2 / span 5 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(10) {
+  grid-area: 23 / 2 / span 3 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(11) {
+  --tile-zoom: 1.73;
+
+  background-color: var(--ao-lime);
+  grid-area: 4 / 1 / span 3 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(12) {
+  grid-area: 7 / 1 / span 3 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(13) {
+  --tile-zoom: 2.14;
+  --tile-y: 11.9%;
+
+  grid-area: 22 / 1 / span 4 / span 1;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(14) {
+  display: none;
+}
+
+main .cards-mosaic .cards-mosaic-item:nth-child(15) {
+  --tile-zoom: 1.53;
+  --tile-x: -4.1%;
+  --tile-y: -4.2%;
+
+  grid-area: 18 / 2 / span 5 / span 1;
+}
+
+/* breakpoint-exception: the source (Framer) switches to the 5-column collage at 810px */
+@media (width >= 810px) {
+  /* 5 columns x 6 rows of 125px, 12px row / 10px column gap; tiles auto-flow in source order */
+  main .cards-mosaic .cards-mosaic-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-rows: repeat(6, 125px);
+    gap: 12px 10px;
+    height: auto;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:nth-child(n) {
+    display: block;
+    grid-area: auto;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:is(:nth-child(4), :nth-child(7), :nth-child(12), :nth-child(14), :nth-child(15)) {
+    grid-row: span 2;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:is(:nth-child(6), :nth-child(8)) {
+    grid-row: span 3;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:is(:nth-child(10), :nth-child(13)) {
+    grid-area: span 2 / span 2;
+  }
+
+  /* desktop image crops (source wrapper offsets at 1440px) */
+  main .cards-mosaic .cards-mosaic-item:nth-child(1) {
+    --tile-zoom: 1.32;
+    --tile-x: -7.7%;
+    --tile-y: -4%;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:nth-child(3) {
+    --tile-zoom: 1.37;
+    --tile-x: 7.5%;
+    --tile-y: 24.8%;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:nth-child(5) {
+    --tile-zoom: 1.16;
+    --tile-y: -1.2%;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:nth-child(11) {
+    --tile-zoom: 1.46;
+    --tile-y: -12.8%;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:nth-child(13) {
+    --tile-zoom: 1.13;
+    --tile-y: 4.8%;
+  }
+
+  main .cards-mosaic .cards-mosaic-item:nth-child(15) {
+    --tile-zoom: 1.36;
+    --tile-x: -21.1%;
+    --tile-y: -3.6%;
+  }
+}

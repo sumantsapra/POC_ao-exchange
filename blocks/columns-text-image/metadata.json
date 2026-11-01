@@ -1,0 +1,47 @@
+{
+  "variantName": "columns-text-image",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Two columns: short heading + paragraph left, single illustration/image right, vertically centred",
+    "purpose": "short explanatory text beside a diagram or image"
+  },
+  "contentPattern": {
+    "summary": "Text (heading 'Colour distribution' + paragraph) beside donut chart image",
+    "structure": "one row, two cells: cell 1 heading + paragraph, cell 2 image or diagram (either order)"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One row with two cells: text (heading + paragraph) and an image/diagram. Stacks on mobile; side by side and vertically centred from 900px.",
+  "reuseGuidance": "Any explanatory text beside a diagram or image on chapter pages (logos, typography, graphic elements)",
+  "sourceUrl": "https://aobrandplaybook.com.au/colour",
+  "alsoUsedOn": [],
+  "blockContent": {
+    "baseBlock": "columns",
+    "source": "get_all_blocks_catalog columns",
+    "rows": [
+      {
+        "row": "1",
+        "cells": [
+          "Cell 1: heading 'Colour distribution' + paragraph",
+          "Cell 2: donut chart image"
+        ]
+      }
+    ]
+  },
+  "usageTracking": {
+    "pagesUsing": [
+      "/colour",
+      "/logos"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  },
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

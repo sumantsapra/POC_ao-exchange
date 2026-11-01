@@ -1,0 +1,18 @@
+{
+  "variantName": "cards-tone",
+  "baseBlock": "cards",
+  "canonicalModel": "collection",
+  "visualCharacteristics": "Rounded accent-colour text tiles with centred uppercase display lines, 3 per row",
+  "contentPattern": "3 tone-of-voice word tiles: 'SOUNDS LIKE SUNSCREEN AND SUBWOOFERS', 'SOUNDS LIKE BEATS, BOPS AND BANGERS', 'SOUNDS LIKE YOU’RE STAYING OUT LATE'",
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One row per tile, one cell with the campaign line as a paragraph. Tile colours come from the section style via --cards-tone-tile-background / --cards-tone-tile-color. 3 per row on desktop, stacked on mobile.",
+  "reuseGuidance": "Tone-of-voice campaign lines / word tiles on sub-brand guides",
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

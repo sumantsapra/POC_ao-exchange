@@ -1,0 +1,55 @@
+{
+  "variantName": "cards-contrast",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Small 90px 'Aa' squares in a wrapping grid with Background/Text captions",
+    "purpose": "accessible background/text colour pairings painted from named colours"
+  },
+  "contentPattern": {
+    "summary": "13 contrast-pair tiles ('Aa' + Background/Text caption) | sub-brand-guide: 2 contrast tiles labelled Navy Blue/Process Blue and Navy Blue/Bright Blue (the rendered squares actually show Process Blue bg + Lime text and Lime bg + Process Blue text)",
+    "structure": "one row per colour pairing; one cell: \"Aa\" paragraph, \"Background: **Navy Blue**\", \"Text: **Process Blue**\""
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One row per colour pairing: \"Aa\" sample paragraph, then \"Background: **Colour**\" and \"Text: **Colour**\" paragraphs using brand colour names (or CSS colours). The sample square is painted from those colours with captions below.",
+  "reuseGuidance": "Accessibility colour-contrast tables",
+  "sourceUrl": "https://aobrandplaybook.com.au/colour",
+  "alsoUsedOn": [
+    "https://aobrandplaybook.com.au/ao-live"
+  ],
+  "blockContent": {
+    "baseBlock": "cards",
+    "source": "get_block_examples /block-collection/cards ('no images' 1-column model)",
+    "rows": [
+      {
+        "row": "each subsequent row = one contrast pair",
+        "cells": [
+          "Cell 1 (text): 'Aa' sample paragraph, then 'Background: <strong>Navy Blue</strong>' and 'Text: <strong>Process Blue</strong>'"
+        ]
+      }
+    ],
+    "behaviour": "Block code maps the background and text colour names to brand colours and paints the 'Aa' square; captions sit below.",
+    "example": [
+      [
+        "<p>Aa</p><p>Background: <strong>Navy Blue</strong></p><p>Text: <strong>Process Blue</strong></p>"
+      ]
+    ]
+  },
+  "usageTracking": {
+    "pagesUsing": [
+      "/colour",
+      "/ao-live",
+      "/logos"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  },
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

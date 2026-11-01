@@ -1,17 +1,4 @@
-:root {
-  --navy: #000c3c;
-  --cyan: #00afff;
-  --ink: #000c3c;
-  --muted: #3b3b3b;
-  --line: rgba(255, 255, 255, 0.55);
-  --pill: rgba(246, 246, 246, 0.78);
-  --font-display: "Sequel Sans", "Anybody", "Arial Narrow", Impact, sans-serif;
-  --font-ui: "Poppins", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, monospace;
-  --nav-height: 96px;
-  --page-pad: 60px;
-  --max: 1200px;
-}
+@import url('brand.css');
 
 *,
 *::before,
@@ -26,19 +13,12 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  color: #fff;
-  background-color: var(--navy);
-  background-image:
-    linear-gradient(180deg, rgba(0, 12, 60, 0.35), rgba(0, 12, 60, 0.72)),
-    url("/media/hero-bg.png");
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center top;
-  font-family: var(--font-display);
-  font-stretch: 125%;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 1.35;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font-family: var(--body-font-family);
+  font-weight: 400;
+  font-size: var(--body-font-size-m);
+  line-height: var(--body-line-height-m);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -52,53 +32,75 @@ img {
   border: 0;
 }
 
-a {
-  color: inherit;
-}
-
+/* typography: Sharp Sans carries its weight in the family name, so never synthesise bold */
 h1,
 h2,
 h3,
 h4,
-p {
+h5,
+h6 {
   margin: 0;
+  color: var(--heading-color);
+  font-family: var(--heading-font-family);
+  font-weight: 400;
+  font-synthesis: none;
+  scroll-margin-top: calc(var(--nav-height) + 16px);
+}
+
+h1,
+h2 {
+  font-size: var(--heading-font-size-xxl);
+  line-height: var(--heading-line-height-xxl);
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--heading-font-size-s);
+  line-height: var(--heading-line-height-s);
+}
+
+p,
+ul,
+ol,
+dl,
+pre,
+blockquote {
+  margin: 0;
+}
+
+strong,
+b {
+  font-weight: 600;
+}
+
+a:any-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  transition: color 0.2s ease;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+a:any-link:hover {
+  color: var(--link-hover-color);
 }
 
 main {
   display: block;
 }
 
-.section {
-  padding: 0 var(--page-pad);
+main img {
+  display: block;
 }
 
-.section > div {
-  max-width: var(--max);
-  margin: 0 auto;
-}
-
-.button-wrapper {
-  margin: 0;
-}
-
-a.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 28px;
-  border-radius: 30px;
-  background: var(--cyan);
-  color: #fff;
-  font-family: var(--font-display);
-  font-stretch: 150%;
-  font-weight: 600;
-  font-size: 16px;
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
+/* 404 page */
 main.error {
   min-height: calc(100vh - 180px);
   display: flex;
@@ -106,29 +108,273 @@ main.error {
   text-align: center;
 }
 
-main.error h1 {
-  font-stretch: 150%;
-  font-size: clamp(64px, 12vw, 120px);
-  letter-spacing: 0.04em;
+main.error > div {
+  width: 100%;
 }
 
-main.error h2 {
-  margin-top: 8px;
-  font-weight: 500;
-  font-stretch: 125%;
+/* sections: gutters, vertical rhythm */
+main > .section {
+  padding-inline: var(--page-gutter) var(--page-gutter-end);
 }
 
-main.error .button-wrapper {
+main > .section + .section {
+  margin-top: var(--section-gap);
+}
+
+main > .section:first-child {
+  padding-top: var(--section-first-top);
+}
+
+main > .section:last-child {
+  padding-bottom: var(--page-end-space);
+}
+
+main .section > div + div {
+  margin-top: 40px;
+}
+
+/* default content */
+main .default-content-wrapper > * + * {
   margin-top: 28px;
 }
 
-@media (max-width: 767px) {
+main .default-content-wrapper > :is(h1, h2) + p {
+  margin-top: 40px;
+  color: var(--text-color);
+  font-family: var(--heading-font-medium);
+  font-size: var(--lead-font-size);
+  line-height: var(--lead-line-height);
+  font-synthesis: none;
+}
+
+main .default-content-wrapper > :is(h3, h4, h5, h6) + * {
+  margin-top: 8px;
+}
+
+main .default-content-wrapper > * + :is(h3, h4, h5, h6) {
+  margin-top: 40px;
+}
+
+main .default-content-wrapper ul,
+main .default-content-wrapper ol {
+  padding-inline-start: 1.25em;
+}
+
+/* content-column images (chapter / sub-brand lead animations): 10px radius like the source frames */
+main .default-content-wrapper img {
+  border-radius: 10px;
+}
+
+/* full-width media sections fill the content column edge to edge */
+main > .section.full-width .default-content-wrapper img {
+  border-radius: 0;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+main > .section.centered .default-content-wrapper {
+  text-align: center;
+}
+
+/*
+ * scale heading (/tone-of-voice "Playful ↔ Premium"): an h2 whose accent word is emphasised.
+ * Source: Sharp Sans No2 Bold 25/25 (375) / 50/50 (1440), accent process blue, then Poppins
+ * 18/28 copy 40px below.
+ */
+main .default-content-wrapper > h2 > em {
+  font-style: normal;
+  color: var(--ao-process-blue);
+}
+
+main .default-content-wrapper > h2:has(> em) {
+  font-size: 25px;
+  line-height: 25px;
+}
+
+main .default-content-wrapper > h2:has(> em) + p {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: var(--body-line-height-m);
+}
+
+/* coloured sections: background bands with light text */
+main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime) {
+  padding-block: var(--colored-section-padding);
+}
+
+main > .section.royal-blue {
+  background-color: var(--ao-royal-blue);
+}
+
+main > .section.process-blue {
+  background-color: var(--ao-process-blue);
+}
+
+main > .section.navy {
+  background-color: var(--ao-navy);
+}
+
+/* AO Reserve page colour: rgb(15, 18, 66) */
+main > .section.dark-navy {
+  background-color: var(--ao-dark-navy);
+}
+
+main > .section.hits-different-blue {
+  background-color: var(--ao-hits-different-blue);
+}
+
+main > .section.lime {
+  background-color: var(--ao-lime);
+}
+
+/* the source band behind the AO LIVE tone tiles is a lighter process blue */
+main > .section.bright-blue {
+  background-color: #00afff;
+}
+
+main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) {
+  color: var(--light-color);
+}
+
+main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) :is(h1, h2, h3, h4, h5, h6),
+main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .default-content-wrapper > :is(h1, h2) + p {
+  color: var(--light-color);
+}
+
+main > .section:is(.bright-blue, .lime),
+main > .section:is(.bright-blue, .lime) :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--ao-navy);
+}
+
+/* a coloured first section (hero + title on the page colour) keeps the space under the header */
+main > .section:first-child:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime) {
+  padding-top: var(--section-first-top);
+}
+
+/* sub-brand title band: starts right under the hero */
+main > .hero-banner-container + .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime) {
+  margin-top: 0;
+  padding-block: 120px 100px;
+}
+
+main > .hero-banner-container + .section.royal-blue {
+  background-image: linear-gradient(#212c90 0%, var(--ao-royal-blue) 100%);
+}
+
+/* sub-brand guides leave more room under sub-headings than the chapters */
+main > .hero-banner-container ~ .section .default-content-wrapper > :is(h3, h4, h5, h6) + * {
+  margin-top: 20px;
+}
+
+/* sub-brand intro copy is smaller than the chapter lead */
+main > .hero-banner-container + .section .default-content-wrapper > h1 + p {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: var(--body-line-height-m);
+}
+
+/* runs of the same colour read as one band */
+main > .section.royal-blue + .section.royal-blue,
+main > .section.process-blue + .section.process-blue,
+main > .section.navy + .section.navy,
+main > .section.dark-navy + .section.dark-navy,
+main > .section.bright-blue + .section.bright-blue,
+main > .section.hits-different-blue + .section.hits-different-blue,
+main > .section.lime + .section.lime {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/*
+ * buttons (bold lone link = a.button, e.g. /logos "Download Logos"): source pill measured at
+ * 1440 and 375: navy rgb(0, 12, 61), 218x50, 40px radius, 20px side padding, Poppins 600 18/28
+ * white, 10px gap to an 18px glyph, centred in the content column; no hover change on the source.
+ */
+main .button-wrapper {
+  text-align: center;
+}
+
+main .default-content-wrapper > * + .button-wrapper {
+  margin-top: 40px;
+}
+
+main a.button:any-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  min-height: 50px;
+  margin: 0;
+  padding: 11px 20px;
+  border: 0;
+  border-radius: 40px;
+  background-color: #000c3d;
+  color: var(--ao-white);
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+main a.button:any-link:hover {
+  color: var(--ao-white);
+}
+
+/* download buttons (label mentions "download"; decorateButtons copies it to the title) */
+main a.button[title*="download" i]::after {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 18px;
+  background: url("../icons/download.svg") center / contain no-repeat;
+}
+
+@media (width >= 600px) {
   :root {
-    --page-pad: 20px;
+    --heading-font-size-xxl: 60px;
+    --heading-line-height-xxl: 70px;
+    --lead-font-size: 28px;
+    --lead-line-height: 38px;
+    --page-gutter: 40px;
+    --page-gutter-end: 40px;
+  }
+}
+
+@media (width >= 900px) {
+  main .default-content-wrapper > h2:has(> em) {
+    font-size: 50px;
+    line-height: 50px;
   }
 
-  body {
-    background-attachment: scroll;
-    font-size: 16px;
+  main > .hero-banner-container + .section .default-content-wrapper > h1 + p {
+    font-family: var(--heading-font-medium);
+    font-size: 22px;
+    line-height: 28px;
+  }
+}
+
+@media (width >= 1200px) {
+  :root {
+    --heading-font-size-xxl: 70px;
+    --heading-line-height-xxl: 80px;
+    --page-gutter: 0px;
+    --section-gap: 60px;
+    --section-first-top: 160px;
+    --page-end-space: 80px;
+  }
+
+  main > .hero-banner-container + .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime) {
+    padding-block: 100px;
+  }
+
+  /* coloured bands bleed under the sidebar column like the source */
+  body.has-nav-sidebar main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime) {
+    margin-inline-start: -220px;
+    padding-inline-start: 220px;
   }
 }

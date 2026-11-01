@@ -1,0 +1,48 @@
+/*
+ * Video Autoplay
+ * Source (Framer): full content-column width, fixed frame height per breakpoint
+ * (250px phone, 400px tablet, 600px desktop), 10px radius, object-fit cover.
+ */
+main .video-autoplay .video-autoplay-frame {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+main .video-autoplay .video-autoplay-frame video,
+main .video-autoplay .video-autoplay-poster,
+main .video-autoplay .video-autoplay-poster img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+/* wide: 2:1 frame at every width (AO LIVE logo / kinetic type videos are 1400x700 and follow the
+   column width on the source, 10px radius, never cropped) */
+main .video-autoplay.wide .video-autoplay-frame {
+  height: auto;
+  aspect-ratio: 2 / 1;
+}
+
+main .video-autoplay[data-embed-loaded='true'] .video-autoplay-poster {
+  visibility: hidden;
+}
+
+/* breakpoint-exception: the source (Framer tablet breakpoint) switches the frame height at 810px */
+@media (width >= 810px) {
+  main .video-autoplay .video-autoplay-frame {
+    height: 400px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .video-autoplay .video-autoplay-frame {
+    height: 600px;
+  }
+}

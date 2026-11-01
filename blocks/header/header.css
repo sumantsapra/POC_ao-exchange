@@ -1,136 +1,350 @@
-header .nav-pill {
+/* AO Playbook header
+   small screens: fixed 69px bar (logo + two-bar toggle) with an expandable chapter menu
+   >= 1200px: chapter sidebar (content pages) or logo bar + section nav (homepage) */
+header .header {
+  --header-ink: #000c3d;
+  --header-text: #2b2d3e;
+  --header-accent: #0590d0;
+  --header-bar-bg: #f2f2f2;
+  --header-bar-height: 69px;
+  --header-font-medium: "Sharp Sans No2 Medium", var(--font-ui);
+  --header-font-semibold: "Sharp Sans No2 Semibold", var(--font-ui);
+  --header-font-bold: "Sharp Sans No2 Bold", var(--font-ui);
+}
+
+header .nav-wrapper {
   position: fixed;
+  inset: 0 0 auto;
   z-index: 20;
-  top: 22px;
-  left: 50%;
+  background: var(--header-bar-bg);
+}
+
+header nav#nav {
   display: flex;
+  position: relative;
+  flex-flow: row wrap;
+  place-content: flex-start space-between;
   align-items: center;
-  width: min(1320px, calc(100% - 48px));
-  min-height: 67px;
-  padding: 8px 12px 8px 18px;
-  border-radius: 48px;
-  background: var(--pill);
-  backdrop-filter: blur(16px);
-  transform: translateX(-50%);
+  gap: 0;
+  min-height: var(--header-bar-height);
+
+  /* text lives in styled labels; the boxes keep the source's neutral defaults */
+  color: #000;
+  font-family: sans-serif;
+  font-size: 12px;
+  line-height: normal;
 }
 
 header .nav-brand {
+  margin: 12.5px 0 12.5px 24px;
+}
+
+header .nav-brand p {
+  margin: 0;
+}
+
+header .nav-brand a {
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
-  margin-right: auto;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  min-height: 44px;
+  border-radius: 6px;
+  color: var(--header-ink);
+  text-decoration: none;
+}
+
+header .nav-brand a span {
+  font-family: var(--font-ui);
+  font-size: 23.25px;
+  font-weight: 600;
+  letter-spacing: -0.64px;
+  line-height: 32px;
 }
 
 header .nav-brand img {
   display: block;
-  width: 75px;
-  height: 37px;
-  object-fit: contain;
+  width: 41px;
+  height: 20px;
 }
 
-header .nav-links {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-right: 28px;
-}
-
-header .nav-links a {
-  color: var(--ink);
-  font-stretch: 125%;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-header .nav-links a[aria-current="page"] {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-header .nav-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--ink);
-}
-
-header .nav-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 191px;
-  min-height: 46px;
-  padding: 0 22px;
-  border-radius: 30px;
-  background: var(--cyan);
-  color: #fff;
-  font-stretch: 150%;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
+/* two bars that morph into a cross */
 header .nav-toggle {
-  display: none;
+  position: relative;
   width: 44px;
   height: 44px;
-  margin-left: 8px;
+  margin: 12.5px 10px 12.5px 0;
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
 }
 
-header .nav-toggle span {
-  display: block;
-  width: 22px;
+header .nav-toggle-bar {
+  position: absolute;
+  left: 12px;
+  width: 20px;
   height: 2px;
-  margin: 6px auto;
-  background: var(--ink);
+  background: #000;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.3s ease;
 }
 
-@media (max-width: 900px) {
-  header .nav-pill {
-    width: calc(100% - 24px);
-    top: 12px;
-    flex-wrap: wrap;
-    padding-right: 8px;
+header .nav-toggle-bar:first-child {
+  top: 15px;
+}
+
+header .nav-toggle-bar:last-child {
+  top: 26px;
+}
+
+header .nav-wrapper.is-open .nav-toggle-bar:first-child {
+  top: 21px;
+  transform: rotate(45deg);
+}
+
+header .nav-wrapper.is-open .nav-toggle-bar:last-child {
+  top: 21px;
+  transform: rotate(-45deg);
+}
+
+/* expandable chapter menu */
+header .nav-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  transition: grid-template-rows 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+header .nav-wrapper.is-open .nav-panel {
+  grid-template-rows: 1fr;
+}
+
+header .nav-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+header .nav-sections ul,
+header .nav-page-sections ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+header .nav-sections a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  height: 56px;
+  padding: 0;
+  color: #000c3c;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+header .nav-sections a span {
+  margin-inline-start: 20px;
+  font-family: var(--header-font-semibold);
+  font-size: 16px;
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 16px;
+}
+
+header .nav-meta {
+  padding: 8px 20px 20px;
+}
+
+header .nav-meta p {
+  width: fit-content;
+  margin: 0;
+  color: var(--header-text);
+  font-family: var(--font-ui);
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+/* homepage section nav is desktop-only */
+header .nav-page-sections {
+  display: none;
+}
+
+/* keep page content clear of the fixed small-screen bar */
+body {
+  padding-top: 69px;
+}
+
+@media (width >= 1200px) {
+  body {
+    padding-top: 0;
   }
 
-  header .nav-links,
-  header .nav-cta {
-    display: none;
+  header .nav-wrapper {
+    position: relative;
+    inset: auto;
+    background: transparent;
   }
 
-  header .nav-pill.is-open .nav-links,
-  header .nav-pill.is-open .nav-cta {
-    display: flex;
-  }
-
-  header .nav-pill.is-open .nav-links {
-    flex-basis: 100%;
-    flex-direction: column;
+  header nav#nav {
+    flex-flow: column nowrap;
+    justify-content: center;
     align-items: flex-start;
-    order: 3;
-    margin: 8px 0 12px;
-    padding: 8px 8px 0;
-  }
-
-  header .nav-pill.is-open .nav-dot {
-    display: none;
-  }
-
-  header .nav-pill.is-open .nav-cta {
-    order: 4;
-    margin: 0 8px 12px;
+    min-height: 0;
   }
 
   header .nav-toggle {
+    display: none;
+  }
+
+  header .nav-brand {
+    margin: 0;
+  }
+
+  header .nav-brand a {
+    min-height: 53px;
+    padding: 8px;
+  }
+
+  /* the panel is always open on desktop */
+  header .nav-panel,
+  header .nav-wrapper.is-open .nav-panel {
     display: block;
+    width: auto;
+    transition: none;
+  }
+
+  header .nav-panel-inner {
+    overflow: visible;
+  }
+
+  /* homepage section nav */
+  header .nav-page-sections {
+    display: block;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 19;
+    width: 193px;
+    pointer-events: none;
+  }
+
+  header .nav-page-sections ul {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+    position: absolute;
+    top: 374px;
+    left: 42px;
+    pointer-events: auto;
+  }
+
+  header .nav-page-sections a {
+    color: var(--header-ink);
+    font-family: var(--header-font-medium);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  header .nav-page-sections a[aria-current="location"] {
+    font-family: var(--header-font-bold);
+  }
+
+  header .nav-sections a {
+    width: 240px;
+    height: 40px;
+    padding: 8px 0;
+    color: var(--header-text);
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  header .nav-sections a span {
+    margin-inline-start: 30px;
+    font-size: 14px;
+    line-height: 44px;
+  }
+
+  header .nav-sections a:hover {
+    color: var(--header-accent);
+  }
+
+  header .nav-sections a[aria-current="page"] span {
+    font-family: var(--header-font-bold);
+  }
+
+  header .nav-meta {
+    padding: 0 30px;
+  }
+
+  header .nav-meta p {
+    margin-top: 4px;
+    font-size: 10px;
+    line-height: 18px;
+  }
+
+  /* content pages: fixed 240px sidebar */
+  header .header-sidebar .nav-wrapper {
+    position: fixed;
+    inset: 0 auto auto 0;
+    width: 240px;
+  }
+
+  header .header-sidebar .nav-brand {
+    margin: 24px 0 0 24px;
+  }
+
+  header .header-sidebar .nav-sections {
+    margin-top: 70px;
+  }
+
+  body.has-nav-sidebar main {
+    padding-inline-start: 220px;
+  }
+
+  /* homepage: logo bar only (chapters live in the page), section nav on the left */
+  header .header-home .nav-wrapper .nav-panel,
+  header .header-home .nav-wrapper.is-open .nav-panel {
+    display: none;
+  }
+
+  /* homepage logo bar slides away once the page scrolls */
+  header .header-home .nav-wrapper {
+    position: fixed;
+    inset: 15px 36px auto;
+    height: 50px;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+
+  header .header-home .nav-wrapper.is-hidden {
+    transform: translateY(-137px);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  header .header-home nav#nav {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+  }
+
+  /* logo pill at the top left */
+  header .header-home .nav-brand a {
+    min-height: 36px;
+    padding: 2px 13px;
+    border-radius: 31px;
+    background: #f1f1f1;
+  }
+
+  header .nav-page-sections.is-inverted a {
+    color: #fff;
   }
 }

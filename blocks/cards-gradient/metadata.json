@@ -1,0 +1,37 @@
+{
+  "variantName": "cards-gradient",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Row of tiles filled with a horizontal gradient; name top-left, stop names along the bottom",
+    "purpose": "brand gradient definitions painted from named colour stops"
+  },
+  "contentPattern": {
+    "summary": "4 gradient tiles with name and colour stops",
+    "structure": "one row per gradient; one cell: gradient name as h3, then a bulleted list of colour-stop names in order (e.g. Process Blue, Bright Blue, White)"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One row per gradient: heading with the gradient name, then a list of colour-stop names (brand colour names such as Process Blue, Bright Blue, White, or CSS colours). Painted as a 90deg linear gradient with evenly spread stops; stop labels sit along the bottom.",
+  "reuseGuidance": "Gradient definitions",
+  "sourceUrl": "https://aobrandplaybook.com.au/colour",
+  "alsoUsedOn": [],
+  "blockContent": {
+    "baseBlock": "cards",
+    "source": "get_block_examples /block-collection/cards ('no images' 1-column model)",
+    "rows": [
+      {
+        "row": "each subsequent row = one gradient",
+        "cells": [
+          "Cell 1 (text): gradient name as heading (h3), then a list of colour stops in order (e.g. Process Blue, Bright Blue, White)"
+        ]
+      }
+    ],
+    "behaviour": "Block code maps the stop names to brand colours and paints a 90deg linear gradient, with the stops spread evenly; stop labels sit along the bottom.",
+    "example": [
+      [
+        "<h3>AO Morning Gradient</h3><ul><li>Process Blue</li><li>Bright Blue</li><li>White</li></ul>"
+      ]
+    ]
+  }
+}

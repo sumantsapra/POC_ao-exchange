@@ -1,0 +1,39 @@
+{
+  "variantName": "video-autoplay",
+  "baseBlock": "video",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Silent autoplay looping MP4 with no controls, rounded content-width frame",
+    "purpose": "silent ambient looping video with no controls"
+  },
+  "contentPattern": {
+    "summary": "Autoplaying muted looping MP4, no controls | sub-brand-guide: Autoplay looping logo animation video https://framerusercontent.com/assets/wB01by0W41v3pxxg6a8ZKRI2o.mp4 (1180x590, rounded) | Kinetic typography autoplay video https://framerusercontent.com/assets/nqbIAM119Ro9qtWh7TYCDVimsOk.mp4 (1180x590, rounded)",
+    "structure": "one row, one cell: optional poster image, then a link to the MP4"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One cell with a link to an MP4, optionally preceded by a poster image. Plays muted, looping, inline, without controls once in view; with reduced motion it does not autoplay and shows controls.",
+  "reuseGuidance": "Ambient/brand videos on chapter pages (brand sound, graphic elements)",
+  "sourceUrl": "https://aobrandplaybook.com.au/colour",
+  "alsoUsedOn": [
+    "https://aobrandplaybook.com.au/ao-live"
+  ],
+  "blockContent": {
+    "baseBlock": "video",
+    "source": "get_block_examples /block-collection/video",
+    "rows": [
+      {
+        "row": "1",
+        "cells": [
+          "Cell 1: link to the MP4 (https://framerusercontent.com/assets/zgLKoIkVykTecHU7HxE8Nhf8uRo.mp4); optional poster image above it"
+        ]
+      }
+    ],
+    "behaviour": "Autoplay, muted, loop, playsinline, no controls; rounded 1180x600 frame in the content column."
+  },
+  "sectionMetadata": [
+    {
+      "style": "royal-blue"
+    }
+  ]
+}

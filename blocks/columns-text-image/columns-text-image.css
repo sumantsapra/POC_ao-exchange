@@ -1,0 +1,198 @@
+/*
+ * columns-text-image
+ * Two layouts, chosen by authored cell order (no variant class needed):
+ * - text first (e.g. /colour "Colour distribution"): plain illustration beside the text,
+ *   vertically centred, text column 40% on desktop.
+ * - image first (e.g. /logos "Annual Logo"): logo in a white framed card, text column
+ *   bottom-aligned beside it on desktop.
+ * Values measured from aobrandplaybook.com.au.
+ */
+.columns-text-image {
+  --cti-card-bg: #fff;
+  --cti-card-border: 1px solid #f0f0f0;
+  --cti-card-radius: 10px;
+}
+
+.columns-text-image .columns-text-image-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.columns-text-image .columns-text-image-row + .columns-text-image-row {
+  margin-top: 40px;
+}
+
+/* text column */
+.columns-text-image .columns-text-image-text-col {
+  width: 100%;
+  color: var(--text-color);
+}
+
+.columns-text-image .columns-text-image-text-col > * {
+  margin: 0;
+}
+
+.columns-text-image .columns-text-image-text-col > :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--heading-color);
+}
+
+.columns-text-image .columns-text-image-text-col > :is(h1, h2, h3, h4, h5, h6) + * {
+  margin-top: 10px;
+}
+
+.columns-text-image .columns-text-image-text-col > p + p {
+  margin-top: 20px;
+}
+
+/* image column: plain illustration (text-first layout) */
+.columns-text-image .columns-text-image-img-col {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  line-height: 0;
+}
+
+.columns-text-image .columns-text-image-img-col picture {
+  display: block;
+  max-width: 100%;
+}
+
+.columns-text-image .columns-text-image-img-col img {
+  display: block;
+  width: 272px;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* image-first layout: logo in a white framed card */
+.columns-text-image .columns-text-image-row:has(> .columns-text-image-img-col:first-child) {
+  align-items: stretch;
+  gap: 20px;
+}
+
+.columns-text-image .columns-text-image-img-col:first-child {
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  padding: 36px;
+  background-color: var(--cti-card-bg);
+  border: var(--cti-card-border);
+  border-radius: var(--cti-card-radius);
+  overflow: hidden;
+}
+
+.columns-text-image .columns-text-image-img-col:first-child picture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.columns-text-image .columns-text-image-img-col:first-child img {
+  width: auto;
+  max-width: min(100%, 174px);
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* follow-up note under a logo description (e.g. "Please contact the China Department ...") */
+.columns-text-image .columns-text-image-img-col:first-child + .columns-text-image-text-col > p + p {
+  font-size: 10px;
+  line-height: 16px;
+}
+
+/* dark section backgrounds: plain white cards, no visible border */
+.section:is(.royal-blue, .process-blue, .navy, .dark-navy, .bright-blue) .columns-text-image {
+  --cti-card-border: 0;
+}
+
+/* dark section backgrounds (e.g. /ao-reserve, /partner-guidelines): white copy beside the cards */
+.section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .columns-text-image .columns-text-image-text-col,
+.section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .columns-text-image .columns-text-image-text-col > :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--light-color);
+}
+
+@media (width >= 900px) {
+  /* text-first: side by side, vertically centred; image column hugs its illustration */
+  .columns-text-image .columns-text-image-row {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .columns-text-image .columns-text-image-text-col {
+    flex: 1 0 0;
+    width: auto;
+    min-width: 0;
+  }
+
+  .columns-text-image .columns-text-image-img-col {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .columns-text-image .columns-text-image-img-col img {
+    width: 330px;
+  }
+
+  /* image-first: card stacks above the text until desktop */
+  .columns-text-image .columns-text-image-row:has(> .columns-text-image-img-col:first-child) {
+    flex-direction: column;
+  }
+
+  .columns-text-image .columns-text-image-img-col:first-child {
+    width: 100%;
+    height: 350px;
+  }
+
+  .columns-text-image .columns-text-image-img-col:first-child img {
+    max-width: min(100%, 299px);
+  }
+
+  .columns-text-image .columns-text-image-img-col:first-child + .columns-text-image-text-col {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .columns-text-image .columns-text-image-img-col:first-child + .columns-text-image-text-col > p + p {
+    font-size: var(--body-font-size-s);
+    line-height: var(--body-line-height-s);
+  }
+}
+
+@media (width >= 1200px) {
+  .columns-text-image .columns-text-image-text-col {
+    flex: 0 0 40%;
+  }
+
+  .columns-text-image .columns-text-image-img-col {
+    flex: 1 0 0;
+    min-width: 0;
+  }
+
+  .columns-text-image .columns-text-image-img-col img {
+    width: 392px;
+  }
+
+  /* image-first: 50/50 row, text bottom-aligned with the card */
+  .columns-text-image .columns-text-image-row:has(> .columns-text-image-img-col:first-child) {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 20px 40px;
+  }
+
+  .columns-text-image .columns-text-image-img-col:first-child {
+    flex: 1 1 50%;
+    width: auto;
+    padding: 0;
+  }
+
+  .columns-text-image .columns-text-image-img-col:first-child + .columns-text-image-text-col {
+    flex: 1 1 50%;
+    width: auto;
+  }
+}

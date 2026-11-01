@@ -1,0 +1,25 @@
+{
+  "variantName": "carousel-stack",
+  "baseBlock": "carousel",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Rounded media cards that pin and stack over each other while scrolling, centred caption with accent phrase, no arrows or dots",
+    "purpose": "Scroll-told media sequences (photo/video + one-line caption)"
+  },
+  "contentPattern": {
+    "summary": "3 sticky stacked autoplay video cards, each with caption: 'It's the <em>roar of the crowd.</em>', 'It's the <em>heat of the summer.</em>', 'It's the <em>pulse of the city.</em>'",
+    "structure": "cell 1 = link to the video (any link is treated as a video, e.g. extension-less storage URLs) or a picture; cell 2 = caption paragraph, accent phrase in <em>"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Scroll-told sequence: each card pins (position: sticky) for one viewport and the next card slides over it. Only the front card video plays. No arrows or dots. Reduced motion: cards stack statically with video controls.",
+  "reuseGuidance": "Scroll-told media sequences (photo/video + one-line caption)",
+  "sourceUrl": "https://aobrandplaybook.com.au/",
+  "sectionMetadata": [
+    {
+      "style": "centered",
+      "anchor": "intro",
+      "nav-label": "Intro"
+    }
+  ]
+}

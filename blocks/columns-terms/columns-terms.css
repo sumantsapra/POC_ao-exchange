@@ -1,0 +1,113 @@
+/*
+ * columns-terms: /tone-of-voice term panels. Both panels: 10px radius, 1px #f0f0f0 outline.
+ * Naming conventions (plain lists): white panel, 30px 20px padding (375) / 50px 30px (1440);
+ *   terms Sharp Sans No2 Semibold 16/32 (375) / 22/44 (1440), two 540px columns 40px apart;
+ *   usage notes Sharp Sans No2 Semibold Oblique 14px.
+ * Editorial style guide (checks): #fafafa panel, 40px 20px padding (375) / 32px (1440);
+ *   rows of [term | icon], terms 16/24 (375) / 22/33 (1440), 16px / 20px between rows,
+ *   blue tick (46x31) / red cross (31x31) at the column end, two columns 80px apart.
+ */
+main .columns-terms {
+  padding: 30px 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  background-color: var(--ao-white);
+}
+
+main .columns-terms .columns-terms-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+main .columns-terms ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+main .columns-terms li {
+  margin: 0;
+  color: var(--text-color);
+  font-family: var(--heading-font-semibold);
+  font-size: 16px;
+  font-synthesis: none;
+  line-height: 32px;
+}
+
+main .columns-terms li em {
+  font-size: 0.636em;
+  font-style: italic;
+  font-synthesis: style;
+}
+
+/* checks: [term | icon] rows */
+main .columns-terms.columns-terms-checks {
+  padding: 40px 20px;
+  background-color: var(--background-color);
+}
+
+main .columns-terms.columns-terms-checks .columns-terms-row,
+main .columns-terms.columns-terms-checks ul {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+main .columns-terms.columns-terms-checks li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 31px;
+  line-height: 24px;
+}
+
+main .columns-terms :is(.columns-terms-correct, .columns-terms-incorrect) li::after {
+  content: "";
+  flex: none;
+  width: 46px;
+  height: 31px;
+  background: url("tick.svg") center right / contain no-repeat;
+}
+
+main .columns-terms .columns-terms-incorrect li::after {
+  width: 31px;
+  background-image: url("cross.svg");
+}
+
+@media (width >= 900px) {
+  main .columns-terms {
+    padding: 50px 30px;
+  }
+
+  main .columns-terms .columns-terms-row {
+    grid-template-columns: none;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 40px;
+  }
+
+  main .columns-terms li {
+    font-size: 22px;
+    line-height: 44px;
+  }
+
+  main .columns-terms.columns-terms-checks {
+    padding: 32px;
+  }
+
+  main .columns-terms.columns-terms-checks .columns-terms-row {
+    display: grid;
+    gap: 80px;
+    align-items: start;
+  }
+
+  main .columns-terms.columns-terms-checks ul {
+    gap: 20px;
+  }
+
+  main .columns-terms.columns-terms-checks li {
+    min-height: 33px;
+    line-height: 33px;
+  }
+}

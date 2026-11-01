@@ -1,0 +1,10 @@
+{
+  "type": "da",
+  "sites": {
+    "POC_ao-exchange": {
+      "previewOrg": "sumantsapra",
+      "previewSite": "POC_ao-exchange",
+      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json"
+    }
+  }
+}

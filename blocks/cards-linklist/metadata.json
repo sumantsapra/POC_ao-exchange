@@ -1,0 +1,24 @@
+{
+  "variantName": "cards-linklist",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Text-only full-width link rows with arrow icon and divider lines",
+    "purpose": "Chapter/toolkit link lists and any list of links to detail pages"
+  },
+  "contentPattern": {
+    "summary": "7 chapter links (Tone of voice, Logos, Colour, Typography, Graphic elements, Brand sound, Partner guidelines), each a row with arrow icon and divider",
+    "structure": "cell 1 = a link with the item name (the block adds the arrow icon and makes the whole row clickable)"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Chapter / toolkit link lists; rows fade and slide in as they scroll into view (disabled for reduced motion).",
+  "reuseGuidance": "Chapter/toolkit link lists and any list of links to detail pages",
+  "sourceUrl": "https://aobrandplaybook.com.au/",
+  "sectionMetadata": [
+    {
+      "anchor": "summary",
+      "nav-label": "Toolkits"
+    }
+  ]
+}
