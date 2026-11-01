@@ -1,0 +1,145 @@
+/* cards-swatch: colour palette tiles. Values measured on aobrandplaybook.com.au/colour (Core Palette). */
+main .cards-swatch > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+main .cards-swatch .cards-swatch-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: var(--swatch-color, transparent);
+}
+
+main .cards-swatch .cards-swatch-tile.is-dark {
+  color: #fff;
+}
+
+main .cards-swatch .cards-swatch-tile.is-light {
+  color: var(--heading-color);
+}
+
+/* special-finish tiles: texture image fills the tile */
+main .cards-swatch .cards-swatch-tile.has-image {
+  padding: 20px 24px;
+}
+
+/* the source's special-finish (silver foil) tile uses navy text */
+main .cards-swatch .cards-swatch-tile.has-image:not([data-hex]) {
+  color: var(--heading-color);
+}
+
+main .cards-swatch .cards-swatch-image {
+  position: absolute;
+  inset: 0;
+  line-height: 0;
+}
+
+main .cards-swatch .cards-swatch-image picture,
+main .cards-swatch .cards-swatch-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+main .cards-swatch .cards-swatch-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* source face "Sequel 100 Wide 85", loaded from /fonts */
+main .cards-swatch .cards-swatch-name {
+  margin: 0;
+  font-family: "Sequel 100 Wide 85", var(--heading-font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 34px;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+main .cards-swatch .cards-swatch-values {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 2px 6px;
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 12.8px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+main .cards-swatch .cards-swatch-values dt,
+main .cards-swatch .cards-swatch-values dd {
+  margin: 0;
+}
+
+main .cards-swatch .cards-swatch-values dt::after {
+  content: ":";
+}
+
+/* Copy HEX pill: tinted with the tile text colour at 7%, revealed on tile hover */
+main .cards-swatch .cards-swatch-copy {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  z-index: 1;
+  margin: 0;
+  padding: 6px 8px 5px;
+  border: 0;
+  border-radius: 4px;
+  background: color-mix(in srgb, currentcolor 7%, transparent);
+  color: inherit;
+  font-family: "DM Mono", var(--body-font-family);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 12.8px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+main .cards-swatch .cards-swatch-copy:focus-visible {
+  opacity: 1;
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
+}
+
+main .cards-swatch .cards-swatch-copy.is-copied,
+main .cards-swatch .cards-swatch-tile:hover .cards-swatch-copy {
+  opacity: 1;
+}
+
+/* touch devices have no hover: keep the copy control visible */
+@media (hover: none) {
+  main .cards-swatch .cards-swatch-copy {
+    opacity: 1;
+  }
+}
+
+/* breakpoint-exception: the source (Framer) switches to the 3-column tablet grid at 810px */
+@media (width >= 810px) {
+  main .cards-swatch > ul {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+}

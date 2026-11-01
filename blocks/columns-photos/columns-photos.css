@@ -1,0 +1,112 @@
+/*
+ * Columns: photos.
+ * The block itself is the grid; rows are flattened with display: contents so a
+ * gallery authored in rows of three still reflows to the source column count.
+ * Three layouts from the source:
+ * - inset pair (default): rounded photos with a fixed height, side by side from 900px
+ * - tiles (rows of three): rounded 250px tiles, 2 then 3 columns
+ * - full-width gallery (section style "full-width"): edge-to-edge 12:7 photos, no gap, no radius
+ */
+main .columns-photos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+main .columns-photos .columns-photos-row {
+  display: contents;
+}
+
+main .columns-photos .columns-photos-cell {
+  height: 250px;
+  overflow: hidden;
+  border-radius: 10px;
+  line-height: 0;
+}
+
+/* an empty trailing cell (odd photo count) must not leave a blank slot */
+main .columns-photos .columns-photos-cell:empty {
+  display: none;
+}
+
+main .columns-photos .columns-photos-cell picture,
+main .columns-photos .columns-photos-cell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* tiles: rows of three photos */
+main .columns-photos:has(.columns-photos-cell:nth-child(3)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+}
+
+main .columns-photos:has(.columns-photos-cell:nth-child(3)) .columns-photos-cell {
+  height: 128px;
+}
+
+/* full-width gallery */
+main .section.full-width .columns-photos.block {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+main .section.full-width .columns-photos.block .columns-photos-cell {
+  height: auto;
+  aspect-ratio: 720 / 420;
+  border-radius: 0;
+}
+
+@media (width >= 900px) {
+  main .columns-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+  }
+
+  main .columns-photos .columns-photos-cell {
+    height: 350px;
+  }
+
+  main .columns-photos:has(.columns-photos-cell:nth-child(3)) {
+    gap: 40px;
+  }
+
+  main .columns-photos:has(.columns-photos-cell:nth-child(3)) .columns-photos-cell {
+    height: 250px;
+  }
+
+  main .section.full-width .columns-photos.block {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  main .section.full-width .columns-photos.block .columns-photos-cell {
+    height: auto;
+  }
+}
+
+@media (width >= 1200px) {
+  main .columns-photos .columns-photos-cell {
+    height: 400px;
+  }
+
+  main .columns-photos:has(.columns-photos-cell:nth-child(3)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 70px 40px;
+  }
+
+  main .columns-photos:has(.columns-photos-cell:nth-child(3)) .columns-photos-cell {
+    height: 250px;
+  }
+
+  main .section.full-width .columns-photos.block {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  main .section.full-width .columns-photos.block .columns-photos-cell {
+    height: auto;
+  }
+}

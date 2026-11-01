@@ -1,0 +1,90 @@
+/*
+ * columns-voice: /tone-of-voice "Usage examples" (Framer "usage example").
+ * Label Sharp Sans No2 Semibold Oblique 18/28 navy, 20px above the tiles.
+ * Tiles 350px tall, 10px radius, centred text: playful = process blue with a navy label,
+ * premium = navy (#000c3d) with a process-blue label; label 24/30, quote Sharp Sans Bold white
+ * 30/33 (375) / 40/44 (1440), 10px under the label.
+ * 375: tiles stacked (20px gap, 36px padding), 40px between examples.
+ * 1440: two 570px tiles (40px gap, 40px padding), 80px between examples.
+ */
+main .columns-voice {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+main .columns-voice .columns-voice-label {
+  margin: 0 0 20px;
+  color: var(--heading-color);
+  font-family: var(--heading-font-semibold);
+  font-size: 18px;
+  font-style: italic;
+  line-height: 28px;
+}
+
+main .columns-voice .columns-voice-tiles {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+main .columns-voice .columns-voice-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 350px;
+  padding: 36px;
+  border-radius: 10px;
+  background-color: var(--ao-process-blue);
+  text-align: center;
+}
+
+main .columns-voice .columns-voice-tile-premium {
+  background-color: #000c3d;
+}
+
+main .columns-voice .columns-voice-tile > * {
+  margin: 0;
+}
+
+main .columns-voice .columns-voice-tile > :is(h1, h2, h3, h4, h5, h6) {
+  color: #000c3d;
+  font-family: var(--heading-font-family);
+  font-size: 24px;
+  line-height: 30px;
+}
+
+main .columns-voice .columns-voice-tile-premium > :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--ao-process-blue);
+}
+
+main .columns-voice .columns-voice-tile > p {
+  margin-top: 10px;
+  color: var(--ao-white);
+  font-family: var(--heading-font-family);
+  font-size: 30px;
+  font-synthesis: none;
+  line-height: 33px;
+}
+
+@media (width >= 900px) {
+  main .columns-voice {
+    gap: 80px;
+  }
+
+  main .columns-voice .columns-voice-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+  }
+
+  main .columns-voice .columns-voice-tile {
+    padding: 40px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .columns-voice .columns-voice-tile > p {
+    font-size: 40px;
+    line-height: 44px;
+  }
+}

@@ -1,0 +1,54 @@
+/* AO Brand Playbook design tokens, measured from aobrandplaybook.com.au */
+:root {
+  /* fonts: the source encodes weight in the family name */
+  --font-ui: "Poppins", "Helvetica Neue", arial, sans-serif;
+  --body-font-family: var(--font-ui);
+  --heading-font-family: "Sharp Sans No2 Bold", var(--font-ui);
+  --heading-font-semibold: "Sharp Sans No2 Semibold", var(--font-ui);
+  --heading-font-medium: "Sharp Sans No2 Medium", var(--font-ui);
+  --body-font-book: "Sharp Sans No2 Book", var(--font-ui);
+  --display-font-family: "Sequel 100 Wide 85", var(--heading-font-family);
+  --display-font-light: "Sequel 100 Wide 65", var(--heading-font-family);
+  --display-font-black: "Sequel 100 Wide 95", var(--heading-font-family);
+  --mono-font-family: "DM Mono", ui-monospace, monospace;
+
+  /* page colours */
+  --background-color: #fafafa;
+  --text-color: #2b2d3e;
+  --heading-color: #000c3d;
+  --link-color: #0091d2;
+  --link-hover-color: #0590d0;
+  --light-color: #fafafa;
+  --dark-color: #000c3d;
+
+  /* AO core palette */
+  --ao-process-blue: #0091d2;
+  --ao-royal-blue: #1e2886;
+  --ao-hits-different-blue: #0078ff;
+  --ao-navy: #000c3c;
+  --ao-dark-navy: #0f1242;
+  --ao-bright-blue: #00e1ff;
+  --ao-lime: #e1ff00;
+  --ao-white: #fff;
+
+  /* type scale (mobile first; larger values set in styles.css) */
+  --heading-font-size-xxl: 48px;
+  --heading-line-height-xxl: 52px;
+  --heading-font-size-s: 24px;
+  --heading-line-height-s: 30px;
+  --lead-font-size: 22px;
+  --lead-line-height: 32px;
+  --body-font-size-m: 18px;
+  --body-line-height-m: 28px;
+  --body-font-size-s: 14px;
+  --body-line-height-s: 20px;
+
+  /* layout */
+  --nav-height: 69px;
+  --page-gutter: 24px;
+  --page-gutter-end: 24px;
+  --section-gap: 80px;
+  --section-first-top: 51px;
+  --page-end-space: 64px;
+  --colored-section-padding: 60px;
+}

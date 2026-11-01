@@ -1,0 +1,18 @@
+{
+  "variantName": "hero-banner",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": "Full-bleed 800px media banner (photo or autoplay video), no text",
+  "contentPattern": "Full-bleed autoplay looping banner video https://framerusercontent.com/assets/OXpgZq4kK7YREBavcJSkRgT6oA.mp4, no text",
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Row 1: one cell holding a photo, or a link to an MP4 (rendered as an autoplay, muted, looping, inline video; an optional image above the link becomes the poster). Row 2 (optional): heading or text overlaid at the bottom.",
+  "reuseGuidance": "Top banner of every sub-brand guide",
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

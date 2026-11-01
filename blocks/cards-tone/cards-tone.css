@@ -1,0 +1,172 @@
+/*
+ * cards-tone: tone-of-voice word tiles.
+ * Default look = AO Reserve (white tiles, light-blue hairline, navy Fino Sans, 4 per row on desktop).
+ * Context looks measured on the source:
+ *  - AO LIVE (block in a bright-blue section): lime tiles, #00afff Aro Normal, 3 per row.
+ *  - Opening Week (tiles with a headline + sub line): hits-different-blue tiles, white Sequel, 3 per row.
+ *  - AO Shop (hits-different-blue section): white tiles, #0078ff Sequel, 3 per row.
+ *  - AO 1 Point Slam (hits-different-blue section, headline + sub line): blue tiles, white keyline.
+ * Tile colours/fonts are custom properties so a section style can override them.
+ */
+main .cards-tone > ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+main .cards-tone .cards-tone-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  min-height: 200px;
+  margin: 0;
+  padding: 20px 36px;
+  border-radius: 10px;
+  background-color: var(--cards-tone-tile-background, var(--ao-white));
+  color: var(--cards-tone-tile-color, var(--heading-color));
+  font-family: var(--cards-tone-font-family, "Fino Sans Medium", var(--heading-font-medium));
+  font-size: var(--cards-tone-font-size, 26px);
+  font-weight: var(--cards-tone-font-weight, 500);
+  font-synthesis: none;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* source draws the hairline as an inset ::after so it does not change the tile box */
+main .cards-tone .cards-tone-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--cards-tone-tile-border, 1px solid #80d9ff);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* let headline + sub line become flex items of the tile so space-evenly spreads them */
+main .cards-tone .cards-tone-card-body {
+  display: contents;
+}
+
+main .cards-tone .cards-tone-card-body > * {
+  width: 100%;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
+main .cards-tone .cards-tone-card-body > * + * {
+  font-family: var(--cards-tone-sub-font-family, inherit);
+  font-size: 18px;
+}
+
+/* Opening Week: tiles carry a headline plus a sub line */
+main .cards-tone:has(.cards-tone-card-body > * + *) {
+  --cards-tone-tile-background: var(--ao-hits-different-blue);
+  --cards-tone-tile-color: var(--ao-white);
+  --cards-tone-tile-border: 0;
+  --cards-tone-font-family: var(--display-font-family);
+  --cards-tone-sub-font-family: "Sequel 100 Wide 45", var(--display-font-light);
+  --cards-tone-font-weight: 400;
+}
+
+/* AO LIVE: block sits in the bright-blue section */
+main .section.bright-blue .cards-tone {
+  --cards-tone-tile-background: var(--ao-lime);
+  --cards-tone-tile-color: #00afff;
+  --cards-tone-tile-border: 0;
+  --cards-tone-font-family: "Aro Normal", var(--display-font-black);
+  --cards-tone-font-weight: 400;
+}
+
+/* lime section (Opening Week): hits-different-blue tiles, white Sequel */
+main .section.lime .cards-tone {
+  --cards-tone-tile-background: var(--ao-hits-different-blue);
+  --cards-tone-tile-color: var(--ao-white);
+  --cards-tone-tile-border: 0;
+  --cards-tone-font-family: var(--display-font-family);
+  --cards-tone-font-weight: 400;
+}
+
+/* hits-different-blue section (AO Shop, AO 1 Point Slam): Sequel 100 Wide 85 26px, no hairline */
+main .section.hits-different-blue .cards-tone {
+  --cards-tone-tile-border: 0;
+  --cards-tone-font-family: var(--display-font-family);
+  --cards-tone-font-weight: 400;
+}
+
+/* AO Shop: white tiles with sub-brand blue text */
+main .section.hits-different-blue .cards-tone:not(:has(.cards-tone-card-body > * + *)) {
+  --cards-tone-tile-color: var(--ao-hits-different-blue);
+}
+
+/* AO 1 Point Slam: blue tiles on the blue band keep a white keyline */
+main .section.hits-different-blue .cards-tone:has(.cards-tone-card-body > * + *) {
+  --cards-tone-tile-border: 1px solid var(--ao-white);
+}
+
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main .cards-tone > ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  main .cards-tone .cards-tone-card {
+    min-height: 350px;
+    padding: 36px;
+  }
+
+  main .section.bright-blue .cards-tone {
+    --cards-tone-font-size: 18px;
+  }
+
+  main .section.bright-blue .cards-tone > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  main .section.bright-blue .cards-tone .cards-tone-card {
+    min-height: 250px;
+    padding: 20px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .cards-tone > ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  main .cards-tone .cards-tone-card {
+    min-height: 250px;
+    padding: 0 20px;
+  }
+
+  main .cards-tone:has(.cards-tone-card-body > * + *) > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  main .cards-tone:has(.cards-tone-card-body > * + *) .cards-tone-card {
+    padding: 20px;
+  }
+
+  main .section.bright-blue .cards-tone {
+    --cards-tone-font-size: 26px;
+  }
+
+  main .section.bright-blue .cards-tone > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  main .section.bright-blue .cards-tone .cards-tone-card {
+    padding: 20px;
+  }
+
+  /* AO Shop, AO 1 Point Slam, Opening Week: 3 tiles per row (367px on the source) */
+  main .section:is(.hits-different-blue, .lime) .cards-tone > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

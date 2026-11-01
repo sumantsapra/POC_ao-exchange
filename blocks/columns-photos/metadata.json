@@ -1,0 +1,47 @@
+{
+  "variantName": "columns-photos",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Row of equal-width rounded photos with no text",
+    "purpose": "rows or grids of equal-width photos with no text"
+  },
+  "contentPattern": {
+    "summary": "Two photos side by side | sub-brand-guide: 4 brand-example photos in a 2x2 full-bleed grid",
+    "structure": "one or more rows; each cell holds one photo; rows of two give a 2x2 grid"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Rows of equal-width photos with no text, one photo per cell. One row of two = side-by-side pair; two rows of two = 2x2 grid (put in a full-width section for full-bleed).",
+  "reuseGuidance": "Application/example photo rows on chapter pages",
+  "sourceUrl": "https://aobrandplaybook.com.au/colour",
+  "alsoUsedOn": [
+    "https://aobrandplaybook.com.au/ao-live"
+  ],
+  "blockContent": {
+    "baseBlock": "columns",
+    "source": "get_all_blocks_catalog columns",
+    "rows": [
+      {
+        "row": "1",
+        "cells": [
+          "Cell 1: photo",
+          "Cell 2: photo"
+        ]
+      }
+    ],
+    "behaviour": "Equal-width rounded photos side by side, stacking on mobile. Any number of cells per row."
+  },
+  "sectionMetadata": [
+    {
+      "style": "full-width"
+    }
+  ],
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

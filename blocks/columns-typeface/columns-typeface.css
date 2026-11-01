@@ -1,0 +1,328 @@
+/*
+ * columns-typeface: font specimen panels (name / glyphs / styles) with copy beside or below.
+ * Source (Framer) switches at 810px (tablet) and 1200px (desktop); mapped to 900px and 1200px.
+ * Row types (set by JS): -row-full (panel only), -row-stacked (untitled copy below the panel),
+ * -row-side (titled copy beside the panel on desktop).
+ */
+
+/* block: rows */
+main .columns-typeface {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* sub-brand guides pair a full-width brand specimen with a secondary one: tighter rhythm */
+main .columns-typeface:has(.columns-typeface-row-full) {
+  gap: 40px;
+}
+
+main .columns-typeface .columns-typeface-row {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+main .columns-typeface .columns-typeface-row > div {
+  min-width: 0;
+}
+
+main .columns-typeface:has(.columns-typeface-row-full) .columns-typeface-row {
+  gap: 40px;
+}
+
+main .columns-typeface .columns-typeface-row-stacked {
+  gap: 16px;
+}
+
+/* specimen panel (mobile sizes) */
+main .columns-typeface .columns-typeface-specimen {
+  --columns-typeface-name-size: 26px;
+  --columns-typeface-name-lh: 1.28;
+  --columns-typeface-glyphs-size: var(--columns-typeface-name-size);
+  --columns-typeface-glyphs-lh: var(--columns-typeface-name-lh);
+  --columns-typeface-styles-size: 16px;
+  --columns-typeface-styles-lh: 1.28;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 250px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+
+  /* source draws a 1px inset hairline (::after, inset 0) */
+  box-shadow: inset 0 0 0 1px #f0f0f0;
+  color: var(--text-color);
+  font-family: var(--columns-typeface-font), var(--heading-font-family);
+  font-weight: 400;
+  font-synthesis: none;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+main .columns-typeface .columns-typeface-row-stacked > .columns-typeface-specimen {
+  --columns-typeface-name-size: 30px;
+  --columns-typeface-styles-size: 17px;
+
+  padding: 50px 20px;
+}
+
+main .columns-typeface .columns-typeface-row-full > .columns-typeface-specimen {
+  --columns-typeface-name-size: 100px;
+  --columns-typeface-name-lh: 1;
+  --columns-typeface-glyphs-size: 30px;
+  --columns-typeface-glyphs-lh: 1.28;
+  --columns-typeface-styles-size: 30px;
+
+  padding: 50px 20px;
+}
+
+main .columns-typeface .columns-typeface-specimen > p {
+  margin: 0;
+}
+
+main .columns-typeface .columns-typeface-name {
+  font-size: var(--columns-typeface-name-size);
+  line-height: var(--columns-typeface-name-lh);
+}
+
+main .columns-typeface .columns-typeface-glyphs {
+  font-size: var(--columns-typeface-glyphs-size);
+  line-height: var(--columns-typeface-glyphs-lh);
+}
+
+main .columns-typeface .columns-typeface-row-full .columns-typeface-glyphs {
+  margin-top: 10px;
+}
+
+main .columns-typeface .columns-typeface-specimen > .columns-typeface-styles {
+  margin-top: 10px;
+  font-size: var(--columns-typeface-styles-size);
+  line-height: var(--columns-typeface-styles-lh);
+}
+
+main .columns-typeface .columns-typeface-style.is-bold {
+  font-weight: 700;
+}
+
+main .columns-typeface .columns-typeface-style.is-italic {
+  font-style: italic;
+}
+
+/* Sharp Sans No.2: weight lives in the family name */
+main .columns-typeface .columns-typeface-font-sharp-sans-no-2 .columns-typeface-name,
+main .columns-typeface .columns-typeface-font-sharp-sans-no-2 .columns-typeface-style-bold {
+  font-family: var(--heading-font-family);
+}
+
+main .columns-typeface .columns-typeface-font-sharp-sans-no-2 .columns-typeface-glyphs,
+main .columns-typeface .columns-typeface-font-sharp-sans-no-2 .columns-typeface-style-medium {
+  font-family: var(--heading-font-medium);
+}
+
+main .columns-typeface .columns-typeface-font-sharp-sans-no-2 .columns-typeface-styles,
+main .columns-typeface .columns-typeface-font-sharp-sans-no-2 .columns-typeface-style-semibold {
+  font-family: var(--heading-font-semibold);
+}
+
+main .columns-typeface .columns-typeface-font-sharp-sans-no-2 .columns-typeface-style-book {
+  font-family: var(--body-font-book);
+}
+
+main .columns-typeface .columns-typeface-font-sharp-sans-no-2 .columns-typeface-style.is-bold {
+  font-weight: 400;
+}
+
+/* Sequel 100 Wide: 86 / 46 / 45 cuts are not licensed for the project, nearest loaded cut stands in */
+main .columns-typeface .columns-typeface-font-sequel-100-wide,
+main .columns-typeface .columns-typeface-font-sequel-sans-wide-100 {
+  --columns-typeface-name-lh: 1.1;
+}
+
+main .columns-typeface .columns-typeface-font-sequel-100-wide .columns-typeface-name,
+main .columns-typeface .columns-typeface-font-sequel-sans-wide-100 .columns-typeface-name,
+main .columns-typeface .columns-typeface-font-sequel-100-wide .columns-typeface-styles,
+main .columns-typeface .columns-typeface-font-sequel-sans-wide-100 .columns-typeface-styles,
+main .columns-typeface .columns-typeface-font-sequel-100-wide .columns-typeface-style-86,
+main .columns-typeface .columns-typeface-font-sequel-sans-wide-100 .columns-typeface-style-86 {
+  font-family: "Sequel 100 Wide 86", var(--display-font-family);
+}
+
+main .columns-typeface .columns-typeface-font-sequel-100-wide .columns-typeface-style-85,
+main .columns-typeface .columns-typeface-font-sequel-sans-wide-100 .columns-typeface-style-85 {
+  font-family: var(--display-font-family);
+}
+
+main .columns-typeface .columns-typeface-font-sequel-100-wide .columns-typeface-glyphs,
+main .columns-typeface .columns-typeface-font-sequel-sans-wide-100 .columns-typeface-glyphs,
+main .columns-typeface .columns-typeface-font-sequel-100-wide .columns-typeface-style-46,
+main .columns-typeface .columns-typeface-font-sequel-sans-wide-100 .columns-typeface-style-46 {
+  font-family: "Sequel 100 Wide 46", var(--display-font-light);
+}
+
+main .columns-typeface .columns-typeface-font-sequel-100-wide .columns-typeface-style-45,
+main .columns-typeface .columns-typeface-font-sequel-sans-wide-100 .columns-typeface-style-45 {
+  font-family: "Sequel 100 Wide 45", var(--display-font-light);
+}
+
+/* Poppins */
+main .columns-typeface .columns-typeface-font-poppins .columns-typeface-name {
+  font-weight: 700;
+}
+
+main .columns-typeface .columns-typeface-font-poppins .columns-typeface-styles {
+  font-weight: 500;
+}
+
+main .columns-typeface .columns-typeface-font-poppins .columns-typeface-style-regular {
+  font-weight: 400;
+}
+
+/* Arial */
+main .columns-typeface .columns-typeface-font-arial {
+  font-family: arial, "Helvetica Neue", helvetica, sans-serif;
+}
+
+main .columns-typeface .columns-typeface-font-arial .columns-typeface-name {
+  font-weight: 700;
+}
+
+/* ARO (ao-live): not available to the project, falls back to the wide / narrow brand faces */
+main .columns-typeface .columns-typeface-font-aro .columns-typeface-style-extended {
+  font-family: "Aro Extended", var(--display-font-black);
+}
+
+main .columns-typeface .columns-typeface-font-aro .columns-typeface-name {
+  font-family: "Aro Wide", var(--display-font-black);
+}
+
+main .columns-typeface .columns-typeface-font-aro .columns-typeface-glyphs,
+main .columns-typeface .columns-typeface-font-aro .columns-typeface-styles {
+  font-family: "Aro Narrow", var(--heading-font-family);
+}
+
+main .columns-typeface .columns-typeface-font-aro .columns-typeface-style-wide {
+  font-family: "Aro Wide", var(--display-font-family);
+}
+
+main .columns-typeface .columns-typeface-font-aro .columns-typeface-style-normal {
+  font-family: "Aro Normal", var(--heading-font-family);
+}
+
+main .columns-typeface .columns-typeface-font-aro .columns-typeface-style-narrow {
+  font-family: "Aro Narrow", var(--heading-font-semibold);
+}
+
+main .columns-typeface .columns-typeface-font-aro .columns-typeface-style-condensed {
+  font-family: "Aro Condensed", var(--heading-font-medium);
+}
+
+/* Neue Plak (ao-live): not available to the project, falls back to Poppins */
+main .columns-typeface .columns-typeface-font-neue-plak {
+  --columns-typeface-name-size: 30px;
+  --columns-typeface-glyphs-size: 20px;
+  --columns-typeface-styles-size: 20px;
+
+  font-family: "Neue Plak Regular", var(--body-font-family);
+}
+
+main .columns-typeface .columns-typeface-font-neue-plak .columns-typeface-name {
+  font-family: "Neue Plak Bold", var(--body-font-family);
+  font-weight: 700;
+}
+
+/* copy */
+main .columns-typeface .columns-typeface-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  color: var(--text-color);
+}
+
+main .columns-typeface .columns-typeface-text > * {
+  margin: 0;
+}
+
+main .columns-typeface .columns-typeface-row-stacked > .columns-typeface-text {
+  justify-content: flex-start;
+  gap: 20px 40px;
+  padding-top: 20px;
+}
+
+@media (width >= 900px) {
+  main .columns-typeface .columns-typeface-specimen {
+    --columns-typeface-name-size: 40px;
+    --columns-typeface-styles-size: 30px;
+
+    min-height: 350px;
+    padding: 36px;
+  }
+
+  main .columns-typeface .columns-typeface-row-stacked > .columns-typeface-specimen {
+    --columns-typeface-name-size: 70px;
+    --columns-typeface-styles-size: 40px;
+
+    min-height: 400px;
+    padding: 50px;
+  }
+
+  main .columns-typeface .columns-typeface-row-full > .columns-typeface-specimen {
+    --columns-typeface-name-size: 120px;
+    --columns-typeface-glyphs-size: 40px;
+    --columns-typeface-styles-size: 20px;
+
+    min-height: 400px;
+    padding: 50px;
+  }
+
+  main .columns-typeface .columns-typeface-font-arial {
+    --columns-typeface-styles-size: 40px;
+  }
+
+  main .columns-typeface .columns-typeface-font-neue-plak {
+    --columns-typeface-name-size: 30px;
+    --columns-typeface-glyphs-size: 30px;
+    --columns-typeface-styles-size: 20px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .columns-typeface .columns-typeface-row-side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    gap: 40px;
+  }
+
+  main .columns-typeface .columns-typeface-row-side > .columns-typeface-specimen {
+    padding: 20px 50px;
+  }
+
+  main .columns-typeface .columns-typeface-row-stacked > .columns-typeface-specimen {
+    --columns-typeface-name-size: 100px;
+
+    min-height: 500px;
+  }
+
+  main .columns-typeface .columns-typeface-row-full > .columns-typeface-specimen {
+    min-height: 500px;
+  }
+
+  main .columns-typeface .columns-typeface-row-stacked > .columns-typeface-text {
+    flex-direction: row;
+  }
+
+  main .columns-typeface .columns-typeface-row-stacked > .columns-typeface-text > * {
+    flex: 1 1 0;
+  }
+}
+
+/* dark section backgrounds (e.g. /partner-guidelines navy page): white copy beside the specimen */
+main .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .columns-typeface .columns-typeface-text,
+main .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .columns-typeface .columns-typeface-text :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--light-color);
+}

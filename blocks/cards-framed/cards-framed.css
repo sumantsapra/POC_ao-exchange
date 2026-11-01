@@ -1,0 +1,184 @@
+/* source values: aobrandplaybook.com.au /logos, /graphic-elements, /ao-shop (Framer) */
+main .cards-framed {
+  --cards-framed-frame-height: 250px;
+  --cards-framed-frame-bg: #fff;
+  --cards-framed-frame-border: 1px solid #ededed;
+  --cards-framed-frame-radius: 10px;
+  --cards-framed-gap: 40px;
+  --cards-framed-art-max-width: 81%;
+  --cards-framed-art-max-height: 76%;
+  --cards-framed-cover-height: 300px;
+}
+
+main .cards-framed.short {
+  --cards-framed-frame-height: 250px;
+}
+
+/* white artwork (reverse logos): frame takes the sub-brand blue */
+main .cards-framed.reverse {
+  --cards-framed-frame-bg: var(--ao-hits-different-blue);
+}
+
+/* dark section backgrounds: plain white frames, no visible border */
+main .section:is(.royal-blue, .bright-blue, .process-blue, .navy, .dark-navy) .cards-framed {
+  --cards-framed-frame-border: 0;
+}
+
+main .cards-framed > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cards-framed-gap);
+}
+
+main .cards-framed > ul > li {
+  margin: 0;
+  min-width: 0;
+}
+
+main .cards-framed .cards-framed-frame {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--cards-framed-frame-height);
+  padding: 0;
+  background: var(--cards-framed-frame-bg);
+  border: var(--cards-framed-frame-border);
+  border-radius: var(--cards-framed-frame-radius);
+  overflow: hidden;
+}
+
+main .cards-framed .cards-framed-frame picture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+main .cards-framed .cards-framed-frame img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: var(--cards-framed-art-max-width);
+  max-height: var(--cards-framed-art-max-height);
+  object-fit: contain;
+}
+
+main .cards-framed .cards-framed-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 40px;
+  color: var(--text-color);
+}
+
+main .cards-framed .cards-framed-body > * {
+  margin: 0;
+}
+
+main .cards-framed .cards-framed-body :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--text-color);
+  font-family: var(--heading-font-family);
+  font-size: 24px;
+  line-height: 30px;
+}
+
+main .cards-framed .cards-framed-body p {
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  line-height: 28px;
+}
+
+/* cover: full-bleed artwork tiles (e.g. graphic elements forward slash / half-circle) */
+main .cards-framed.cover .cards-framed-frame {
+  height: var(--cards-framed-cover-height);
+  background: none;
+  border: 0;
+}
+
+main .cards-framed.cover .cards-framed-frame img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+
+/* panel: items grouped in one bordered blue panel, artwork unframed, white captions */
+main .cards-framed.panel > ul {
+  box-sizing: border-box;
+  align-items: center;
+  padding: 50px;
+  background: var(--ao-hits-different-blue);
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+}
+
+main .cards-framed.panel .cards-framed-frame {
+  justify-content: flex-start;
+  height: auto;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+main .cards-framed.panel .cards-framed-frame picture {
+  justify-content: flex-start;
+}
+
+main .cards-framed.panel .cards-framed-frame img {
+  width: 100%;
+  max-width: 380px;
+  max-height: none;
+}
+
+main .cards-framed.panel .cards-framed-body {
+  margin-top: 20px;
+  max-width: 416px;
+}
+
+main .cards-framed.panel .cards-framed-body,
+main .cards-framed.panel .cards-framed-body :is(h1, h2, h3, h4, h5, h6) {
+  color: #fff;
+}
+
+@media (width >= 900px) {
+  main .cards-framed {
+    --cards-framed-frame-height: 350px;
+    --cards-framed-art-max-width: 58%;
+    --cards-framed-art-max-height: 60%;
+    --cards-framed-cover-height: 350px;
+  }
+
+  main .cards-framed.cards-framed-cols-2 > ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  main .cards-framed.cards-framed-cols-3 > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  main .cards-framed.cards-framed-single > ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  main .cards-framed.panel > ul {
+    min-height: 560px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .cards-framed {
+    --cards-framed-cover-height: 400px;
+  }
+}
+
+/* dark section backgrounds: white titles and copy under the frames */
+main .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .cards-framed .cards-framed-body,
+main .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .cards-framed .cards-framed-body :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--light-color);
+}

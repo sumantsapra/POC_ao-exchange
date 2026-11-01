@@ -1,0 +1,66 @@
+/* hero-banner: full-bleed autoplay video (or photo) at the top of the sub-brand guides.
+   Source (/ao-live, /opening-week): media runs edge to edge, object-fit cover centred,
+   299px tall under the 69px bar on mobile, 481px at tablet, 800px from y=0 (under the
+   transparent sidebar) on desktop. */
+main .hero-banner {
+  position: relative;
+  overflow: hidden;
+
+  /* bleed out of the section gutters so the media spans the viewport */
+  margin-inline: calc(-1 * var(--page-gutter)) calc(-1 * var(--page-gutter-end));
+}
+
+/* the hero sits flush under the header: cancel the first-section top space */
+main > .section:first-child .hero-banner {
+  margin-top: calc(-1 * var(--section-first-top));
+}
+
+main .hero-banner .hero-banner-media {
+  width: 100%;
+  height: 299px;
+}
+
+main .hero-banner .hero-banner-media > div,
+main .hero-banner .hero-banner-media p {
+  height: 100%;
+  margin: 0;
+}
+
+main .hero-banner .hero-banner-media video,
+main .hero-banner .hero-banner-media picture,
+main .hero-banner .hero-banner-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+main .hero-banner .hero-banner-content {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 24px;
+}
+
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main .hero-banner .hero-banner-media {
+    height: 481px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .hero-banner .hero-banner-media {
+    height: 800px;
+  }
+
+  /* --page-gutter is a unitless 0 here (invalid inside calc), so set the start edge directly */
+  main .hero-banner {
+    margin-inline: 0 calc(-1 * var(--page-gutter-end));
+  }
+
+  /* run under the fixed sidebar like the source (main is padded 220px for it) */
+  body.has-nav-sidebar main .hero-banner {
+    margin-inline-start: -220px;
+  }
+}

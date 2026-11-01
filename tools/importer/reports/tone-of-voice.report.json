@@ -1,0 +1,24 @@
+{
+  "status": "success",
+  "url": "https://aobrandplaybook.com.au/tone-of-voice",
+  "path": "tone-of-voice",
+  "timestamp": "2026-11-01T07:22:55.874Z",
+  "title": "AO Brand Playbook",
+  "template": "guideline-chapter",
+  "blocks": [
+    "video-autoplay",
+    "cards-principle",
+    "columns-voice",
+    "columns-terms",
+    "columns-terms",
+    "cards-social"
+  ],
+  "detection": [
+    "video-autoplay:fallback",
+    "cards-principle:mapped",
+    "columns-voice:mapped",
+    "columns-terms:mapped",
+    "columns-terms:mapped",
+    "cards-social:mapped"
+  ]
+}

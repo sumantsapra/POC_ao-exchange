@@ -1,0 +1,18 @@
+{
+  "variantName": "columns-typeface",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": "Bordered font specimen panels (font name huge, glyphs, widths/weights) with an optional text column beside",
+  "contentPattern": "Typeface specimens: Aro (full width: 'ARO', '1234567890&%#@', 'Extended Wide Normal Narrow Condensed'); Neue Plak ('Neue Plak', '1234567890&%#@', 'Regular Bold') beside 'Secondary font' heading + paragraph",
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Two cells per row. A specimen cell has no heading: paragraph 1 is the font name (the panel is set in that font), paragraph 2 the glyph line, the last paragraph the width/weight names (each word styled as itself; bold text is set bold). A cell with a heading is copy, bottom-aligned. Leave the second cell empty to make a specimen span the full width. Stacks on mobile.",
+  "reuseGuidance": "Typography specimens on sub-brand guides and the typography chapter",
+  "usageStats": {
+    "pagesUsing": [
+      "/ao-reserve"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-30"
+  }
+}

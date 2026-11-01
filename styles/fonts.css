@@ -1,22 +1,50 @@
-@import url("https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@125,500;125,700;150,600;150,700&family=Geist+Mono:wght@400&family=Poppins:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Poppins:wght@400;500;600;700&display=swap");
 
-/* Sequel Sans (the Framer site's "Sequel 100 Wide") is a licensed face.
-   Drop the woff2 files into /fonts and uncomment the faces below to match
-   the live site exactly. Anybody is the open stand-in used until then. */
-
-/*
+/* Sharp Sans No2 and Sequel 100 Wide (AO Playbook faces), served from /fonts. Licensed faces: confirm the web licence */
 @font-face {
-  font-family: "Sequel Sans";
-  src: url("../fonts/SequelSans-Roman.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
+  font-family: "Sharp Sans No2 Medium";
+  src: url("../fonts/sharp-sans-no2-medium.woff2") format("woff2");
   font-display: swap;
 }
+
 @font-face {
-  font-family: "Sequel Sans";
-  src: url("../fonts/SequelSans-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
+  font-family: "Sharp Sans No2 Semibold";
+  src: url("../fonts/sharp-sans-no2-semibold.woff2") format("woff2");
   font-display: swap;
 }
-*/
+
+@font-face {
+  font-family: "Sharp Sans No2 Bold";
+  src: url("../fonts/sharp-sans-no2-bold.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sharp Sans No2 Book";
+  src: url("../fonts/sharp-sans-no2-book.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sequel 100 Wide 65";
+  src: url("../fonts/sequel-100-wide-65.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sequel 100 Wide 85";
+  src: url("../fonts/sequel-100-wide-85.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sequel 100 Wide 95";
+  src: url("../fonts/sequel-100-wide-95.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sequel 100 Wide 66";
+  src: url("../fonts/sequel-100-wide-66.woff2") format("woff2");
+  font-display: swap;
+}

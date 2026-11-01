@@ -1,0 +1,185 @@
+/* columns-panel: equal-width artwork/imagery side by side on a rounded showcase panel.
+   Source: aobrandplaybook.com.au /ao-live "Shape Masks" + "Ticker Tape" panels,
+   /logos "Badge and Fav Icon" safe zone emblem panel. */
+
+main .columns-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+
+  /* mobile: 40px panel padding + 40px inner artwork padding on the source */
+  padding: 80px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: var(--columns-panel-background, transparent);
+}
+
+main .columns-panel .columns-panel-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 61px;
+  place-items: center;
+}
+
+main .columns-panel .columns-panel-row > div {
+  width: 100%;
+  min-width: 0;
+}
+
+main .columns-panel .columns-panel-image picture,
+main .columns-panel .columns-panel-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+main .columns-panel .columns-panel-image img {
+  object-fit: cover;
+}
+
+main .columns-panel .columns-panel-text > :first-child {
+  margin-top: 0;
+}
+
+main .columns-panel .columns-panel-text > :last-child {
+  margin-bottom: 0;
+}
+
+/* a lone artwork (e.g. /partner-guidelines composite logo): centred, full width on small screens,
+   two thirds of the panel from 900px */
+main .columns-panel .columns-panel-row:not(:has(> :nth-child(2))) .columns-panel-image {
+  display: flex;
+  justify-content: center;
+}
+
+
+/* image rows (4+ items, e.g. ticker tape posters): two per row on small screens */
+main .columns-panel .columns-panel-row:has(> :nth-child(4)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* logo artwork panel (SVG badges at their native size on a light tinted panel) */
+main .columns-panel:has(img[src^="data:image/svg+xml"], img[src$=".svg"]) {
+  --columns-panel-background: #f8f8f8;
+
+  padding: 50px;
+  box-shadow: inset 0 0 0 1px #f0f0f0;
+}
+
+main .columns-panel:has(img[src^="data:image/svg+xml"], img[src$=".svg"]) .columns-panel-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 60px;
+}
+
+main .columns-panel:has(img[src^="data:image/svg+xml"], img[src$=".svg"]) .columns-panel-row > div {
+  width: auto;
+}
+
+main .columns-panel:has(img[src^="data:image/svg+xml"], img[src$=".svg"]) .columns-panel-image img {
+  width: auto;
+  max-width: 100%;
+}
+
+main .columns-panel:has(.columns-panel-row > :nth-child(4)) {
+  padding: 50px;
+}
+
+/* panel colour follows the section it sits in */
+main > .section.royal-blue .columns-panel {
+  --columns-panel-background: var(--ao-navy);
+}
+
+main > .section:is(.navy, .dark-navy) .columns-panel {
+  --columns-panel-background: #0f1242;
+}
+
+/* panel colour variants (block options; override the section-driven colour):
+   hits-different-blue: /ao-shop elements panels (#0078ff, 1px #f0f0f0 keyline, 50px padding)
+   white: /opening-week illustration panels on the navy band (#fff, 1px #f0f0f0 keyline)
+   transparent: /partner-guidelines AO Court images (no panel) */
+main .section .columns-panel.hits-different-blue {
+  --columns-panel-background: var(--ao-hits-different-blue);
+
+  box-shadow: inset 0 0 0 1px #f0f0f0;
+}
+
+main .section .columns-panel.white {
+  --columns-panel-background: #fff;
+
+  box-shadow: inset 0 0 0 1px #f0f0f0;
+}
+
+main .section .columns-panel.transparent {
+  --columns-panel-background: transparent;
+
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+@media (width >= 600px) {
+  main .columns-panel:has(img[src^="data:image/svg+xml"], img[src$=".svg"]) {
+    min-height: 350px;
+  }
+
+  main .columns-panel:has(img[src^="data:image/svg+xml"], img[src$=".svg"]) .columns-panel-row {
+    flex-direction: row;
+    gap: 80px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .columns-panel {
+    min-height: 590px;
+    padding: 40px;
+  }
+
+  main .columns-panel .columns-panel-row {
+    grid-template-columns: repeat(var(--columns-panel-count, 3), minmax(0, 1fr));
+    gap: 10px 40px;
+  }
+
+  main .columns-panel:has(img[src^="data:image/svg+xml"], img[src$=".svg"]) {
+    min-height: 600px;
+    padding: 50px;
+  }
+
+  main .columns-panel:has(.columns-panel-row > :nth-child(4)) {
+    min-height: 0;
+    padding: 50px;
+  }
+
+  main .columns-panel .columns-panel-row:has(> :nth-child(4)) {
+    grid-template-columns: repeat(var(--columns-panel-count, 4), minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  main .section .columns-panel.hits-different-blue {
+    padding: 50px;
+  }
+
+  main .section .columns-panel.transparent {
+    min-height: 0;
+    padding: 0;
+  }
+}
+
+/* lone artwork panels: less padding on small screens so the logo keeps its size */
+main .columns-panel:not(.transparent):has(.columns-panel-row:only-child > :only-child) {
+  padding: 40px 20px;
+}
+
+@media (width >= 900px) {
+  main .columns-panel .columns-panel-row:not(:has(> :nth-child(2))) .columns-panel-image picture {
+    width: 66%;
+  }
+
+  main .columns-panel:not(.transparent):has(.columns-panel-row:only-child > :only-child) {
+    padding: 80px;
+  }
+}

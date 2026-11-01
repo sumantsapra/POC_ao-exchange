@@ -1,0 +1,18 @@
+{
+  "variantName": "hero-slideshow",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Full-viewport inset rounded frame with stacked photos that fade out in turn over a background video; large white title bottom-left, scroll-down link and skip pill",
+    "purpose": "Landing-page intro heroes with a cycling photo/video stack and title"
+  },
+  "contentPattern": {
+    "summary": "7 cycling photos over a background video, title 'Brand Playbook', 'Scroll to explore' (#intro) and 'Skip intro' (#summary) controls",
+    "structure": "row 1 = background media (pictures, cycled top first, plus an optional link to an MP4 used as the final looping layer); row 2 = H1 title and a paragraph of links (first link = scroll-down control with arrow, second link = skip pill)"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Full-viewport intro hero at the top of a landing page. Photos fade out one by one (2.5s each) to reveal the looping muted video. Reduced motion: first photo shown statically.",
+  "reuseGuidance": "Landing-page intro heroes with a cycling photo/video stack and title",
+  "sourceUrl": "https://aobrandplaybook.com.au/"
+}

@@ -1,0 +1,11 @@
+{
+  "variantName": "cards-misuse",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": "Incorrect-usage tiles: rounded cover-fit image with a thin red diagonal strike line (bottom-left to top-right) drawn by the block, caption preceded by a small red prohibited icon",
+  "contentPattern": "9 'don't' tiles: logo misuse image + red strike + red prohibited icon + 'Don't ...' caption",
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "One row per incorrect-usage example. Cell 1: the misuse example image. Cell 2: the 'Don't ...' caption paragraph. The red strike line and prohibited icon are added automatically; do not include them in the content. 3 columns on desktop, 2 on tablet, 1 on mobile.",
+  "reuseGuidance": "Logo / brand-asset misuse ('Don't ...') grids on the logos chapter and partner guidelines."
+}

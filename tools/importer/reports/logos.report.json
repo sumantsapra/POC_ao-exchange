@@ -1,0 +1,32 @@
+{
+  "status": "success",
+  "url": "https://aobrandplaybook.com.au/logos",
+  "path": "logos",
+  "timestamp": "2026-11-01T07:22:49.074Z",
+  "title": "AO Brand Playbook",
+  "template": "guideline-chapter",
+  "blocks": [
+    "cards-logo",
+    "columns-text-image",
+    "cards-framed",
+    "columns-text-image",
+    "columns-text-image",
+    "cards-framed",
+    "cards-framed",
+    "cards-misuse",
+    "columns-panel",
+    "cards-contrast"
+  ],
+  "detection": [
+    "cards-logo:mapped",
+    "columns-text-image:mapped",
+    "cards-framed:mapped",
+    "columns-text-image:mapped",
+    "columns-text-image:mapped",
+    "cards-framed:mapped",
+    "cards-framed:mapped",
+    "cards-misuse:mapped",
+    "columns-panel:mapped",
+    "cards-contrast:mapped"
+  ]
+}

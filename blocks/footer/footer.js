@@ -1,39 +1,53 @@
-const SOCIAL = [
-  { href: 'https://www.linkedin.com/company/tennis-australia/', icon: 'linkedin', label: 'Tennis Australia on LinkedIn' },
-  { href: 'https://www.instagram.com/australianopen', icon: 'instagram', label: 'Australian Open on Instagram' },
-  { href: 'https://www.tiktok.com/@ausopen', icon: 'tiktok', label: 'Australian Open on TikTok' },
-  { href: 'https://www.facebook.com/AustralianOpen/', icon: 'facebook', label: 'Australian Open on Facebook' },
-];
+/**
+ * Fetches the footer fragment. Local preview serves it under /content, DA/EDS at the root.
+ * @returns {Promise<{html: string, base: string}|null>}
+ */
+async function fetchFooter() {
+  let path = '/content/footer.plain.html';
+  let resp = await fetch('/content/footer.plain.html');
+  if (!resp.ok) {
+    path = '/footer.plain.html';
+    resp = await fetch('/footer.plain.html');
+  }
+  if (!resp.ok) return null;
+  return { html: await resp.text(), base: new URL(path, window.location.href).href };
+}
 
 /**
- * Site footer: wordmark, social links, and the copyright line.
- * @param {Element} block Footer block
+ * Resolves fragment-relative image paths against the fragment URL.
+ * @param {Element} root
+ * @param {string} base
  */
-export default function decorate(block) {
-  const bar = document.createElement('div');
-  bar.className = 'footer-bar';
+function resolveImages(root, base) {
+  root.querySelectorAll('img[src]').forEach((img) => {
+    const src = img.getAttribute('src');
+    if (!/^(https?:|data:|\/)/.test(src)) img.src = new URL(src, base).href;
+  });
+}
 
-  const brand = document.createElement('a');
-  brand.href = 'https://ausopen.com/';
-  brand.innerHTML = '<img src="/media/footer-logo.png" alt="Australian Open">';
+/**
+ * Decorates the footer: a brand column (the section holding an image) and a text column.
+ * @param {Element} block The footer block element
+ */
+export default async function decorate(block) {
+  const footer = await fetchFooter();
+  if (!footer) return;
 
-  const social = document.createElement('div');
-  social.className = 'footer-social';
-  SOCIAL.forEach((item) => {
-    const a = document.createElement('a');
-    a.href = item.href;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    a.setAttribute('aria-label', item.label);
-    a.innerHTML = `<img src="/icons/${item.icon}.svg" alt="">`;
-    social.append(a);
+  const fragment = document.createElement('div');
+  fragment.innerHTML = footer.html;
+  resolveImages(fragment, footer.base);
+
+  const inner = document.createElement('div');
+  inner.className = 'footer-inner';
+  [...fragment.children].forEach((section) => {
+    section.className = section.querySelector('img') ? 'footer-brand' : 'footer-text';
+    section.querySelectorAll('img').forEach((img) => {
+      img.loading = 'lazy';
+      img.decoding = 'async';
+    });
+    inner.append(section);
   });
 
-  bar.append(brand, social);
-
-  const legal = document.createElement('p');
-  legal.className = 'footer-legal';
-  legal.textContent = 'COPYRIGHT|TENNIS AUSTRALIA ALL RIGHTS RESERVED';
-
-  block.replaceChildren(bar, legal);
+  block.textContent = '';
+  block.append(inner);
 }

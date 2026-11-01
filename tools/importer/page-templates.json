@@ -1,0 +1,751 @@
+{
+  "templates": [
+    {
+      "name": "homepage",
+      "urls": [
+        "https://aobrandplaybook.com.au/"
+      ],
+      "coverageGaps": [],
+      "description": "Long scroll-animated landing page opening with a full-screen video hero and centered display heading, followed by stacked story panels and chapter links",
+      "blocks": [
+        {
+          "name": "hero-slideshow",
+          "instances": [
+            "#hero .framer-z1hcay"
+          ]
+        },
+        {
+          "name": "carousel-stack",
+          "instances": [
+            "#intro #photo1"
+          ]
+        },
+        {
+          "name": "accordion-photo",
+          "instances": [
+            "#brandvoice .framer-1eyc6ig-container"
+          ]
+        },
+        {
+          "name": "hero-scrollvideo",
+          "instances": [
+            "#hitsdifferentsection .framer-rmcsqp"
+          ]
+        },
+        {
+          "name": "cards-mosaic",
+          "instances": [
+            "#test-2-nav #grid"
+          ]
+        },
+        {
+          "name": "columns-tiles",
+          "instances": [
+            "#howeplay .framer-1aqcy54"
+          ]
+        },
+        {
+          "name": "cards-linklist",
+          "instances": [
+            "#summary .framer-1kzpkww-container"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "intro-hero",
+          "selector": [
+            "#hero"
+          ],
+          "style": null,
+          "blocks": [
+            "hero-slideshow"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2",
+          "name": "tennis-down-under",
+          "selector": [
+            "#intro"
+          ],
+          "style": "centered",
+          "blocks": [
+            "carousel-stack"
+          ],
+          "defaultContent": [
+            "#intro .framer-zogz1q h5",
+            "#intro .framer-7hzwnd h1"
+          ]
+        },
+        {
+          "id": "section-3",
+          "name": "who-we-are",
+          "selector": [
+            "#brand-positioning"
+          ],
+          "style": "process-blue, centered, text-reveal",
+          "blocks": [],
+          "defaultContent": [
+            "#brand-positioning .framer-2dc9vw h5",
+            "#brand-positioning .framer-151xpzu h6"
+          ]
+        },
+        {
+          "id": "section-4",
+          "name": "brand-values",
+          "selector": [
+            "#brandvoice"
+          ],
+          "style": null,
+          "blocks": [
+            "accordion-photo"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-5",
+          "name": "how-it-comes-to-life",
+          "selector": [
+            "#gamechangercomestolife"
+          ],
+          "style": "centered, text-reveal",
+          "blocks": [],
+          "defaultContent": [
+            "#gamechangercomestolife .framer-1n29ak3 h5",
+            "#gamechangercomestolife .framer-3fx0p7 h6"
+          ]
+        },
+        {
+          "id": "section-6",
+          "name": "hits-different",
+          "selector": [
+            "#hitsdifferentsection"
+          ],
+          "style": null,
+          "blocks": [
+            "hero-scrollvideo"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-7",
+          "name": "one-brand",
+          "selector": [
+            "#onebrandsection"
+          ],
+          "style": "centered, headline-swap",
+          "blocks": [],
+          "defaultContent": [
+            "#onebrandsection .framer-venm6w h5",
+            "#onebrandsection .framer-13dnfv0 h2",
+            "#onebrandsection .framer-13b2vow h3"
+          ]
+        },
+        {
+          "id": "section-8",
+          "name": "playful-premium",
+          "selector": [
+            "#test > div.framer-jj7874"
+          ],
+          "style": "centered",
+          "blocks": [],
+          "defaultContent": [
+            "#test > div.framer-jj7874 .framer-q7ufdr h4"
+          ]
+        },
+        {
+          "id": "section-9",
+          "name": "photo-collage",
+          "selector": [
+            "#test-2-nav"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-mosaic"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-10",
+          "name": "brand-tiles",
+          "selector": [
+            "#howeplay"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-tiles"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-11",
+          "name": "toolkits",
+          "selector": [
+            "#summary"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-linklist"
+          ],
+          "defaultContent": []
+        }
+      ]
+    },
+    {
+      "name": "guideline-chapter",
+      "urls": [
+        "https://aobrandplaybook.com.au/colour",
+        "https://aobrandplaybook.com.au/brand-sound",
+        "https://aobrandplaybook.com.au/graphic-elements",
+        "https://aobrandplaybook.com.au/logos",
+        "https://aobrandplaybook.com.au/tone-of-voice",
+        "https://aobrandplaybook.com.au/typography"
+      ],
+      "coverageGaps": [],
+      "description": "Chapter page with a persistent left sidebar navigation, page title and intro paragraph, then stacked content sections of swatch/image grids, tiles and supporting copy",
+      "blocks": [
+        {
+          "name": "cards-swatch",
+          "instances": [
+            "#safe-zones .framer-1wuo8kk",
+            "#color .framer-1g9andj",
+            "#color .framer-198no5b"
+          ]
+        },
+        {
+          "name": "columns-text-image",
+          "instances": [
+            "#lookup-1 .framer-3ffpn",
+            "#lookup-2 .framer-1qkttbj",
+            "#lookup-2 .framer-jt41uw",
+            "#lookup-2 .framer-ndjhhs"
+          ]
+        },
+        {
+          "name": "columns-photos",
+          "instances": [
+            "#lookup-2 .framer-36ce78"
+          ]
+        },
+        {
+          "name": "video-autoplay",
+          "instances": [
+            "#safe-zones-1 .framer-ksfi4b-container"
+          ]
+        },
+        {
+          "name": "cards-gradient",
+          "instances": [
+            "#safe-zones-1 .framer-10cvpg2"
+          ]
+        },
+        {
+          "name": "cards-contrast",
+          "instances": [
+            "#safe-zones-2 .framer-1hoawxf",
+            "#color-1 .framer-1gnjipl"
+          ]
+        },
+        {
+          "name": "cards-logo",
+          "instances": [
+            "#lookup-1 .framer-wyv0dm"
+          ]
+        },
+        {
+          "name": "cards-framed",
+          "instances": [
+            "#lookup-2 .framer-zdrygb",
+            "#lookup-2 .framer-qzequr",
+            "#safe-zones .framer-190g2jc"
+          ]
+        },
+        {
+          "name": "cards-misuse",
+          "instances": [
+            "#color .framer-1pautcq"
+          ]
+        },
+        {
+          "name": "columns-panel",
+          "instances": [
+            "#safe-zones-1 .framer-1tm17e8"
+          ]
+        },
+        {
+          "name": "columns-typeface",
+          "instances": [
+            "#safe-zones .framer-7kzaul",
+            "#safe-zones-1 .framer-b9xw17",
+            "#lookup-5 .framer-1a64gka",
+            "#lookup-5 .framer-gqai87"
+          ]
+        },
+        {
+          "name": "cards-shape",
+          "instances": [
+            "#lookup-3 .framer-1dfbedl",
+            "#lookup-3 .framer-2mxgr",
+            "#lookup-3 .framer-ss7pv0",
+            "#lookup-3 .framer-ds2ofi",
+            "#lookup-3 .framer-1fsydwe",
+            "#lookup-3 .framer-2n93lj",
+            "#safe-zones-2 .framer-11s1aok",
+            "#safe-zones-2 .framer-k0ajs8",
+            "#safe-zones-2 .framer-6128tf",
+            "#safe-zones-2 .framer-1fxhp2s"
+          ]
+        },
+        {
+          "name": "cards-principle",
+          "instances": [
+            "#safe-zones .framer-1czmh2h"
+          ]
+        },
+        {
+          "name": "columns-voice",
+          "instances": [
+            "#color-3 .framer-14ss45b"
+          ]
+        },
+        {
+          "name": "columns-terms",
+          "instances": [
+            "#color-4 .framer-i3505b",
+            "#color-5 .framer-2l1627"
+          ]
+        },
+        {
+          "name": "cards-social",
+          "instances": [
+            "#color-6 .framer-1gtid9f"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "intro",
+          "selector": [
+            "section.framer-h13a33"
+          ],
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            "section.framer-h13a33 h1",
+            "section.framer-h13a33 h4"
+          ]
+        },
+        {
+          "id": "section-2",
+          "name": "intro-animation",
+          "selector": [
+            "#lookup"
+          ],
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            "#lookup img"
+          ]
+        },
+        {
+          "id": "section-3",
+          "name": "core-palette",
+          "selector": [
+            "#safe-zones"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-swatch"
+          ],
+          "defaultContent": [
+            "#safe-zones .framer-fvytxn h6",
+            "#safe-zones .framer-4u0g6g p"
+          ]
+        },
+        {
+          "id": "section-4",
+          "name": "colour-distribution",
+          "selector": [
+            "#lookup-1"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-text-image"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-5",
+          "name": "application-examples",
+          "selector": [
+            "#lookup-2"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-photos"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-6",
+          "name": "brand-moment",
+          "selector": [
+            "#brandmoment"
+          ],
+          "style": "full-width",
+          "blocks": [],
+          "defaultContent": [
+            "#brandmoment img"
+          ]
+        },
+        {
+          "id": "section-7",
+          "name": "special-use-palettes",
+          "selector": [
+            "#color"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-swatch"
+          ],
+          "defaultContent": [
+            "#color .framer-1lf9jez h6",
+            "#color .framer-fomqto p",
+            "#color .framer-1wxktou h6",
+            "#color .framer-ixrbpy p"
+          ]
+        },
+        {
+          "id": "section-8",
+          "name": "gradients",
+          "selector": [
+            "#safe-zones-1"
+          ],
+          "style": null,
+          "blocks": [
+            "video-autoplay",
+            "cards-gradient"
+          ],
+          "defaultContent": [
+            "#safe-zones-1 .framer-dhg7oe h6",
+            "#safe-zones-1 .framer-1lth049 p"
+          ]
+        },
+        {
+          "id": "section-9",
+          "name": "accessibility",
+          "selector": [
+            "#safe-zones-2"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-contrast"
+          ],
+          "defaultContent": [
+            "#safe-zones-2 .framer-1xdz6gu h6",
+            "#safe-zones-2 .framer-1f8vvy0 p"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sub-brand-guide",
+      "urls": [
+        "https://aobrandplaybook.com.au/ao-live",
+        "https://aobrandplaybook.com.au/ao-ballpark",
+        "https://aobrandplaybook.com.au/ao-one-point-slam",
+        "https://aobrandplaybook.com.au/ao-reserve",
+        "https://aobrandplaybook.com.au/ao-shop",
+        "https://aobrandplaybook.com.au/opening-week",
+        "https://aobrandplaybook.com.au/partner-guidelines"
+      ],
+      "coverageGaps": [],
+      "description": "Long-form sub-brand guide opening with a full-width photo banner, then title and intro followed by stacked primary logo, logo versions, tone of voice, typography, colour palette and photography sections (light or dark background)",
+      "blocks": [
+        {
+          "name": "hero-banner",
+          "instances": [
+            "#main section.framer-1a75kpf .framer-sd595j-container"
+          ]
+        },
+        {
+          "name": "video-autoplay",
+          "instances": [
+            "#lookup .framer-df41zr",
+            "#safe-zones-2 .framer-1uyj8zm-container"
+          ]
+        },
+        {
+          "name": "cards-logo",
+          "instances": [
+            "#safe-zones-1 .framer-1a4gwti"
+          ]
+        },
+        {
+          "name": "cards-tone",
+          "instances": [
+            "#color .framer-pwqk2e"
+          ]
+        },
+        {
+          "name": "columns-typeface",
+          "instances": [
+            "#safe-zones-2 .framer-1kg7mil"
+          ]
+        },
+        {
+          "name": "cards-swatch",
+          "instances": [
+            "#color-1 .framer-u3pgik",
+            "#color-1 .framer-ubccr7"
+          ]
+        },
+        {
+          "name": "cards-contrast",
+          "instances": [
+            "#safe-zones-3 .framer-1r2xhsk"
+          ]
+        },
+        {
+          "name": "cards-shape",
+          "instances": [
+            "#color-2 .framer-cqjpu3"
+          ]
+        },
+        {
+          "name": "columns-panel",
+          "instances": [
+            "#color-2 .framer-1nqe3ua",
+            "#color-2 .framer-1l9oco5"
+          ]
+        },
+        {
+          "name": "columns-photos",
+          "instances": [
+            "#lookup-4 .framer-68998n"
+          ]
+        },
+        {
+          "name": "cards-framed",
+          "instances": [
+            "#safe-zones-1 .framer-1auaux7",
+            "#safe-zones-2 .framer-1h8oj3a",
+            "#safe-zones-3 .framer-aldbd2",
+            "#color-2 .framer-56ls52"
+          ]
+        },
+        {
+          "name": "columns-text-image",
+          "instances": [
+            "#lookup-2 .framer-1lenh07"
+          ]
+        },
+        {
+          "name": "cards-misuse",
+          "instances": [
+            "#color .framer-5e88u2"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "banner",
+          "selector": [
+            "#main section.framer-1a75kpf"
+          ],
+          "style": null,
+          "blocks": [
+            "hero-banner"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2",
+          "name": "title-intro",
+          "selector": [
+            "#main section.framer-zghjvr"
+          ],
+          "style": "royal-blue",
+          "blocks": [],
+          "defaultContent": [
+            "#main section.framer-zghjvr .framer-o3nc87 h2",
+            "#main section.framer-zghjvr p",
+            "#main section.framer-zghjvr img"
+          ]
+        },
+        {
+          "id": "section-3",
+          "name": "primary-logo",
+          "selector": [
+            "#main div.framer-y4dw6j"
+          ],
+          "style": "royal-blue",
+          "blocks": [
+            "video-autoplay",
+            "cards-logo"
+          ],
+          "defaultContent": [
+            "#safe-zones .framer-1friibd h6",
+            "#safe-zones .framer-12d6146 p"
+          ]
+        },
+        {
+          "id": "section-4",
+          "name": "photo-1",
+          "selector": [
+            "#lookup-1"
+          ],
+          "style": "full-width",
+          "blocks": [],
+          "defaultContent": [
+            "#lookup-1 img"
+          ]
+        },
+        {
+          "id": "section-5",
+          "name": "tone-of-voice",
+          "selector": [
+            "#color"
+          ],
+          "style": "bright-blue",
+          "blocks": [
+            "cards-tone"
+          ],
+          "defaultContent": [
+            "#color .framer-dipzqq h6",
+            "#color .framer-18fkybu p",
+            "#color .framer-117z2n0 img",
+            "#color .framer-qlrh08 p"
+          ]
+        },
+        {
+          "id": "section-6",
+          "name": "photo-2",
+          "selector": [
+            "#lookup-2"
+          ],
+          "style": "full-width",
+          "blocks": [],
+          "defaultContent": [
+            "#lookup-2 img"
+          ]
+        },
+        {
+          "id": "section-7",
+          "name": "typography",
+          "selector": [
+            "#safe-zones-2"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-typeface",
+            "video-autoplay"
+          ],
+          "defaultContent": [
+            "#safe-zones-2 .framer-1lqcozg h6",
+            "#safe-zones-2 .framer-zhyf4w p",
+            "#safe-zones-2 .framer-1p3jffl p"
+          ]
+        },
+        {
+          "id": "section-8",
+          "name": "colour-palettes",
+          "selector": [
+            "#color-1"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-swatch"
+          ],
+          "defaultContent": [
+            "#color-1 .framer-1915gbc h6",
+            "#color-1 .framer-anvjqr p",
+            "#color-1 .framer-1xroz0u h6",
+            "#color-1 .framer-1mlb4ha p"
+          ]
+        },
+        {
+          "id": "section-9",
+          "name": "colour-pairings",
+          "selector": [
+            "#safe-zones-3"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-contrast"
+          ],
+          "defaultContent": [
+            "#safe-zones-3 .framer-1xoj0kg h6",
+            "#safe-zones-3 .framer-156a11o p",
+            "#safe-zones-3 .framer-pnb64u p"
+          ]
+        },
+        {
+          "id": "section-10",
+          "name": "photo-3",
+          "selector": [
+            "#lookup-3"
+          ],
+          "style": "full-width",
+          "blocks": [],
+          "defaultContent": [
+            "#lookup-3 img"
+          ]
+        },
+        {
+          "id": "section-11",
+          "name": "shapes",
+          "selector": [
+            "#color-2"
+          ],
+          "style": "royal-blue",
+          "blocks": [
+            "cards-shape",
+            "columns-panel"
+          ],
+          "defaultContent": [
+            "#color-2 .framer-1aac7on h6",
+            "#color-2 .framer-boymv1 p",
+            "#color-2 .framer-df54j1 h6",
+            "#color-2 .framer-t9xgly p",
+            "#color-2 .framer-sacmql h6",
+            "#color-2 .framer-1codb69 p",
+            "#color-2 .framer-gdeh2j img"
+          ]
+        },
+        {
+          "id": "section-12",
+          "name": "brand-examples",
+          "selector": [
+            "#safe-zones-4"
+          ],
+          "style": "royal-blue",
+          "blocks": [],
+          "defaultContent": [
+            "#safe-zones-4 .framer-10qfyot h6",
+            "#safe-zones-4 .framer-fa1zr0 p"
+          ]
+        },
+        {
+          "id": "section-13",
+          "name": "photo-grid",
+          "selector": [
+            "#lookup-4"
+          ],
+          "style": "full-width",
+          "blocks": [
+            "columns-photos"
+          ],
+          "defaultContent": []
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "projectType": "da"
+  }
+}

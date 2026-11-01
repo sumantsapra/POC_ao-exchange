@@ -1,0 +1,18 @@
+{
+  "variantName": "hero-scrollvideo",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "summary": "Brand-blue panel with a pinned display title; captions phase in around it and a video scales from a card to full-bleed behind it",
+    "purpose": "Tagline/brand-idea moments with a pinned lockup over scroll-scaled video"
+  },
+  "contentPattern": {
+    "summary": "Pinned 'Hits Different' lockup over a scroll-scaled video, with three eyebrow + caption pairs (Energy, impact, euphoria / Unique, playful, special / More than just a tagline)",
+    "structure": "row 1 = link to the MP4 (or a picture); row 2 = eyebrow (<strong> paragraph) + caption pairs before the heading, the heading (title), then eyebrow + caption pairs after it; when there are 2+ pairs after the heading, the last one is the outro caption"
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Pinned title over a ~12-viewport scroll track. Phases by scroll progress: intro (captions around the title, 0-20%), title alone (20-30%), video card grows to full-bleed and back (30-80%), outro caption (80-100%). Reduced motion: everything stacked statically, video with controls.",
+  "reuseGuidance": "Tagline/brand-idea moments with a pinned lockup over scroll-scaled video",
+  "sourceUrl": "https://aobrandplaybook.com.au/"
+}

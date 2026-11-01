@@ -1,0 +1,79 @@
+/*
+ * cards-social: /tone-of-voice "Social media" channel grid (Framer "Color Logo Grid").
+ * 375: 2 per row (40px gap), 70px icons, text Poppins 10/16 25px under the icon.
+ * 1440: 4 per row (265px, 40px gap), 100px icons, text Poppins 14/20 60px under the icon,
+ *   rows 380px apart, 70px under the section heading.
+ */
+main .cards-social > ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+main .cards-social > ul > li {
+  margin: 0;
+  min-width: 0;
+}
+
+main .cards-social .cards-social-card-image img {
+  display: block;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+main .cards-social .cards-social-card-body {
+  margin-top: 25px;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 10px;
+  line-height: 16px;
+}
+
+main .cards-social .cards-social-card-body > * {
+  margin: 0;
+  font: inherit;
+}
+
+main .cards-social .cards-social-card-body > * + * {
+  margin-top: 16px;
+}
+
+main .cards-social .cards-social-card-body strong {
+  font-weight: 600;
+}
+
+@media (width >= 900px) {
+  main .cards-social > ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 80px 40px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .cards-social {
+    margin-top: 30px;
+  }
+
+  main .cards-social > ul {
+    row-gap: 120px;
+  }
+
+  main .cards-social .cards-social-card-image img {
+    width: 100px;
+    height: 100px;
+  }
+
+  main .cards-social .cards-social-card-body {
+    margin-top: 60px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  main .cards-social .cards-social-card-body > * + * {
+    margin-top: 20px;
+  }
+}

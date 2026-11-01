@@ -1,0 +1,42 @@
+{
+  "status": "success",
+  "url": "https://aobrandplaybook.com.au/graphic-elements",
+  "path": "graphic-elements",
+  "timestamp": "2026-11-01T07:22:43.682Z",
+  "title": "AO Brand Playbook",
+  "template": "guideline-chapter",
+  "blocks": [
+    "video-autoplay",
+    "cards-framed",
+    "columns-photos",
+    "columns-photos",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape",
+    "cards-shape"
+  ],
+  "detection": [
+    "video-autoplay:fallback",
+    "cards-framed:fallback",
+    "columns-photos:fallback",
+    "columns-photos:fallback",
+    "cards-shape:mapped",
+    "cards-shape:mapped",
+    "cards-shape:mapped",
+    "cards-shape:mapped",
+    "cards-shape:mapped",
+    "cards-shape:mapped",
+    "cards-shape:fallback",
+    "cards-shape:mapped",
+    "cards-shape:mapped",
+    "cards-shape:mapped",
+    "cards-shape:mapped"
+  ]
+}
