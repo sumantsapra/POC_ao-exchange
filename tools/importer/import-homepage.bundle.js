@@ -1100,12 +1100,17 @@ var CustomImportScript = (() => {
       video.replaceWith(a);
     });
   }
-  var FRAMER_IMAGE = /^(https?:)?\/\/framerusercontent\.com\/images\/[^?#]+\.(jpe?g|png|webp)(\?[^#]*)?$/i;
+  var FRAMER_IMAGE = /^(https?:)?\/\/framerusercontent\.com\/images\/[^?#]+\.(jpe?g|png|webp|gif)(\?[^#]*)?$/i;
   function capFramerImages(document) {
     document.querySelectorAll("img[src]").forEach((img) => {
       const src = img.getAttribute("src") || "";
       if (!FRAMER_IMAGE.test(src)) return;
-      img.setAttribute("src", `${src.split("?")[0]}?scale-down-to=2048`);
+      const base = src.split("?")[0];
+      if (/\.gif$/i.test(base)) {
+        if (img.closest("table")) img.setAttribute("src", `${base}?scale-down-to=1024`);
+        return;
+      }
+      img.setAttribute("src", `${base}?scale-down-to=2048`);
       img.removeAttribute("srcset");
       img.removeAttribute("sizes");
     });

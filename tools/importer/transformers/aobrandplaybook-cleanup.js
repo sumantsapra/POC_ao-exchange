@@ -827,15 +827,22 @@ function videosToLinks(document) {
   });
 }
 
-// Framer serves the uploaded original (often 5-37 MB); its CDN scales raster images on request.
-// GIFs are not resized by the CDN, SVGs need no resizing.
-const FRAMER_IMAGE = /^(https?:)?\/\/framerusercontent\.com\/images\/[^?#]+\.(jpe?g|png|webp)(\?[^#]*)?$/i;
+// Framer serves the uploaded original (often 5-46 MB); its CDN scales images on request.
+// Animated GIFs stay animated. GIFs inside block tiles (afterTransform: blocks are tables)
+// are capped at 1024px because EDS preview rejects images over 20 MB; full-width GIFs keep
+// their size.
+const FRAMER_IMAGE = /^(https?:)?\/\/framerusercontent\.com\/images\/[^?#]+\.(jpe?g|png|webp|gif)(\?[^#]*)?$/i;
 
 function capFramerImages(document) {
   document.querySelectorAll('img[src]').forEach((img) => {
     const src = img.getAttribute('src') || '';
     if (!FRAMER_IMAGE.test(src)) return;
-    img.setAttribute('src', `${src.split('?')[0]}?scale-down-to=2048`);
+    const base = src.split('?')[0];
+    if (/\.gif$/i.test(base)) {
+      if (img.closest('table')) img.setAttribute('src', `${base}?scale-down-to=1024`);
+      return;
+    }
+    img.setAttribute('src', `${base}?scale-down-to=2048`);
     img.removeAttribute('srcset');
     img.removeAttribute('sizes');
   });
