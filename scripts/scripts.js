@@ -55,6 +55,30 @@ function decorateButtons(main) {
 }
 
 /**
+ * The source site picks heading levels for their look: section headings are h6 straight after the
+ * page h1, homepage labels are h5. Renumber the headings in main so levels never skip (each
+ * authored level is mapped to at most one deeper than the heading before its first use), and keep
+ * the authored level as a heading-hN class, which the styles size from.
+ * @param {Element} main The main element
+ */
+function normalizeHeadingLevels(main) {
+  const levels = new Map();
+  let previous = 0;
+  main.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((heading) => {
+    const authored = Number(heading.tagName[1]);
+    if (!levels.has(authored)) levels.set(authored, Math.min(authored, previous + 1));
+    const level = Math.min(levels.get(authored), previous + 1);
+    previous = level;
+    heading.classList.add(`heading-h${authored}`);
+    if (level === authored) return;
+    const renumbered = document.createElement(`h${level}`);
+    [...heading.attributes].forEach(({ name, value }) => renumbered.setAttribute(name, value));
+    renumbered.append(...heading.childNodes);
+    heading.replaceWith(renumbered);
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -62,6 +86,7 @@ function decorateButtons(main) {
 export function decorateMain(main) {
   decorateIcons(main);
   decorateSections(main);
+  normalizeHeadingLevels(main);
   decorateBlocks(main);
   decorateButtons(main);
 }
