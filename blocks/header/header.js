@@ -6,10 +6,14 @@ const HIDE_AFTER_PX = 100;
  * @returns {Promise<{html: string, base: string}|null>}
  */
 async function fetchNav() {
-  let path = '/content/nav.plain.html';
-  let resp = await fetch('/content/nav.plain.html');
-  if (!resp.ok) {
-    path = '/nav.plain.html';
+  let path = '/nav.plain.html';
+  let resp = null;
+  // the /content copy only exists in the local preview; skipping it elsewhere avoids a 404
+  if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    resp = await fetch('/content/nav.plain.html');
+    if (resp.ok) path = '/content/nav.plain.html';
+  }
+  if (!resp || !resp.ok) {
     resp = await fetch('/nav.plain.html');
   }
   if (!resp.ok) return null;

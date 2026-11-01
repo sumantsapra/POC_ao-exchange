@@ -3,10 +3,14 @@
  * @returns {Promise<{html: string, base: string}|null>}
  */
 async function fetchFooter() {
-  let path = '/content/footer.plain.html';
-  let resp = await fetch('/content/footer.plain.html');
-  if (!resp.ok) {
-    path = '/footer.plain.html';
+  let path = '/footer.plain.html';
+  let resp = null;
+  // the /content copy only exists in the local preview; skipping it elsewhere avoids a 404
+  if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    resp = await fetch('/content/footer.plain.html');
+    if (resp.ok) path = '/content/footer.plain.html';
+  }
+  if (!resp || !resp.ok) {
     resp = await fetch('/footer.plain.html');
   }
   if (!resp.ok) return null;
