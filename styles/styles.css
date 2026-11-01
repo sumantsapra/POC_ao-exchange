@@ -61,6 +61,18 @@ h6 {
   line-height: var(--heading-line-height-s);
 }
 
+/* headings in main are renumbered so levels never skip (scripts.js normalizeHeadingLevels);
+   they keep the size of their authored level, recorded as a heading-hN class */
+:is(h1, h2, h3, h4, h5, h6):where(.heading-h1, .heading-h2) {
+  font-size: var(--heading-font-size-xxl);
+  line-height: var(--heading-line-height-xxl);
+}
+
+:is(h1, h2, h3, h4, h5, h6):where(.heading-h3, .heading-h4, .heading-h5, .heading-h6) {
+  font-size: var(--heading-font-size-s);
+  line-height: var(--heading-line-height-s);
+}
+
 p,
 ul,
 ol,
@@ -138,7 +150,7 @@ main .default-content-wrapper > * + * {
   margin-top: 28px;
 }
 
-main .default-content-wrapper > :is(h1, h2) + p {
+main .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):where(.heading-h1, .heading-h2) + p {
   margin-top: 40px;
   color: var(--text-color);
   font-family: var(--heading-font-medium);
@@ -147,11 +159,11 @@ main .default-content-wrapper > :is(h1, h2) + p {
   font-synthesis: none;
 }
 
-main .default-content-wrapper > :is(h3, h4, h5, h6) + * {
+main .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):where(.heading-h3, .heading-h4, .heading-h5, .heading-h6) + * {
   margin-top: 8px;
 }
 
-main .default-content-wrapper > * + :is(h3, h4, h5, h6) {
+main .default-content-wrapper > * + :is(h1, h2, h3, h4, h5, h6):where(.heading-h3, .heading-h4, .heading-h5, .heading-h6) {
   margin-top: 40px;
 }
 
@@ -182,17 +194,17 @@ main > .section.centered .default-content-wrapper {
  * Source: Sharp Sans No2 Bold 25/25 (375) / 50/50 (1440), accent process blue, then Poppins
  * 18/28 copy 40px below.
  */
-main .default-content-wrapper > h2 > em {
+main .default-content-wrapper > h2:where(.heading-h2) > em {
   font-style: normal;
   color: var(--ao-process-blue);
 }
 
-main .default-content-wrapper > h2:has(> em) {
+main .default-content-wrapper > h2:where(.heading-h2):has(> em) {
   font-size: 25px;
   line-height: 25px;
 }
 
-main .default-content-wrapper > h2:has(> em) + p {
+main .default-content-wrapper > h2:where(.heading-h2):has(> em) + p {
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
   line-height: var(--body-line-height-m);
@@ -238,7 +250,7 @@ main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dar
 }
 
 main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) :is(h1, h2, h3, h4, h5, h6),
-main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .default-content-wrapper > :is(h1, h2) + p {
+main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):where(.heading-h1, .heading-h2) + p {
   color: var(--light-color);
 }
 
@@ -263,7 +275,7 @@ main > .hero-banner-container + .section.royal-blue {
 }
 
 /* sub-brand guides leave more room under sub-headings than the chapters */
-main > .hero-banner-container ~ .section .default-content-wrapper > :is(h3, h4, h5, h6) + * {
+main > .hero-banner-container ~ .section .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):where(.heading-h3, .heading-h4, .heading-h5, .heading-h6) + * {
   margin-top: 20px;
 }
 
@@ -346,7 +358,7 @@ main a.button[title*="download" i]::after {
 }
 
 @media (width >= 900px) {
-  main .default-content-wrapper > h2:has(> em) {
+  main .default-content-wrapper > h2:where(.heading-h2):has(> em) {
     font-size: 50px;
     line-height: 50px;
   }
