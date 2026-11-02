@@ -4,6 +4,8 @@
  * Authoring: one cell holding a link to the MP4, optionally preceded by a poster image.
  * With prefers-reduced-motion the video does not autoplay; it shows controls instead.
  * Option "wide" (block variant): 2:1 frame instead of the fixed-height frame (CSS only).
+ * Option "sound": a video with audio (e.g. brand sound). It does not autoplay; it shows controls
+ * so visitors start it and hear it.
  */
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -15,20 +17,22 @@ function getVideoType(src) {
   return 'video/mp4';
 }
 
-function buildVideo(src, posterSrc) {
+function buildVideo(src, posterSrc, sound) {
   const video = document.createElement('video');
-  video.muted = true;
-  video.setAttribute('muted', '');
-  video.setAttribute('loop', '');
   video.setAttribute('playsinline', '');
   video.setAttribute('preload', 'metadata');
-  video.setAttribute('aria-hidden', 'true');
   if (posterSrc) video.setAttribute('poster', posterSrc);
-  if (prefersReducedMotion.matches) {
+  if (sound || prefersReducedMotion.matches) {
+    // started by the visitor (with sound for the "sound" option)
     video.setAttribute('controls', '');
-    video.removeAttribute('aria-hidden');
   } else {
     video.setAttribute('autoplay', '');
+  }
+  if (!sound) {
+    video.muted = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('loop', '');
+    if (!prefersReducedMotion.matches) video.setAttribute('aria-hidden', 'true');
   }
   const source = document.createElement('source');
   source.src = src;
@@ -55,13 +59,14 @@ export default function decorate(block) {
   block.append(frame);
   block.dataset.embedLoaded = 'false';
 
+  const sound = block.classList.contains('sound');
   const load = () => {
-    const video = buildVideo(src, posterImg ? posterImg.currentSrc || posterImg.src : '');
+    const video = buildVideo(src, posterImg ? posterImg.currentSrc || posterImg.src : '', sound);
     video.addEventListener('loadeddata', () => {
       block.dataset.embedLoaded = 'true';
     }, { once: true });
     frame.append(video);
-    if (!prefersReducedMotion.matches) {
+    if (!sound && !prefersReducedMotion.matches) {
       const playing = video.play();
       if (playing && playing.catch) playing.catch(() => {});
     }

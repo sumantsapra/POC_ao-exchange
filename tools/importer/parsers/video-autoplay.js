@@ -9,6 +9,8 @@
  * the import script's onLoad (data-excat-video-width / -height; the video elements the parser
  * sees are fresh, unloaded copies whose frame collapses to the 150px placeholder height when it
  * is sized by the video). Without a known size the video is not classified.
+ * Option "sound": the source video has no muted attribute and an audio track (the import script's
+ * onLoad sets data-excat-video-audio); it is shown with controls and sound instead of a silent loop.
  */
 function imgSrc(img) {
   const src = img.getAttribute('src') || '';
@@ -63,7 +65,13 @@ export default function parse(element, { document }) {
   }
 
   const cells = [[cell]];
-  const name = isWide(video) ? 'video-autoplay (wide)' : 'video-autoplay';
+  // Option "sound": the source video is not muted (/brand-sound), so visitors start it and hear it
+  const options = [];
+  if (isWide(video)) options.push('wide');
+  if (video && !video.hasAttribute('muted') && video.getAttribute('data-excat-video-audio') === 'true') {
+    options.push('sound');
+  }
+  const name = options.length ? `video-autoplay (${options.join(', ')})` : 'video-autoplay';
   const block = WebImporter.Blocks.createBlock(document, { name, cells });
   element.replaceWith(block);
 }

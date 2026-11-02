@@ -156,7 +156,12 @@ var CustomImportScript = (() => {
       cell.push(p);
     }
     const cells = [[cell]];
-    const name = isWide(video) ? "video-autoplay (wide)" : "video-autoplay";
+    const options = [];
+    if (isWide(video)) options.push("wide");
+    if (video && !video.hasAttribute("muted") && video.getAttribute("data-excat-video-audio") === "true") {
+      options.push("sound");
+    }
+    const name = options.length ? `video-autoplay (${options.join(", ")})` : "video-autoplay";
     const block = WebImporter.Blocks.createBlock(document, { name, cells });
     element.replaceWith(block);
   }
@@ -1730,6 +1735,42 @@ var CustomImportScript = (() => {
       video.replaceWith(a);
     });
   }
+  var LOCAL_VIDEOS = /* @__PURE__ */ new Set([
+    "4QequgSrwRxIxv0x2ZsfEEVk",
+    "4srbpIsRiWZgjXRIDLDI7dJ73s",
+    "5LnEuzSwguGfyrcXwcPLY8tGYFo",
+    "8bUmoGbGmZ",
+    "Antwrj4fsO",
+    "BAGRy8kLa8YMLhnVF0yFbKF2DaE",
+    "CP4uCysfn9jVRsunEkJKG4mAtk",
+    "FBGYx7bZZpHUicy8Z35JQjrfGU",
+    "JZ9KbZznxjj8oMJcMuPCOMVgA4",
+    "OXpgZq4kK7YREBavcJSkRgT6oA",
+    "QkpZiBF48BdGmh7BMJW2FZ6MzE",
+    "SVrKbxY8ugGVpoM6plnVrTTRDA",
+    "UdhKApLyAO",
+    "fu7jdgnxA9npvX5kNncRZ3ybUMo",
+    "hbvxNXxfjscq4j4Yqs9IPhCGKY",
+    "mfnuFZlPzAUS882VDLeF2YQEeZ8",
+    "nqbIAM119Ro9qtWh7TYCDVimsOk",
+    "phnQHIeonPJUJaPlsVPJv8pIBk",
+    "ploPrlKSfuxa3A6bgpl5gbDBPCI",
+    "qyckSGnnixoKJfwaHF1IT5Flr8",
+    "wB01by0W41v3pxxg6a8ZKRI2o",
+    "xhALKl34K2wmBQYzX4PUvZnvATo",
+    "zgLKoIkVykTecHU7HxE8Nhf8uRo"
+  ]);
+  var VIDEO_URL = /^(?:https?:)?\/\/(?:framerusercontent\.com\/assets\/([^/?#]+)\.mp4|[^/]+\.supabase\.co\/storage\/v1\/object\/public\/files\/([^/?#]+)\/original)(?:[?#].*)?$/i;
+  function localVideos(document) {
+    document.querySelectorAll("a[href]").forEach((a) => {
+      const m = (a.getAttribute("href") || "").match(VIDEO_URL);
+      const id = m && (m[1] || m[2]);
+      if (!id || !LOCAL_VIDEOS.has(id)) return;
+      const local = `/videos/${id}.mp4`;
+      if (a.textContent.trim() === a.getAttribute("href")) a.textContent = local;
+      a.setAttribute("href", local);
+    });
+  }
   var FRAMER_IMAGE = /^(https?:)?\/\/framerusercontent\.com\/images\/[^?#]+\.(jpe?g|png|webp|gif)(\?[^#]*)?$/i;
   function capFramerImages(document) {
     document.querySelectorAll("img[src]").forEach((img) => {
@@ -1798,6 +1839,7 @@ var CustomImportScript = (() => {
     }
     if (hookName === "afterTransform") {
       videosToLinks(document);
+      localVideos(document);
       capFramerImages(document);
       finalCleanup(document);
     }
@@ -2844,6 +2886,13 @@ var CustomImportScript = (() => {
     }
     return null;
   }
+  function mp4HasAudio(buffer) {
+    const bytes = new Uint8Array(buffer);
+    for (let i = 4; i + 12 <= bytes.length; i += 1) {
+      if (bytes[i] === 104 && bytes[i + 1] === 100 && bytes[i + 2] === 108 && bytes[i + 3] === 114 && String.fromCharCode(bytes[i + 12], bytes[i + 13], bytes[i + 14], bytes[i + 15]) === "soun") return true;
+    }
+    return false;
+  }
   function loadVideoMetadata(document) {
     return __async(this, null, function* () {
       const all = [...document.querySelectorAll("video")];
@@ -2874,6 +2923,15 @@ var CustomImportScript = (() => {
             v.setAttribute("data-excat-video-width", String(size[0]));
             v.setAttribute("data-excat-video-height", String(size[1]));
           }
+        } catch (e) {
+        }
+      })));
+      yield Promise.all(all.map((v) => __async(null, null, function* () {
+        const src = v.currentSrc || v.getAttribute("src") || v.querySelector("source[src]") && v.querySelector("source[src]").getAttribute("src");
+        if (!src) return;
+        try {
+          const res = yield fetch(src, { headers: { Range: "bytes=0-262143" } });
+          v.setAttribute("data-excat-video-audio", mp4HasAudio(yield res.arrayBuffer()) ? "true" : "false");
         } catch (e) {
         }
       })));
