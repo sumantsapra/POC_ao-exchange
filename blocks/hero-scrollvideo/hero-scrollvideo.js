@@ -69,9 +69,9 @@ export default function decorate(block) {
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('aria-hidden', 'true');
-    video.preload = 'metadata';
+    video.preload = 'none';
     if (reduceMotion) video.controls = true;
-    video.src = link.href;
+    video.dataset.src = link.href;
     media.append(video);
   } else {
     const picture = mediaRow?.querySelector('picture');
@@ -106,6 +106,25 @@ export default function decorate(block) {
   track.className = 'hero-scrollvideo-track';
   track.append(stage);
   block.replaceChildren(track);
+
+  // the block sits far down the homepage: attach the video source once it is a viewport away
+  if (video) {
+    const attach = () => {
+      video.src = video.dataset.src;
+      delete video.dataset.src;
+      video.preload = 'metadata';
+    };
+    if ('IntersectionObserver' in window) {
+      const nearObserver = new IntersectionObserver((entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        nearObserver.disconnect();
+        attach();
+      }, { rootMargin: '100% 0px' });
+      nearObserver.observe(track);
+    } else {
+      attach();
+    }
+  }
 
   if (reduceMotion) {
     block.classList.add('is-static');

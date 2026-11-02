@@ -378,6 +378,16 @@ function mp4Size(buffer) {
   return null;
 }
 
+// true when the MP4's header declares a sound track (a "hdlr" box whose handler type is "soun")
+function mp4HasAudio(buffer) {
+  const bytes = new Uint8Array(buffer);
+  for (let i = 4; i + 12 <= bytes.length; i += 1) {
+    if (bytes[i] === 0x68 && bytes[i + 1] === 0x64 && bytes[i + 2] === 0x6c && bytes[i + 3] === 0x72
+      && String.fromCharCode(bytes[i + 12], bytes[i + 13], bytes[i + 14], bytes[i + 15]) === "soun") return true;
+  }
+  return false;
+}
+
 async function loadVideoMetadata(document) {
   const all = [...document.querySelectorAll("video")];
   const vids = all.filter((v) => v.readyState < 1);
@@ -406,6 +416,17 @@ async function loadVideoMetadata(document) {
       }
     } catch (e) {
       // no size: the parser leaves the video unclassified
+    }
+  }));
+  // record whether each video has an audio track (the video-autoplay parser's "sound" option)
+  await Promise.all(all.map(async (v) => {
+    const src = v.currentSrc || v.getAttribute("src") || (v.querySelector("source[src]") && v.querySelector("source[src]").getAttribute("src"));
+    if (!src) return;
+    try {
+      const res = await fetch(src, { headers: { Range: "bytes=0-262143" } });
+      v.setAttribute("data-excat-video-audio", mp4HasAudio(await res.arrayBuffer()) ? "true" : "false");
+    } catch (e) {
+      // unknown: the parser treats the video as silent
     }
   }));
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));

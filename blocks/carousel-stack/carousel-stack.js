@@ -16,10 +16,36 @@ function buildVideo(href, reduceMotion) {
   video.playsInline = true;
   video.setAttribute('muted', '');
   video.setAttribute('playsinline', '');
-  video.preload = 'metadata';
+  video.preload = 'none';
   if (reduceMotion) video.controls = true;
-  video.src = href;
+  // the source is attached when the block nears the viewport (see loadVideosWhenNear)
+  video.dataset.src = href;
   return video;
+}
+
+/**
+ * Attaches each video's source once the block is within one viewport of the screen, so the
+ * stack's videos are not downloaded while the visitor is still at the top of the page.
+ * @param {Element} block
+ * @param {HTMLVideoElement[]} videos
+ */
+function loadVideosWhenNear(block, videos) {
+  const attach = () => videos.forEach((video) => {
+    if (!video.dataset.src) return;
+    video.src = video.dataset.src;
+    delete video.dataset.src;
+    video.preload = 'metadata';
+  });
+  if (!('IntersectionObserver' in window)) {
+    attach();
+    return;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    observer.disconnect();
+    attach();
+  }, { rootMargin: '100% 0px' });
+  observer.observe(block);
 }
 
 /**
@@ -70,6 +96,7 @@ export default function decorate(block) {
 
   optimizePictures(list);
   block.replaceChildren(list);
+  loadVideosWhenNear(block, videos);
 
   if (reduceMotion) {
     block.classList.add('is-static');
