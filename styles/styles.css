@@ -249,6 +249,14 @@ main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dar
   color: var(--light-color);
 }
 
+/* white is below WCAG AA on Process Blue (3.4:1) and Hits Different Blue (3.9:1): text on these
+   bands is navy instead. The colour variables are redefined so block text follows. */
+main > .section:is(.process-blue, .hits-different-blue) {
+  --light-color: var(--ao-navy);
+  --text-color: var(--ao-navy);
+  --heading-color: var(--ao-navy);
+}
+
 main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) :is(h1, h2, h3, h4, h5, h6),
 main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy) .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):where(.heading-h1, .heading-h2) + p {
   color: var(--light-color);

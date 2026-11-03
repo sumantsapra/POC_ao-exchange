@@ -143,7 +143,7 @@ main .cards-framed.panel .cards-framed-body {
 
 main .cards-framed.panel .cards-framed-body,
 main .cards-framed.panel .cards-framed-body :is(h1, h2, h3, h4, h5, h6) {
-  color: #fff;
+  color: var(--ao-navy);
 }
 
 @media (width >= 900px) {
