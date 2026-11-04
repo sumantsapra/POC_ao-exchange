@@ -2,11 +2,12 @@
   "status": "success",
   "url": "https://aobrandplaybook.com.au/partner-guidelines",
   "path": "partner-guidelines",
-  "timestamp": "2026-11-04T00:02:55.462Z",
+  "timestamp": "2026-11-04T03:29:23.793Z",
   "title": "AO Brand Playbook",
   "template": "sub-brand-guide",
   "blocks": [
     "hero-banner",
+    "columns-spectrum",
     "video-autoplay",
     "video-autoplay",
     "columns-panel",
@@ -27,6 +28,7 @@
   ],
   "detection": [
     "hero-banner:fallback",
+    "columns-spectrum:mapped",
     "video-autoplay:fallback",
     "video-autoplay:fallback",
     "columns-panel:fallback",

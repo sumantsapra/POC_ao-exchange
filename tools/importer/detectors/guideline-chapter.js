@@ -32,6 +32,7 @@ import {
   isSideBySide,
   isTypefaceRow,
   isVideoContainer,
+  isLayeredBand,
   contextOf,
   EXCLUSION_RE,
   LOCKUP_RE,
@@ -250,6 +251,8 @@ function isSocialGrid(el) {
 }
 
 export const detectors = [
+  // a photo band with artwork laid over it (tested first: its images are not a photo row)
+  { name: 'banner-overlay', test: (el) => isLayeredBand(el), validate: (el) => isLayeredBand(el) },
   { name: 'cards-swatch', test: (el) => isSwatchGrid(el) || isSwatchTile(el), // a lone tile: its container was rejected
     validate: (el) => /hex/i.test(textOf(el)) },
   { name: 'cards-contrast', test: (el, ctx) => isContrastGrid(el) || isLogoContrastGrid(el, ctx),

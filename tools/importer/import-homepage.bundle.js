@@ -1307,7 +1307,12 @@ var CustomImportScript = (() => {
     const rects = [...el.querySelectorAll(withVideo ? "img, video" : "img")].map((img) => img.getBoundingClientRect()).filter((r) => r.width > 1 && r.height > 1);
     if (!rects.length) return null;
     const overlaps = rects.some((a, i) => rects.some((b, j) => j > i && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2));
-    if (overlaps) return false;
+    if (overlaps) {
+      const size = (r) => r.width * r.height;
+      const base = rects.reduce((a, b) => size(b) > size(a) ? b : a);
+      const inside = rects.every((r) => r === base || r.left >= base.left - 2 && r.right <= base.right + 2 && r.top >= base.top - 2 && r.bottom <= base.bottom + 2);
+      return inside && base.left <= 2 && base.right >= vw - 2;
+    }
     const left = Math.min(...rects.map((r) => r.left));
     const right = Math.max(...rects.map((r) => r.right));
     return left <= 2 && right >= vw - 2;
@@ -1368,18 +1373,46 @@ var CustomImportScript = (() => {
     const box = el.getBoundingClientRect();
     if (!box.width) return false;
     const cs = view.getComputedStyle(el);
-    const mid = (box.left + (parseFloat(cs.paddingLeft) || 0) + box.right - (parseFloat(cs.paddingRight) || 0)) / 2;
-    const texts = [...el.querySelectorAll(TEXT_SEL)].filter((t) => (t.textContent || "").trim() && !t.parentElement.closest(TEXT_SEL));
-    let measured = 0;
-    const ok = texts.every((t) => {
+    const left = box.left + (parseFloat(cs.paddingLeft) || 0);
+    const right = box.right - (parseFloat(cs.paddingRight) || 0);
+    const mid = (left + right) / 2;
+    const items = [...el.querySelectorAll(TEXT_SEL)].filter((t) => (t.textContent || "").trim() && !t.parentElement.closest(TEXT_SEL)).map((t) => {
       const range = document.createRange();
       range.selectNodeContents(t);
-      const r = range.getBoundingClientRect();
-      if (!r.width || !r.height) return true;
-      measured += 1;
-      return Math.abs((r.left + r.right) / 2 - mid) <= 24;
+      let align = "";
+      try {
+        align = view.getComputedStyle(t).textAlign;
+      } catch (e) {
+        align = "";
+      }
+      return { r: range.getBoundingClientRect(), end: /right|end/.test(align) };
+    }).filter(({ r }) => r.width && r.height);
+    const centred = items.filter(({ r }) => Math.abs((r.left + r.right) / 2 - mid) <= 24);
+    const mirrored = (a) => items.some((b) => {
+      if (b === a || a.end === b.end || a.r.top >= b.r.bottom || b.r.top >= a.r.bottom) return false;
+      const [start, end] = a.end ? [b.r, a.r] : [a.r, b.r];
+      return Math.abs(start.left - left - (right - end.right)) <= 24;
     });
-    return ok && measured > 0;
+    return centred.length > 0 && items.every((t) => centred.includes(t) || mirrored(t));
+  }
+  var DISPLAY_MIN = 80;
+  function displayHeading(document, el) {
+    const view = document.defaultView;
+    if (!view || typeof view.getComputedStyle !== "function") return null;
+    return [...el.querySelectorAll("h1, h2, h3, h4, h5, h6")].find((h) => {
+      if (!(h.textContent || "").trim() || typeof h.getBoundingClientRect !== "function") return false;
+      const r = h.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
+      try {
+        return parseFloat(view.getComputedStyle(h).fontSize) >= DISPLAY_MIN;
+      } catch (e) {
+        return false;
+      }
+    }) || null;
+  }
+  function hasColourValues(el) {
+    const t = (el.textContent || "").replace(/\s+/g, " ");
+    return /HEX\s*#?[0-9a-f]{6}/i.test(t) && /RGB\s*\d/i.test(t);
   }
   function siblingBands(sectionsList) {
     const parents = new Set(sectionsList.map((s) => s.parentElement).filter(Boolean));
@@ -1413,7 +1446,12 @@ var CustomImportScript = (() => {
         else full = hasVideo ? family && spans : spans;
         if (full) styles.push("full-width");
       }
-      if (isCenteredBand(document, el)) styles.push("centered");
+      const centred = isCenteredBand(document, el);
+      if (centred) styles.push("centered");
+      if (i > 0 && displayHeading(document, el)) {
+        if (centred) styles.push("intro");
+        else if (hasColourValues(el)) styles.push("colour-feature");
+      }
       const meta = {};
       if (styles.length) meta.style = styles.join(", ");
       return { el, meta, id: `structural-${i + 1}` };

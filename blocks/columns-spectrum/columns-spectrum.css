@@ -1,0 +1,138 @@
+/*
+ * columns-spectrum: a scale between two ends (/partner-guidelines "But first, who's your
+ * audience?"). Source, measured at 375 / 810 / 1440:
+ * - ends rows: start text flush left, end text flush right (text wraps at 40% of the row),
+ *   bottom aligned; Poppins 10/14 (375), 18/28 from 810px; labels Sharp Sans No2 Bold 10/11
+ *   (375), 24/30 from 810px;
+ * - the scale artwork: full-width line, 30px tall, 5px between the rows and the line;
+ * - media row 40px below: videos at 520 / 462 with 10px radius; stacked 20px apart with the
+ *   arrow turned down (48px wide) on mobile; side by side from 810px with the arrow between
+ *   (44px wide, 40px gaps; 60px wide, 20px gaps from 1200px).
+ */
+main .columns-spectrum .columns-spectrum-ends {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 5px 10px;
+  font-size: 10px;
+  line-height: 14px;
+}
+
+main .columns-spectrum .columns-spectrum-ends + .columns-spectrum-ends {
+  margin-top: 5px;
+}
+
+main .columns-spectrum .columns-spectrum-ends > .columns-spectrum-start {
+  grid-area: 1 / 1;
+  max-width: 80%;
+  text-align: start;
+}
+
+main .columns-spectrum .columns-spectrum-ends > .columns-spectrum-end {
+  grid-area: 1 / 2;
+  justify-self: end;
+  max-width: 80%;
+  text-align: end;
+}
+
+main .columns-spectrum .columns-spectrum-ends > .columns-spectrum-between {
+  grid-area: 2 / 1 / 3 / -1;
+}
+
+main .columns-spectrum .columns-spectrum-ends p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+main .columns-spectrum .columns-spectrum-ends :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  font-size: 10px;
+  line-height: 11px;
+}
+
+main .columns-spectrum .columns-spectrum-between picture {
+  display: contents;
+}
+
+main .columns-spectrum .columns-spectrum-ends .columns-spectrum-between img {
+  display: block;
+  width: 100%;
+  height: 30px;
+  object-fit: fill;
+}
+
+main .columns-spectrum .columns-spectrum-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+main .columns-spectrum .columns-spectrum-media > :is(.columns-spectrum-start, .columns-spectrum-end) {
+  width: 100%;
+}
+
+main .columns-spectrum .columns-spectrum-media video,
+main .columns-spectrum .columns-spectrum-media > :is(.columns-spectrum-start, .columns-spectrum-end) img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 520 / 462;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+main .columns-spectrum .columns-spectrum-media > .columns-spectrum-between img {
+  display: block;
+  width: 48px;
+  height: auto;
+  transform: rotate(90deg);
+}
+
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main .columns-spectrum .columns-spectrum-ends > :is(.columns-spectrum-start, .columns-spectrum-end) {
+    align-self: center;
+  }
+
+  main .columns-spectrum .columns-spectrum-ends {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  main .columns-spectrum .columns-spectrum-ends :is(h1, h2, h3, h4, h5, h6) {
+    font-size: 24px;
+    line-height: 30px;
+  }
+
+  main .columns-spectrum .columns-spectrum-media {
+    flex-direction: row;
+    gap: 40px;
+  }
+
+  main .columns-spectrum .columns-spectrum-media > :is(.columns-spectrum-start, .columns-spectrum-end) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  main .columns-spectrum .columns-spectrum-media > .columns-spectrum-between {
+    flex: none;
+  }
+
+  main .columns-spectrum .columns-spectrum-media > .columns-spectrum-between img {
+    width: 44px;
+    transform: none;
+  }
+}
+
+@media (width >= 1200px) {
+  main .columns-spectrum .columns-spectrum-media {
+    gap: 20px;
+  }
+
+  main .columns-spectrum .columns-spectrum-media > .columns-spectrum-between img {
+    width: 60px;
+  }
+}

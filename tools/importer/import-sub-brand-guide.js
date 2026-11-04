@@ -16,6 +16,7 @@ import columnsTextImageParser from "./parsers/columns-text-image.js";
 import cardsMisuseParser from "./parsers/cards-misuse.js";
 import columnsMessagingParser from "./parsers/columns-messaging.js";
 import cardsStepsParser from "./parsers/cards-steps.js";
+import columnsSpectrumParser from "./parsers/columns-spectrum.js";
 import aobrandplaybookCleanupTransformer from "./transformers/aobrandplaybook-cleanup.js";
 import aobrandplaybookSectionsTransformer from "./transformers/aobrandplaybook-sections.js";
 import { detectors } from "./detectors/sub-brand-guide.js";
@@ -129,6 +130,12 @@ const PAGE_TEMPLATE = {
       "name": "cards-steps",
       "instances": [
         ".framer-1cc5wk8 .framer-17e6tnf"
+      ]
+    },
+    {
+      "name": "columns-spectrum",
+      "instances": [
+        "#lookup .framer-1io5j2u"
       ]
     }
   ],
@@ -343,6 +350,7 @@ const parsers = {
   "cards-misuse": cardsMisuseParser,
   "columns-messaging": columnsMessagingParser,
   "cards-steps": cardsStepsParser,
+  "columns-spectrum": columnsSpectrumParser,
 };
 
 const transformers = [

@@ -20,6 +20,10 @@
  *    (/ao-reserve "Product Logos"; shape sets are centred in their columns).
  *  - option "framed": the grid sits in a thin light outline on a dark panel (/ao-reserve
  *    "Illustrative Icons": a white panel with an inset navy grid).
+ *  - option "stickers": large artwork five per row on a white card, each filling its grid
+ *    column (every artwork the same width, >= 150px), e.g. /opening-week "Stickers" (184px at
+ *    1440); icon / illustration sets keep their own, smaller artwork sizes, and shapes straight
+ *    on a dark band (/ao-live "Rhythmic Shapes") are not on a card.
  */
 function textOf(el) {
   const clone = el.cloneNode(true);
@@ -108,7 +112,13 @@ function layoutOf(imgs) {
   const widths = rects.map((r) => r.width).sort((a, b) => a - b);
   const top = Math.min(...rects.map((r) => r.top));
   const firstRow = rects.filter((r) => r.top < top + Math.min(...rects.map((x) => x.height)) * 0.8);
-  return { median: widths[Math.floor(widths.length / 2)], cols: firstRow.length, left: Math.min(...firstRow.map((r) => r.left)) };
+  return {
+    median: widths[Math.floor(widths.length / 2)],
+    min: widths[0],
+    max: widths[widths.length - 1],
+    cols: firstRow.length,
+    left: Math.min(...firstRow.map((r) => r.left)),
+  };
 }
 
 /** Light outline around a dark grid panel: painted light ancestor whose content child is dark. */
@@ -121,6 +131,15 @@ function isFramed(element) {
       return rgb && luminance(rgb) < 0.3;
     });
     if (inner) return true;
+  }
+  return false;
+}
+
+/** Light painted card (white) holding the grid, within a few wrappers (not the band itself). */
+function onLightCard(element) {
+  for (let n = element, d = 0; n && d < 4 && n.tagName !== 'SECTION'; n = n.parentElement, d += 1) {
+    const rgb = rgbOf((styleOf(n) || {}).backgroundColor);
+    if (rgb && luminance(rgb) >= 0.9) return true;
   }
   return false;
 }
@@ -185,6 +204,8 @@ export default function parse(element, { document }) {
     const leftAligned = !!(layout && box && Math.abs(layout.left - box.left) <= 2);
     if (layout && layout.cols === 4 && layout.median >= 120 && leftAligned && !isFramed(element)) options.push('logos');
     else if (isFramed(element)) options.push('framed');
+    else if (layout && layout.cols === 5 && layout.min >= 150 && layout.max - layout.min <= 2
+      && onLightCard(element)) options.push('stickers');
   }
 
   // the moved group heading / caption leave the default content
