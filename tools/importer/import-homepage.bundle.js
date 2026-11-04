@@ -1213,6 +1213,8 @@ var CustomImportScript = (() => {
   // tools/importer/transformers/aobrandplaybook-sections.js
   var MARKER = "data-excat-section-id";
   var META_ATTR = "data-excat-section-meta";
+  var BAND_COLOR_ATTR = "data-excat-band-color";
+  var BAND_LAYER_ATTR = "data-excat-band-layer";
   var HOMEPAGE_NAV_META = {
     "#intro": { anchor: "intro", "nav-label": "Intro" },
     "#brand-positioning": { anchor: "brand-positioning", "nav-label": "Who we are" },
@@ -1284,12 +1286,26 @@ var CustomImportScript = (() => {
   function isMediaOnly(el) {
     return !!el.querySelector("img, video, picture, source") && !(el.textContent || "").replace(/\s+/g, "").length;
   }
-  function spansViewport(document, el) {
+  function visibleRect(el) {
+    if (typeof el.getBoundingClientRect !== "function") return null;
+    const r = el.getBoundingClientRect();
+    return r.width > 1 && r.height > 1 ? r : null;
+  }
+  function isMediaWithOverlay(el) {
+    const media = [...el.querySelectorAll("video, img")].map(visibleRect).find((r) => r && r.width > 300);
+    if (!media) return false;
+    const texts = [...el.querySelectorAll("h1, h2, h3, h4, h5, h6, p")].filter((t) => (t.textContent || "").trim() && !t.parentElement.closest("h1, h2, h3, h4, h5, h6, p"));
+    return texts.length > 0 && texts.every((t) => {
+      const r = visibleRect(t);
+      return r && r.left < media.right && media.left < r.right && r.top < media.bottom && media.top < r.bottom;
+    });
+  }
+  function spansViewport(document, el, withVideo = false) {
     const view = document.defaultView;
     const vw = document.documentElement && document.documentElement.clientWidth;
-    if (!view || !vw || typeof el.getBoundingClientRect !== "function") return false;
-    const rects = [...el.querySelectorAll("img")].map((img) => img.getBoundingClientRect()).filter((r) => r.width > 1 && r.height > 1);
-    if (!rects.length) return false;
+    if (!view || !vw || typeof el.getBoundingClientRect !== "function") return null;
+    const rects = [...el.querySelectorAll(withVideo ? "img, video" : "img")].map((img) => img.getBoundingClientRect()).filter((r) => r.width > 1 && r.height > 1);
+    if (!rects.length) return null;
     const overlaps = rects.some((a, i) => rects.some((b, j) => j > i && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2));
     if (overlaps) return false;
     const left = Math.min(...rects.map((r) => r.left));
@@ -1316,6 +1332,8 @@ var CustomImportScript = (() => {
     return best ? best.style : null;
   }
   function bandStyle(document, el, inherit = false) {
+    const textured = parseRgb(el.getAttribute(BAND_COLOR_ATTR));
+    if (textured) return paletteStyle(textured);
     const view = document.defaultView;
     if (!view || typeof view.getComputedStyle !== "function") return null;
     const hasText = !!(el.textContent || "").replace(/\s+/g, "").length;
@@ -1363,15 +1381,38 @@ var CustomImportScript = (() => {
     });
     return ok && measured > 0;
   }
+  function siblingBands(sectionsList) {
+    const parents = new Set(sectionsList.map((s) => s.parentElement).filter(Boolean));
+    const bands = [];
+    parents.forEach((parent) => {
+      [...parent.children].forEach((child) => {
+        if (child.tagName === "SECTION" || child.querySelector("section")) return;
+        if (/^(HEADER|NAV|FOOTER|SCRIPT|STYLE|HR)$/.test(child.tagName)) return;
+        if (!(child.textContent || "").replace(/\s+/g, "").length) return;
+        bands.push(child);
+      });
+    });
+    return bands;
+  }
   function resolveStructural(document, sections) {
     const root = document.querySelector("#main") || document.body;
-    const all = [...root.querySelectorAll("section")].filter((s) => !s.parentElement.closest("section")).filter((s) => !s.closest("header, nav, footer"));
+    const outer = [...root.querySelectorAll("section")].filter((s) => !s.parentElement.closest("section")).filter((s) => !s.closest("header, nav, footer"));
+    const all = [...outer, ...siblingBands(outer)].sort((a, b) => a.compareDocumentPosition(b) & 4 ? -1 : 1);
     const families = fullWidthFamilies(sections);
     return all.map((el, i) => {
       const styles = [];
-      const band = bandStyle(document, el, i > 0 || !isMediaOnly(el));
+      const heroBand = i === 0 && (isMediaOnly(el) || isMediaWithOverlay(el));
+      const band = bandStyle(document, el, !heroBand);
       if (band) styles.push(band);
-      if (isMediaOnly(el) && (el.id && families.has(idFamily(el.id)) || !el.querySelector("video") && spansViewport(document, el))) styles.push("full-width");
+      if (isMediaOnly(el)) {
+        const family = !!(el.id && families.has(idFamily(el.id)));
+        const hasVideo = !!el.querySelector("video");
+        const spans = spansViewport(document, el, hasVideo);
+        let full = false;
+        if (spans === null) full = family;
+        else full = hasVideo ? family && spans : spans;
+        if (full) styles.push("full-width");
+      }
       if (isCenteredBand(document, el)) styles.push("centered");
       const meta = {};
       if (styles.length) meta.style = styles.join(", ");
@@ -1408,6 +1449,8 @@ var CustomImportScript = (() => {
       } else {
         entries = resolveStructural(document, sections);
       }
+      document.querySelectorAll(`[${BAND_LAYER_ATTR}]`).forEach((layer) => layer.remove());
+      document.querySelectorAll(`[${BAND_COLOR_ATTR}]`).forEach((band) => band.removeAttribute(BAND_COLOR_ATTR));
       if (entries.length < 2 && !(entries[0] && Object.keys(entries[0].meta).length)) return;
       insertBreaks(document, entries);
     }

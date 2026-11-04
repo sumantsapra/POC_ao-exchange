@@ -548,6 +548,18 @@
           "instances": [
             "#color .framer-5e88u2"
           ]
+        },
+        {
+          "name": "columns-messaging",
+          "instances": [
+            "#safe-zones-1 .framer-jr9524"
+          ]
+        },
+        {
+          "name": "cards-steps",
+          "instances": [
+            ".framer-1cc5wk8 .framer-17e6tnf"
+          ]
         }
       ],
       "sections": [

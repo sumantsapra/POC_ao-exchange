@@ -177,11 +177,20 @@ main .default-content-wrapper img {
   border-radius: 10px;
 }
 
-/* full-width media sections fill the content column edge to edge */
+/*
+ * full-width media sections run edge to edge like the source bands (photo galleries, "Brand
+ * moment" / "Application" photos), under the sidebar from 1200px. A lone photo is cropped to
+ * the source band height: 400px (375), 600px (tablet), 900px (>= 1200). The hero banner bleeds
+ * by itself.
+ */
+main > .section.full-width:not(.hero-banner-container) {
+  padding-inline: 0;
+}
+
 main > .section.full-width .default-content-wrapper img {
   border-radius: 0;
   width: 100%;
-  height: auto;
+  height: 400px;
   object-fit: cover;
 }
 
@@ -306,6 +315,14 @@ main > .section.lime + .section.lime {
   padding-top: 0;
 }
 
+/* bands of different colours, and edge-to-edge photos next to a colour band, abut on the source:
+   no light page strip between them */
+main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime) + .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime),
+main > .section.full-width + .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime),
+main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime) + .section.full-width {
+  margin-top: 0;
+}
+
 /*
  * buttons (bold lone link = a.button, e.g. /logos "Download Logos"): source pill measured at
  * 1440 and 375: navy rgb(0, 12, 61), 218x50, 40px radius, 20px side padding, Poppins 600 18/28
@@ -365,6 +382,13 @@ main a.button[title*="download" i]::after {
   }
 }
 
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main > .section.full-width .default-content-wrapper img {
+    height: 600px;
+  }
+}
+
 @media (width >= 900px) {
   main .default-content-wrapper > h2:where(.heading-h2):has(> em) {
     font-size: 50px;
@@ -396,5 +420,14 @@ main a.button[title*="download" i]::after {
   body.has-nav-sidebar main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dark-navy, .bright-blue, .lime) {
     margin-inline-start: -220px;
     padding-inline-start: 220px;
+  }
+
+  main > .section.full-width .default-content-wrapper img {
+    height: 900px;
+  }
+
+  body.has-nav-sidebar main > .section.full-width:not(.hero-banner-container) {
+    margin-inline-start: -220px;
+    padding-inline: 0;
   }
 }
