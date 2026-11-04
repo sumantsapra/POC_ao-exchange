@@ -133,11 +133,15 @@ main .hero-slideshow a.hero-slideshow-skip:any-link {
   padding: 4px 16px;
   border-radius: 19px;
   background-color: var(--ao-process-blue);
+  color: var(--ao-navy);
 }
 
-main .hero-slideshow a.hero-slideshow-scroll:any-link:hover,
-main .hero-slideshow a.hero-slideshow-skip:any-link:hover {
+main .hero-slideshow a.hero-slideshow-scroll:any-link:hover {
   color: var(--ao-white);
+}
+
+main .hero-slideshow a.hero-slideshow-skip:any-link:hover {
+  color: var(--ao-navy);
 }
 
 @keyframes hero-slideshow-bounce {

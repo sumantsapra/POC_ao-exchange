@@ -62,7 +62,7 @@ main .columns-tiles .columns-tiles-logo img {
 
 main .columns-tiles .columns-tiles-label p {
   margin: 0;
-  color: var(--ao-process-blue);
+  color: var(--ao-white);
   font-family: var(--display-font-family);
   font-size: 19px;
   font-weight: 400;
@@ -73,7 +73,7 @@ main .columns-tiles .columns-tiles-label p {
 }
 
 main .columns-tiles .columns-tiles-tile-2 .columns-tiles-label p {
-  color: var(--ao-lime);
+  color: var(--ao-navy);
 }
 
 /*

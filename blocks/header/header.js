@@ -86,12 +86,19 @@ function markCurrent(list) {
   });
 }
 
+/* white text passes WCAG AA (4.5:1) on backgrounds up to about this luminance; navy text passes
+   above it, so the switch point sits where both give the same contrast */
+const LIGHT_TEXT_MAX_LUMINANCE = 0.19;
+/* the sidebar's grey text (#2b2d3e) needs a background at least this light for 4.5:1;
+   between the two thresholds (e.g. Process Blue, Hits Different Blue) text switches to navy */
+const GREY_TEXT_MIN_LUMINANCE = 0.3;
+
 /**
- * Returns true when the colour is dark enough to need light text on top.
- * @param {string} color CSS rgb()/rgba() string
- * @returns {boolean|null} null when transparent
+ * Relative luminance (WCAG) of a CSS rgb()/rgba() colour.
+ * @param {string} color
+ * @returns {number|null} null when transparent
  */
-function isDarkColor(color) {
+function luminanceOf(color) {
   const m = color.match(/rgba?\(([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+))?/);
   if (!m) return null;
   if (m[4] !== undefined && Number(m[4]) === 0) return null;
@@ -99,25 +106,25 @@ function isDarkColor(color) {
     const c = Number(v) / 255;
     return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
   });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.35;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
 /**
- * Detects whether what is painted behind a point is dark (dark fill, photo or video).
+ * Luminance of what is painted behind a point. Photos and videos count as dark (0).
  * @param {number} x
  * @param {number} y
  * @param {Element} ignore the nav itself
- * @returns {boolean}
+ * @returns {number}
  */
-function isDarkBehind(x, y, ignore) {
+function luminanceBehind(x, y, ignore) {
   const stack = document.elementsFromPoint(x, y).filter((el) => !ignore.contains(el));
   for (let i = 0; i < stack.length; i += 1) {
     const el = stack[i];
-    if (el.tagName === 'IMG' || el.tagName === 'VIDEO' || el.tagName === 'PICTURE') return true;
-    const dark = isDarkColor(getComputedStyle(el).backgroundColor);
-    if (dark !== null) return dark;
+    if (el.tagName === 'IMG' || el.tagName === 'VIDEO' || el.tagName === 'PICTURE') return 0;
+    const luminance = luminanceOf(getComputedStyle(el).backgroundColor);
+    if (luminance !== null) return luminance;
   }
-  return false;
+  return 1;
 }
 
 /**
@@ -179,17 +186,24 @@ function buildSectionNav(sections) {
 }
 
 /**
- * Keeps the section nav legible: switches to light text over dark backgrounds.
- * @param {Element} nav
+ * Keeps fixed nav text legible over the sections scrolling underneath: each item switches to
+ * white over dark backgrounds (is-inverted) and to navy over mid-tone colours (is-on-colour).
+ * @param {Element} nav the fixed container
+ * @param {string} selector the text items to check
  */
-function watchContrast(nav) {
+function watchContrast(nav, selector) {
   let ticking = false;
   const update = () => {
     ticking = false;
-    const link = nav.querySelector('a');
-    if (!link || !DESKTOP.matches) return;
-    const box = link.getBoundingClientRect();
-    nav.classList.toggle('is-inverted', isDarkBehind(box.left + 2, box.top + box.height / 2, nav));
+    if (!DESKTOP.matches) return;
+    // each item checks what is behind it: the items can sit over different sections
+    nav.querySelectorAll(selector).forEach((item) => {
+      const box = item.getBoundingClientRect();
+      const luminance = luminanceBehind(box.left + 2, box.top + box.height / 2, nav);
+      item.classList.toggle('is-inverted', luminance < LIGHT_TEXT_MAX_LUMINANCE);
+      item.classList.toggle('is-on-colour', luminance >= LIGHT_TEXT_MAX_LUMINANCE
+        && luminance < GREY_TEXT_MIN_LUMINANCE);
+    });
   };
   const schedule = () => {
     if (!ticking) {
@@ -306,9 +320,11 @@ export default async function decorate(block) {
     const sectionNav = buildSectionNav(pageSections);
     block.append(sectionNav);
     hideOnScroll(navWrapper);
-    watchContrast(sectionNav);
+    watchContrast(sectionNav, 'a');
   } else {
     block.classList.add('header-sidebar');
     document.body.classList.add('has-nav-sidebar');
+    // coloured bands run under the transparent sidebar
+    watchContrast(navWrapper, '.nav-brand a, .nav-sections a, .nav-meta p');
   }
 }

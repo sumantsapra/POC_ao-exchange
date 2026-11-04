@@ -344,7 +344,16 @@ body {
     background: #f1f1f1;
   }
 
-  header .nav-page-sections.is-inverted a {
+  header .nav-page-sections a.is-inverted {
     color: #fff;
+  }
+
+  /* sidebar text over the coloured bands that run underneath it */
+  header .header-sidebar :is(.nav-brand a, .nav-sections a, .nav-meta p).is-inverted {
+    color: #fff;
+  }
+
+  header .header-sidebar :is(.nav-brand a, .nav-sections a, .nav-meta p).is-on-colour {
+    color: var(--header-ink);
   }
 }

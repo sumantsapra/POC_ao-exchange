@@ -19,6 +19,10 @@ function normaliseHex(value) {
  * @param {string} hex
  * @returns {number}
  */
+/* white text reaches the WCAG AA 4.5:1 ratio up to this background luminance; above it the tile
+   gets navy text (the brand navy passes on every lighter swatch) */
+const WHITE_TEXT_MAX_LUMINANCE = 0.18;
+
 function luminance(hex) {
   const [r, g, b] = [1, 3, 5].map((i) => {
     const c = parseInt(hex.slice(i, i + 2), 16) / 255;
@@ -125,7 +129,7 @@ export default function decorate(block) {
       if (hex) {
         li.style.setProperty('--swatch-color', hex);
         li.dataset.hex = hex;
-        li.classList.add(luminance(hex) > 0.4 ? 'is-light' : 'is-dark');
+        li.classList.add(luminance(hex) > WHITE_TEXT_MAX_LUMINANCE ? 'is-light' : 'is-dark');
         li.prepend(buildCopyButton(hex));
       }
     }

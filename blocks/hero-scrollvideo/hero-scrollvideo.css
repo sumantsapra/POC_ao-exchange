@@ -140,7 +140,7 @@ main .hero-scrollvideo .hero-scrollvideo-before .hero-scrollvideo-pair::after {
   display: block;
   width: 108px;
   height: 1px;
-  background-color: var(--ao-white);
+  background-color: var(--ao-navy);
 }
 
 main .hero-scrollvideo .hero-scrollvideo-pair::before {
@@ -159,8 +159,9 @@ main .hero-scrollvideo .hero-scrollvideo-pair p {
   margin: 0;
 }
 
+/* lime and white are below WCAG AA on Hits Different Blue: eyebrows and captions are navy */
 main .hero-scrollvideo .hero-scrollvideo-eyebrow {
-  color: var(--ao-lime);
+  color: var(--ao-navy);
   font-family: var(--display-font-light);
   font-size: 13px;
   font-weight: 400;
@@ -174,7 +175,7 @@ main .hero-scrollvideo .hero-scrollvideo-eyebrow strong {
 }
 
 main .hero-scrollvideo .hero-scrollvideo-caption {
-  color: var(--ao-white);
+  color: var(--ao-navy);
   font-family: var(--body-font-family);
   font-size: 12px;
   font-weight: 400;

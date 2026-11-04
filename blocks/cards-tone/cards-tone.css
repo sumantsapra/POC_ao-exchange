@@ -3,7 +3,7 @@
  * Default look = AO Reserve (white tiles, light-blue hairline, navy Fino Sans, 4 per row on desktop).
  * Context looks measured on the source:
  *  - AO LIVE (block in a bright-blue section): lime tiles, #00afff Aro Normal, 3 per row.
- *  - Opening Week (tiles with a headline + sub line): hits-different-blue tiles, white Sequel, 3 per row.
+ *  - Opening Week (tiles with a headline + sub line): hits-different-blue tiles, navy Sequel, 3 per row.
  *  - AO Shop (hits-different-blue section): white tiles, #0078ff Sequel, 3 per row.
  *  - AO 1 Point Slam (hits-different-blue section, headline + sub line): blue tiles, white keyline.
  * Tile colours/fonts are custom properties so a section style can override them.
@@ -68,7 +68,7 @@ main .cards-tone .cards-tone-card-body > * + * {
 /* Opening Week: tiles carry a headline plus a sub line */
 main .cards-tone:has(.cards-tone-card-body > * + *) {
   --cards-tone-tile-background: var(--ao-hits-different-blue);
-  --cards-tone-tile-color: var(--ao-white);
+  --cards-tone-tile-color: var(--ao-navy);
   --cards-tone-tile-border: 0;
   --cards-tone-font-family: var(--display-font-family);
   --cards-tone-sub-font-family: "Sequel 100 Wide 45", var(--display-font-light);
@@ -78,16 +78,16 @@ main .cards-tone:has(.cards-tone-card-body > * + *) {
 /* AO LIVE: block sits in the bright-blue section */
 main .section.bright-blue .cards-tone {
   --cards-tone-tile-background: var(--ao-lime);
-  --cards-tone-tile-color: #00afff;
+  --cards-tone-tile-color: var(--ao-navy);
   --cards-tone-tile-border: 0;
   --cards-tone-font-family: "Aro Normal", var(--display-font-black);
   --cards-tone-font-weight: 400;
 }
 
-/* lime section (Opening Week): hits-different-blue tiles, white Sequel */
+/* lime section (Opening Week): hits-different-blue tiles, navy Sequel (white is below AA on #0078ff) */
 main .section.lime .cards-tone {
   --cards-tone-tile-background: var(--ao-hits-different-blue);
-  --cards-tone-tile-color: var(--ao-white);
+  --cards-tone-tile-color: var(--ao-navy);
   --cards-tone-tile-border: 0;
   --cards-tone-font-family: var(--display-font-family);
   --cards-tone-font-weight: 400;
