@@ -178,6 +178,30 @@ export function inMediaOnlyBand(el) {
   return !!section && isMediaOnly(section);
 }
 
+/**
+ * Layered media band (banner-overlay): el holds every image of a media-only band (no text, no
+ * video): a background photo covering the band and artwork laid inside it, e.g. /graphic-elements
+ * second "Divider full screen" band. Live layout: the largest image covers >= 90% of the band and
+ * contains the others. Without a layout: exactly one image is served at the full viewport width.
+ */
+export function isLayeredBand(el) {
+  const band = el.tagName === 'SECTION' ? el : bandOf(el);
+  if (!band || !isMediaOnly(band) || videos(band).length) return false;
+  const imgs = contentImages(el);
+  if (imgs.length < 2 || contentImages(band).length !== imgs.length) return false;
+  const rect = (n) => (typeof n.getBoundingClientRect === 'function' ? n.getBoundingClientRect() : null);
+  const box = rect(band);
+  const rects = imgs.map(rect);
+  if (box && box.width > 1 && rects.every((r) => r && r.width > 1 && r.height > 1)) {
+    const size = (r) => r.width * r.height;
+    const base = rects.reduce((a, b) => (size(b) > size(a) ? b : a));
+    if (size(base) < 0.9 * box.width * box.height) return false;
+    return rects.every((r) => r === base || (r.left >= base.left - 2 && r.right <= base.right + 2
+      && r.top >= base.top - 2 && r.bottom <= base.bottom + 2));
+  }
+  return imgs.filter((i) => imageInfo(i).fullBleed).length === 1;
+}
+
 /** data-framer-name layer names from el up to its outermost section. */
 export function layerNames(el, root) {
   const names = [];

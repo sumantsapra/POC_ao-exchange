@@ -139,9 +139,10 @@ function isMediaWithOverlay(el) {
 /**
  * Edge-to-edge media band (live browser only): the visible images (and videos, when `withVideo`)
  * of a media-only band tile the full viewport width without overlapping, e.g. /graphic-elements
- * "Divider full screen" 2 x 720 gallery and the 1440 "Application" photo. A logo laid over a band
- * photo overlaps it, so such a band is not treated as a gallery (its overlay would be stretched by
- * the full-width style). Returns null when nothing in the band has a layout (no live browser).
+ * "Divider full screen" 2 x 720 gallery and the 1440 "Application" photo. Overlapping images are
+ * not a gallery; they are a layered band (banner-overlay block) when the largest one spans the
+ * viewport and holds the others (artwork laid over a band photo, the second /graphic-elements
+ * "Divider full screen" band). Returns null when nothing in the band has a layout (no live browser).
  */
 function spansViewport(document, el, withVideo = false) {
   const view = document.defaultView;
@@ -154,7 +155,13 @@ function spansViewport(document, el, withVideo = false) {
   const overlaps = rects.some((a, i) => rects.some((b, j) => j > i
     && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2
     && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2));
-  if (overlaps) return false;
+  if (overlaps) {
+    const size = (r) => r.width * r.height;
+    const base = rects.reduce((a, b) => (size(b) > size(a) ? b : a));
+    const inside = rects.every((r) => r === base || (r.left >= base.left - 2 && r.right <= base.right + 2
+      && r.top >= base.top - 2 && r.bottom <= base.bottom + 2));
+    return inside && base.left <= 2 && base.right >= vw - 2;
+  }
   const left = Math.min(...rects.map((r) => r.left));
   const right = Math.max(...rects.map((r) => r.right));
   return left <= 2 && right >= vw - 2;
@@ -234,19 +241,52 @@ function isCenteredBand(document, el) {
   const box = el.getBoundingClientRect();
   if (!box.width) return false;
   const cs = view.getComputedStyle(el);
-  const mid = (box.left + (parseFloat(cs.paddingLeft) || 0) + box.right - (parseFloat(cs.paddingRight) || 0)) / 2;
-  const texts = [...el.querySelectorAll(TEXT_SEL)]
-    .filter((t) => (t.textContent || '').trim() && !t.parentElement.closest(TEXT_SEL));
-  let measured = 0;
-  const ok = texts.every((t) => {
-    const range = document.createRange();
-    range.selectNodeContents(t);
-    const r = range.getBoundingClientRect();
-    if (!r.width || !r.height) return true; // hidden copy
-    measured += 1;
-    return Math.abs((r.left + r.right) / 2 - mid) <= 24;
+  const left = box.left + (parseFloat(cs.paddingLeft) || 0);
+  const right = box.right - (parseFloat(cs.paddingRight) || 0);
+  const mid = (left + right) / 2;
+  const items = [...el.querySelectorAll(TEXT_SEL)]
+    .filter((t) => (t.textContent || '').trim() && !t.parentElement.closest(TEXT_SEL))
+    .map((t) => {
+      const range = document.createRange();
+      range.selectNodeContents(t);
+      let align = '';
+      try { align = view.getComputedStyle(t).textAlign; } catch (e) { align = ''; }
+      return { r: range.getBoundingClientRect(), end: /right|end/.test(align) };
+    })
+    .filter(({ r }) => r.width && r.height); // hidden copies have no box
+  const centred = items.filter(({ r }) => Math.abs((r.left + r.right) / 2 - mid) <= 24);
+  // a start-aligned text and an end-aligned text side by side, flush with both ends (an audience
+  // scale's start / end labels, /partner-guidelines) are symmetric about the centre line too
+  const mirrored = (a) => items.some((b) => {
+    if (b === a || a.end === b.end || a.r.top >= b.r.bottom || b.r.top >= a.r.bottom) return false;
+    const [start, end] = a.end ? [b.r, a.r] : [a.r, b.r];
+    return Math.abs((start.left - left) - (right - end.right)) <= 24;
   });
-  return ok && measured > 0;
+  return centred.length > 0 && items.every((t) => centred.includes(t) || mirrored(t));
+}
+
+/**
+ * Display heading (live browser only): a heading rendered at >= 80px, far above the 70px page
+ * titles, e.g. /partner-guidelines "An invitation to play" (88px) and "Process Blue" (146px).
+ */
+const DISPLAY_MIN = 80;
+
+function displayHeading(document, el) {
+  const view = document.defaultView;
+  if (!view || typeof view.getComputedStyle !== 'function') return null;
+  return [...el.querySelectorAll('h1, h2, h3, h4, h5, h6')].find((h) => {
+    if (!(h.textContent || '').trim() || typeof h.getBoundingClientRect !== 'function') return false;
+    const r = h.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    try { return parseFloat(view.getComputedStyle(h).fontSize) >= DISPLAY_MIN; } catch (e) { return false; }
+  }) || null;
+}
+
+/** Colour values (RGB / HEX lines) after the display heading: a colour feature band. */
+function hasColourValues(el) {
+  const t = (el.textContent || '').replace(/\s+/g, ' ');
+  // Framer runs the value lines together ("RGB 0 / 145 / 210HEX #0091D2"): no word boundaries
+  return /HEX\s*#?[0-9a-f]{6}/i.test(t) && /RGB\s*\d/i.test(t);
 }
 
 /**
@@ -297,7 +337,14 @@ function resolveStructural(document, sections) {
       else full = hasVideo ? family && spans : spans;
       if (full) styles.push('full-width');
     }
-    if (isCenteredBand(document, el)) styles.push('centered');
+    const centred = isCenteredBand(document, el);
+    if (centred) styles.push('centered');
+    // display title bands (not the hero): a centred intro (title + copy + audience scale), or a
+    // single colour presented by its name in display size above its values
+    if (i > 0 && displayHeading(document, el)) {
+      if (centred) styles.push('intro');
+      else if (hasColourValues(el)) styles.push('colour-feature');
+    }
     const meta = {};
     if (styles.length) meta.style = styles.join(', ');
     return { el, meta, id: `structural-${i + 1}` };

@@ -313,18 +313,18 @@ var CustomImportScript = (() => {
       const tile = tileOf(source, element);
       const label = textOf2(tile);
       const colour = tileColour(source, tile);
-      const textCell = [];
+      const textCell2 = [];
       if (label) {
         const p = document2.createElement("p");
         p.textContent = label;
-        textCell.push(p);
+        textCell2.push(p);
       }
       if (colour) {
         const p = document2.createElement("p");
         p.textContent = `Background: ${colour}`;
-        textCell.push(p);
+        textCell2.push(p);
       }
-      cells.push([img, textCell.length ? textCell : ""]);
+      cells.push([img, textCell2.length ? textCell2 : ""]);
     });
     const block = WebImporter.Blocks.createBlock(document2, { name: "cards-logo", cells });
     element.replaceWith(block);
@@ -528,16 +528,16 @@ var CustomImportScript = (() => {
         pic.alt = img.getAttribute("alt") || name;
         imageCell.push(pic);
       }
-      const textCell = [];
+      const textCell2 = [];
       const h3 = document2.createElement("h3");
       h3.textContent = name;
-      textCell.push(h3);
+      textCell2.push(h3);
       values.forEach((v) => {
         const p = document2.createElement("p");
         p.textContent = v;
-        textCell.push(p);
+        textCell2.push(p);
       });
-      cells.push([imageCell.length ? imageCell : "", textCell]);
+      cells.push([imageCell.length ? imageCell : "", textCell2]);
     });
     [...element.querySelectorAll("p")].filter((p) => textOf5(p) && !isNoise(textOf5(p)) && !p.closest("button")).filter((p) => !tiles.some((t) => t.contains(p))).forEach((p) => addNote(textOf5(p)));
     const block = WebImporter.Blocks.createBlock(document2, { name: "cards-swatch", cells });
@@ -746,7 +746,13 @@ var CustomImportScript = (() => {
     const widths = rects.map((r) => r.width).sort((a, b) => a - b);
     const top = Math.min(...rects.map((r) => r.top));
     const firstRow = rects.filter((r) => r.top < top + Math.min(...rects.map((x) => x.height)) * 0.8);
-    return { median: widths[Math.floor(widths.length / 2)], cols: firstRow.length, left: Math.min(...firstRow.map((r) => r.left)) };
+    return {
+      median: widths[Math.floor(widths.length / 2)],
+      min: widths[0],
+      max: widths[widths.length - 1],
+      cols: firstRow.length,
+      left: Math.min(...firstRow.map((r) => r.left))
+    };
   }
   function isFramed(element) {
     for (let n = element, d = 0; n && d < 3 && n.tagName !== "SECTION"; n = n.parentElement, d += 1) {
@@ -757,6 +763,13 @@ var CustomImportScript = (() => {
         return rgb && luminance(rgb) < 0.3;
       });
       if (inner) return true;
+    }
+    return false;
+  }
+  function onLightCard(element) {
+    for (let n = element, d = 0; n && d < 4 && n.tagName !== "SECTION"; n = n.parentElement, d += 1) {
+      const rgb = rgbOf((styleOf(n) || {}).backgroundColor);
+      if (rgb && luminance(rgb) >= 0.9) return true;
     }
     return false;
   }
@@ -794,12 +807,12 @@ var CustomImportScript = (() => {
       tiles.push(tile);
       artworks.push(source);
       const name2 = textOf7(tile);
-      let textCell = "";
+      let textCell2 = "";
       if (name2) {
-        textCell = document2.createElement("p");
-        textCell.textContent = name2;
+        textCell2 = document2.createElement("p");
+        textCell2.textContent = name2;
       }
-      cells.push([img, textCell]);
+      cells.push([img, textCell2]);
     });
     if (half && half.caption.length) {
       cells.push([half.caption.map((p) => {
@@ -814,6 +827,7 @@ var CustomImportScript = (() => {
       const leftAligned = !!(layout && box && Math.abs(layout.left - box.left) <= 2);
       if (layout && layout.cols === 4 && layout.median >= 120 && leftAligned && !isFramed(element)) options.push("logos");
       else if (isFramed(element)) options.push("framed");
+      else if (layout && layout.cols === 5 && layout.min >= 150 && layout.max - layout.min <= 2 && onLightCard(element)) options.push("stickers");
     }
     if (half) {
       half.heading.remove();
@@ -1073,14 +1087,14 @@ var CustomImportScript = (() => {
         imageCell.src = src;
         imageCell.alt = art.getAttribute("alt") || "";
       }
-      const textCell = texts3.map((n, i) => {
+      const textCell2 = texts3.map((n, i) => {
         const t = textOf8(n);
         const isTitle = i === 0 && texts3.length > 1 && (/^H[1-6]$/.test(n.tagName) || t.split(" ").length <= 6);
         const el = document2.createElement(isTitle ? "h3" : "p");
         el.textContent = t;
         return el;
       });
-      cells.push([imageCell, textCell.length ? textCell : ""]);
+      cells.push([imageCell, textCell2.length ? textCell2 : ""]);
     });
     const measured = heights.filter((h) => h > 0);
     const short = measured.length > 0 && measured.every((h) => h <= 300);
@@ -1211,9 +1225,9 @@ var CustomImportScript = (() => {
     const seenImgs = /* @__PURE__ */ new Set();
     let row = columns.map((col) => contentOf(document2, col, seenImgs)).filter((c) => c.length);
     if (row.length === 1) {
-      const textCell = row[0].filter((n) => n.tagName !== "IMG");
+      const textCell2 = row[0].filter((n) => n.tagName !== "IMG");
       const imgCell = row[0].filter((n) => n.tagName === "IMG");
-      row = imgCell.length && textCell.length ? [textCell, imgCell] : [row[0], ""];
+      row = imgCell.length && textCell2.length ? [textCell2, imgCell] : [row[0], ""];
     }
     const imgCol = columns.find((c) => c.querySelector("img") && !textOf9(c));
     if (row.length === 2 && imgCol && columns[0] === imgCol && Array.isArray(row[1])) {
@@ -1277,12 +1291,12 @@ var CustomImportScript = (() => {
         imageCell.src = src;
         imageCell.alt = photo.getAttribute("alt") || "";
       }
-      const textCell = captions.map((t) => {
+      const textCell2 = captions.map((t) => {
         const p = document2.createElement("p");
         p.textContent = t;
         return p;
       });
-      cells.push([imageCell, textCell.length ? textCell : ""]);
+      cells.push([imageCell, textCell2.length ? textCell2 : ""]);
     });
     const block = WebImporter.Blocks.createBlock(document2, { name: "cards-misuse", cells });
     element.replaceWith(block);
@@ -1440,6 +1454,102 @@ var CustomImportScript = (() => {
     });
     steps.slice(1).forEach((s) => s.remove());
     const block = WebImporter.Blocks.createBlock(document2, { name: "cards-steps", cells });
+    element.replaceWith(block);
+  }
+
+  // tools/importer/parsers/columns-spectrum.js
+  var CONTENT_IMG2 = 'img:not([src^="data:"]), img[src^="data:image/svg+xml"]';
+  var TEXT_SEL3 = "h1, h2, h3, h4, h5, h6, p";
+  function textOf11(el) {
+    const clone = el.cloneNode(true);
+    clone.querySelectorAll("br").forEach((br) => br.replaceWith(" "));
+    return clone.textContent.replace(/\s+/g, " ").trim();
+  }
+  function imgSrc13(img) {
+    const src = img.getAttribute("src") || "";
+    return /framerusercontent\.com\/images\//.test(src) ? src.split("?")[0] : src;
+  }
+  function hasContent6(el) {
+    return !!textOf11(el) || !!el.querySelector(`${CONTENT_IMG2}, video`) || el.matches(`${CONTENT_IMG2}, video`);
+  }
+  function contentChildren(el) {
+    return [...el.children].filter((c) => !/^(SCRIPT|STYLE|HR)$/.test(c.tagName) && hasContent6(c));
+  }
+  function unwrap(el) {
+    let node = el;
+    for (let kids = contentChildren(node); kids.length === 1 && !/^(H\d|P|IMG)$/.test(kids[0].tagName); kids = contentChildren(node)) [node] = kids;
+    return node;
+  }
+  function videoSrc2(el) {
+    const video = el.tagName === "VIDEO" ? el : el.querySelector("video");
+    if (!video) return "";
+    return video.getAttribute("src") || video.querySelector("source[src]") && video.querySelector("source[src]").getAttribute("src") || "";
+  }
+  function imageOf(img, document2) {
+    const out = document2.createElement("img");
+    out.src = imgSrc13(img);
+    out.alt = img.getAttribute("alt") || "";
+    return out;
+  }
+  function textCell(tile, document2) {
+    return [...tile.querySelectorAll(TEXT_SEL3)].filter((t) => textOf11(t) && !t.parentElement.closest(TEXT_SEL3)).map((t) => {
+      const out = document2.createElement(/^H\d$/.test(t.tagName) ? t.tagName.toLowerCase() : "p");
+      out.textContent = textOf11(t);
+      return out;
+    });
+  }
+  function mediaCell(tile, document2) {
+    const src = videoSrc2(tile);
+    if (src) {
+      const p = document2.createElement("p");
+      const a = document2.createElement("a");
+      a.href = src;
+      a.textContent = src;
+      p.append(a);
+      return [p];
+    }
+    const img = tile.matches(CONTENT_IMG2) ? tile : tile.querySelector(CONTENT_IMG2);
+    return img ? [imageOf(img, document2)] : "";
+  }
+  function mediaRowAfter(element) {
+    const band = element.closest("section");
+    if (!band) return null;
+    const after = [...band.querySelectorAll("*")].filter((n) => !element.contains(n) && element.compareDocumentPosition(n) & 4);
+    return after.find((n) => {
+      const kids = contentChildren(n);
+      if (kids.length < 2 || kids.length > 3 || textOf11(n)) return false;
+      const isVideo = (k) => k.querySelectorAll("video").length === 1 && !k.querySelector(CONTENT_IMG2);
+      if (!isVideo(kids[0]) || !isVideo(kids[kids.length - 1])) return false;
+      return kids.length === 2 || kids[1].querySelectorAll(CONTENT_IMG2).length === 1 && !kids[1].querySelector("video");
+    }) || null;
+  }
+  function parse16(element, { document: document2 }) {
+    const cells = [];
+    contentChildren(element).forEach((child) => {
+      const row = unwrap(child);
+      const imgs = row.matches(CONTENT_IMG2) ? [row] : [...row.querySelectorAll(CONTENT_IMG2)];
+      if (!textOf11(row) && imgs.length === 1) {
+        const above = cells[cells.length - 1];
+        if (above) above[1] = [imageOf(imgs[0], document2)];
+        else cells.push(["", [imageOf(imgs[0], document2)], ""]);
+        return;
+      }
+      const kids = contentChildren(row);
+      const start = kids.length >= 2 ? kids[0] : row;
+      const end = kids.length >= 2 ? kids[kids.length - 1] : null;
+      cells.push([textCell(start, document2), "", end ? textCell(end, document2) : ""]);
+    });
+    const media = mediaRowAfter(element);
+    if (media) {
+      const tiles = contentChildren(media);
+      cells.push([
+        mediaCell(tiles[0], document2),
+        tiles.length === 3 ? mediaCell(tiles[1], document2) : "",
+        mediaCell(tiles[tiles.length - 1], document2)
+      ]);
+      media.remove();
+    }
+    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-spectrum", cells });
     element.replaceWith(block);
   }
 
@@ -2298,7 +2408,12 @@ var CustomImportScript = (() => {
     const rects = [...el.querySelectorAll(withVideo ? "img, video" : "img")].map((img) => img.getBoundingClientRect()).filter((r) => r.width > 1 && r.height > 1);
     if (!rects.length) return null;
     const overlaps2 = rects.some((a, i) => rects.some((b, j) => j > i && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2));
-    if (overlaps2) return false;
+    if (overlaps2) {
+      const size = (r) => r.width * r.height;
+      const base = rects.reduce((a, b) => size(b) > size(a) ? b : a);
+      const inside = rects.every((r) => r === base || r.left >= base.left - 2 && r.right <= base.right + 2 && r.top >= base.top - 2 && r.bottom <= base.bottom + 2);
+      return inside && base.left <= 2 && base.right >= vw - 2;
+    }
     const left = Math.min(...rects.map((r) => r.left));
     const right = Math.max(...rects.map((r) => r.right));
     return left <= 2 && right >= vw - 2;
@@ -2352,25 +2467,53 @@ var CustomImportScript = (() => {
     }
     return null;
   }
-  var TEXT_SEL3 = "h1, h2, h3, h4, h5, h6, p, li";
+  var TEXT_SEL4 = "h1, h2, h3, h4, h5, h6, p, li";
   function isCenteredBand(document2, el) {
     const view = document2.defaultView;
     if (!view || typeof view.getComputedStyle !== "function" || typeof document2.createRange !== "function" || typeof el.getBoundingClientRect !== "function") return false;
     const box = el.getBoundingClientRect();
     if (!box.width) return false;
     const cs = view.getComputedStyle(el);
-    const mid = (box.left + (parseFloat(cs.paddingLeft) || 0) + box.right - (parseFloat(cs.paddingRight) || 0)) / 2;
-    const texts3 = [...el.querySelectorAll(TEXT_SEL3)].filter((t) => (t.textContent || "").trim() && !t.parentElement.closest(TEXT_SEL3));
-    let measured = 0;
-    const ok = texts3.every((t) => {
+    const left = box.left + (parseFloat(cs.paddingLeft) || 0);
+    const right = box.right - (parseFloat(cs.paddingRight) || 0);
+    const mid = (left + right) / 2;
+    const items = [...el.querySelectorAll(TEXT_SEL4)].filter((t) => (t.textContent || "").trim() && !t.parentElement.closest(TEXT_SEL4)).map((t) => {
       const range = document2.createRange();
       range.selectNodeContents(t);
-      const r = range.getBoundingClientRect();
-      if (!r.width || !r.height) return true;
-      measured += 1;
-      return Math.abs((r.left + r.right) / 2 - mid) <= 24;
+      let align = "";
+      try {
+        align = view.getComputedStyle(t).textAlign;
+      } catch (e) {
+        align = "";
+      }
+      return { r: range.getBoundingClientRect(), end: /right|end/.test(align) };
+    }).filter(({ r }) => r.width && r.height);
+    const centred = items.filter(({ r }) => Math.abs((r.left + r.right) / 2 - mid) <= 24);
+    const mirrored = (a) => items.some((b) => {
+      if (b === a || a.end === b.end || a.r.top >= b.r.bottom || b.r.top >= a.r.bottom) return false;
+      const [start, end] = a.end ? [b.r, a.r] : [a.r, b.r];
+      return Math.abs(start.left - left - (right - end.right)) <= 24;
     });
-    return ok && measured > 0;
+    return centred.length > 0 && items.every((t) => centred.includes(t) || mirrored(t));
+  }
+  var DISPLAY_MIN = 80;
+  function displayHeading(document2, el) {
+    const view = document2.defaultView;
+    if (!view || typeof view.getComputedStyle !== "function") return null;
+    return [...el.querySelectorAll("h1, h2, h3, h4, h5, h6")].find((h) => {
+      if (!(h.textContent || "").trim() || typeof h.getBoundingClientRect !== "function") return false;
+      const r = h.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
+      try {
+        return parseFloat(view.getComputedStyle(h).fontSize) >= DISPLAY_MIN;
+      } catch (e) {
+        return false;
+      }
+    }) || null;
+  }
+  function hasColourValues(el) {
+    const t = (el.textContent || "").replace(/\s+/g, " ");
+    return /HEX\s*#?[0-9a-f]{6}/i.test(t) && /RGB\s*\d/i.test(t);
   }
   function siblingBands(sectionsList) {
     const parents = new Set(sectionsList.map((s) => s.parentElement).filter(Boolean));
@@ -2404,7 +2547,12 @@ var CustomImportScript = (() => {
         else full = hasVideo ? family && spans : spans;
         if (full) styles.push("full-width");
       }
-      if (isCenteredBand(document2, el)) styles.push("centered");
+      const centred = isCenteredBand(document2, el);
+      if (centred) styles.push("centered");
+      if (i > 0 && displayHeading(document2, el)) {
+        if (centred) styles.push("intro");
+        else if (hasColourValues(el)) styles.push("colour-feature");
+      }
       const meta = {};
       if (styles.length) meta.style = styles.join(", ");
       return { el, meta, id: `structural-${i + 1}` };
@@ -2471,9 +2619,9 @@ var CustomImportScript = (() => {
 
   // tools/importer/detectors/common.js
   var HEADINGS4 = "h1, h2, h3, h4, h5, h6";
-  var TEXT_SEL4 = "h1, h2, h3, h4, h5, h6, p, li";
+  var TEXT_SEL5 = "h1, h2, h3, h4, h5, h6, p, li";
   var NOISE_RE = /^copy( hex| to clipboard)?$/i;
-  function textOf11(el) {
+  function textOf12(el) {
     if (!el) return "";
     return (el.textContent || "").replace(/\s+/g, " ").trim();
   }
@@ -2482,9 +2630,9 @@ var CustomImportScript = (() => {
     const clone = el.cloneNode(true);
     clone.querySelectorAll("button").forEach((b) => b.remove());
     clone.querySelectorAll("p").forEach((p) => {
-      if (NOISE_RE.test(textOf11(p))) p.remove();
+      if (NOISE_RE.test(textOf12(p))) p.remove();
     });
-    return textOf11(clone);
+    return textOf12(clone);
   }
   function contentImages3(el) {
     if (!el) return [];
@@ -2499,23 +2647,23 @@ var CustomImportScript = (() => {
     return el.tagName === "VIDEO" ? [el] : [...el.querySelectorAll("video")];
   }
   function headings(el) {
-    return [...el.querySelectorAll(HEADINGS4)].filter((h) => textOf11(h) && !NOISE_RE.test(textOf11(h)));
+    return [...el.querySelectorAll(HEADINGS4)].filter((h) => textOf12(h) && !NOISE_RE.test(textOf12(h)));
   }
   function textElements(el) {
-    return [...el.querySelectorAll(TEXT_SEL4)].filter((t) => textOf11(t) && !NOISE_RE.test(textOf11(t)) && !t.closest("button")).filter((t) => !t.parentElement.closest(TEXT_SEL4));
+    return [...el.querySelectorAll(TEXT_SEL5)].filter((t) => textOf12(t) && !NOISE_RE.test(textOf12(t)) && !t.closest("button")).filter((t) => !t.parentElement.closest(TEXT_SEL5));
   }
-  function hasContent6(el) {
+  function hasContent7(el) {
     if (!el || el.tagName === "HR" || el.tagName === "STYLE" || el.tagName === "SCRIPT") return false;
-    return !!textOf11(el) || contentImages3(el).length > 0 || videos(el).length > 0;
+    return !!textOf12(el) || contentImages3(el).length > 0 || videos(el).length > 0;
   }
-  function contentChildren(el) {
-    return [...el.children].filter(hasContent6);
+  function contentChildren2(el) {
+    return [...el.children].filter(hasContent7);
   }
   function isMediaOnly2(el) {
-    return !textOf11(el) && (contentImages3(el).length > 0 || videos(el).length > 0);
+    return !textOf12(el) && (contentImages3(el).length > 0 || videos(el).length > 0);
   }
   function isImageTile(el) {
-    return !textOf11(el) && videos(el).length === 0 && contentImages3(el).length === 1;
+    return !textOf12(el) && videos(el).length === 0 && contentImages3(el).length === 1;
   }
   function isLabelledImageTile(el, maxWords = 6) {
     if (videos(el).length || contentImages3(el).length !== 1) return false;
@@ -2525,11 +2673,11 @@ var CustomImportScript = (() => {
     return !t || t.split(" ").length <= maxWords;
   }
   function isImageGrid(el, min = 2) {
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length < min) return false;
     if (kids.every(isImageTile)) return true;
     return kids.every((k) => {
-      const row = contentChildren(k);
+      const row = contentChildren2(k);
       return row.length >= 2 && row.every(isImageTile);
     });
   }
@@ -2604,7 +2752,7 @@ var CustomImportScript = (() => {
   function contextOf(el, ctx) {
     const h = previousHeading(el, ctx);
     return {
-      heading: h ? textOf11(h) : "",
+      heading: h ? textOf12(h) : "",
       layers: layerNames(el, ctx.root).join(" | ")
     };
   }
@@ -2621,7 +2769,7 @@ var CustomImportScript = (() => {
       if (seedEls.includes(el)) return;
       if (/^(SCRIPT|STYLE|SVG|HR|IMG|VIDEO|BUTTON|P|H[1-6])$/i.test(el.tagName)) return;
       const holdsSeed = seedEls.some((s) => el.contains(s));
-      if (!holdsSeed && hasContent6(el)) {
+      if (!holdsSeed && hasContent7(el)) {
         for (const det of detectors2) {
           let ok = false;
           try {
@@ -2632,7 +2780,7 @@ var CustomImportScript = (() => {
           if (ok) {
             let target = el;
             for (; ; ) {
-              const kids = contentChildren(target);
+              const kids = contentChildren2(target);
               if (kids.length !== 1) break;
               let inner = false;
               try {
@@ -2664,20 +2812,20 @@ var CustomImportScript = (() => {
     if (el.classList && el.classList.contains("framer-KY4CI")) return true;
     const hs = headings(el);
     if (hs.length !== 1) return false;
-    const labels = [...el.querySelectorAll("p")].filter((p) => LABEL_RE.test(textOf11(p)));
+    const labels = [...el.querySelectorAll("p")].filter((p) => LABEL_RE.test(textOf12(p)));
     return labels.length >= 1;
   }
   function isImageNameTile(el) {
     const hs = headings(el);
     if (hs.length !== 1 || contentImages3(el).length < 1) return false;
-    return !el.querySelector("p") || [...el.querySelectorAll("p")].every((p) => !LABEL_RE.test(textOf11(p)) && NOISE_RE.test(textOf11(p)));
+    return !el.querySelector("p") || [...el.querySelectorAll("p")].every((p) => !LABEL_RE.test(textOf12(p)) && NOISE_RE.test(textOf12(p)));
   }
   function isNote(el) {
     return !headings(el).length && !contentImages3(el).length && textElements(el).length >= 1;
   }
   function isSwatchGrid(el) {
     if (isSwatchTile(el)) return false;
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (!kids.length) return false;
     let swatches = 0;
     const ok = kids.every((k) => {
@@ -2686,7 +2834,7 @@ var CustomImportScript = (() => {
         return true;
       }
       if (isImageNameTile(k)) return true;
-      const inner = contentChildren(k);
+      const inner = contentChildren2(k);
       if (inner.some(isSwatchTile) && inner.every((c) => isSwatchTile(c) || isNote(c))) {
         swatches += 1;
         return true;
@@ -2697,41 +2845,41 @@ var CustomImportScript = (() => {
   }
   var CONTRAST_RE = /^\S{0,4}\s*background\s*:?\s*\S.*\btext\s*:?\s*\S/i;
   function isContrastTile(el) {
-    const t = textOf11(el).replace(/(background|text)/gi, " $1 ").replace(/\s+/g, " ").trim();
+    const t = textOf12(el).replace(/(background|text)/gi, " $1 ").replace(/\s+/g, " ").trim();
     if (!CONTRAST_RE.test(t) || contentImages3(el).length) return false;
     if (t.split(" ").length > 14) return false;
-    return [...el.querySelectorAll("p")].filter((p) => /^background/i.test(textOf11(p))).length === 1;
+    return [...el.querySelectorAll("p")].filter((p) => /^background/i.test(textOf12(p))).length === 1;
   }
   function isContrastGrid(el) {
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     return kids.length >= 1 && kids.every(isContrastTile) && !isContrastTile(el);
   }
   function isVideoContainer(el) {
     if (el.tagName === "SECTION") return false;
-    if (textOf11(el) || videos(el).length !== 1 || contentImages3(el).length > 0) return false;
+    if (textOf12(el) || videos(el).length !== 1 || contentImages3(el).length > 0) return false;
     const parent = el.parentElement;
     if (!parent || parent.tagName === "SECTION") return true;
-    return !!textOf11(parent) || videos(parent).length !== 1 || contentImages3(parent).length > 0;
+    return !!textOf12(parent) || videos(parent).length !== 1 || contentImages3(parent).length > 0;
   }
   function mediaWrapper(media, root) {
     let node = media;
     while (node.parentElement && node.parentElement !== root && node.parentElement.tagName !== "SECTION") {
       const p = node.parentElement;
-      if (textOf11(p) || contentImages3(p).length + videos(p).length > 1) break;
+      if (textOf12(p) || contentImages3(p).length + videos(p).length > 1) break;
       node = p;
     }
     return node;
   }
   var GLYPH_RE2 = /\d{4}\S{0,10}[&%#@]|(?:[\u3400-\u9fff]\s*){4,}/;
   function glyphLines(el) {
-    return [...el.querySelectorAll("p")].filter((p) => GLYPH_RE2.test(textOf11(p)));
+    return [...el.querySelectorAll("p")].filter((p) => GLYPH_RE2.test(textOf12(p)));
   }
   function isSpecimen2(el) {
-    return glyphLines(el).length === 1 && !headings(el).length && textOf11(el).length <= 220 && !contentImages3(el).length;
+    return glyphLines(el).length === 1 && !headings(el).length && textOf12(el).length <= 220 && !contentImages3(el).length;
   }
   function isTypefaceRow(el) {
     if (videos(el).length || contentImages3(el).length) return false;
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length === 2 && glyphLines(el).length === 1) {
       const spec = kids.find(isSpecimen2);
       const copy = kids.find((k) => k !== spec);
@@ -2744,7 +2892,7 @@ var CustomImportScript = (() => {
     return false;
   }
   function isTypefaceRowShape(el) {
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length !== 2 || glyphLines(el).length !== 1) return false;
     const spec = kids.find(isSpecimen2);
     const copy = kids.find((k) => k !== spec);
@@ -2767,11 +2915,11 @@ var CustomImportScript = (() => {
   }
   var MISUSE_RE = /^(don['’]?t|do not|never|avoid)\b/i;
   function isMisuseGrid(el) {
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length < 2) return false;
     return kids.every((k) => {
       const texts3 = textElements(k);
-      return contentImages3(k).length >= 1 && contentImages3(k).length <= 3 && texts3.length >= 1 && MISUSE_RE.test(textOf11(texts3[0])) && textOf11(k).split(" ").length <= 30 && !videos(k).length;
+      return contentImages3(k).length >= 1 && contentImages3(k).length <= 3 && texts3.length >= 1 && MISUSE_RE.test(textOf12(texts3[0])) && textOf12(k).split(" ").length <= 30 && !videos(k).length;
     });
   }
   function artworkTextTile(el) {
@@ -2779,12 +2927,12 @@ var CustomImportScript = (() => {
     const imgs = contentImages3(el);
     if (imgs.length !== 1) return null;
     const texts3 = textElements(el);
-    if (!texts3.length || MISUSE_RE.test(textOf11(texts3[0]))) return null;
-    if (textOf11(el).split(" ").length > 120) return null;
+    if (!texts3.length || MISUSE_RE.test(textOf12(texts3[0]))) return null;
+    if (textOf12(el).split(" ").length > 120) return null;
     return { img: imgs[0], texts: texts3 };
   }
   function isSideBySide(el) {
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length !== 2) return false;
     const img = kids.find((k) => isImageTile(k));
     const text = kids.find((k) => k !== img);
@@ -2792,12 +2940,12 @@ var CustomImportScript = (() => {
     return flexDirection(el) === "row";
   }
   function isFramedTextGrid(el) {
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length < 2 || kids.length > 6) return false;
     return kids.every((k) => {
       const tile = artworkTextTile(k);
       if (!tile || isSideBySide(k)) return false;
-      return tile.texts.length >= 2 || textOf11(k).split(" ").length > 6;
+      return tile.texts.length >= 2 || textOf12(k).split(" ").length > 6;
     });
   }
   var EXCLUSION_RE = /exclusion|minimum size|clear ?space|safe ?zone/i;
@@ -2827,20 +2975,20 @@ var CustomImportScript = (() => {
     return letters.length > 0 && letters.replace(/[^A-Z]/g, "").length / letters.length >= 0.8;
   }
   function isToneGrid(el) {
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length < 2) return false;
     const tiles = kids.every((k) => {
       if (contentImages3(k).length || videos(k).length) return false;
       const texts3 = textElements(k);
-      return texts3.length >= 1 && texts3.length <= 3 && textOf11(k).split(" ").length <= 14;
+      return texts3.length >= 1 && texts3.length <= 3 && textOf12(k).split(" ").length <= 14;
     });
     if (!tiles) return false;
     const named = /^voice$/i.test(el.getAttribute("data-framer-name") || "");
-    const upper = kids.filter((k) => isUpper(textOf11(k))).length / kids.length >= 0.6;
+    const upper = kids.filter((k) => isUpper(textOf12(k))).length / kids.length >= 0.6;
     return named || upper;
   }
   function isLabelledGrid(el) {
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     return kids.length >= 2 && kids.every((k) => isLabelledImageTile(k));
   }
   function imageGridKind(el, ctx) {
@@ -2865,7 +3013,7 @@ var CustomImportScript = (() => {
     return null;
   }
   function isLonePanel(el) {
-    if (el.tagName === "SECTION" || textOf11(el) || videos(el).length || contentImages3(el).length !== 1) return false;
+    if (el.tagName === "SECTION" || textOf12(el) || videos(el).length || contentImages3(el).length !== 1) return false;
     const view = el.ownerDocument && el.ownerDocument.defaultView;
     if (!view || typeof view.getComputedStyle !== "function" || typeof el.getBoundingClientRect !== "function") return false;
     let cs = null;
@@ -2910,16 +3058,16 @@ var CustomImportScript = (() => {
   }
   function isMessagingPanel(el) {
     if (el.tagName === "SECTION" || !isLightPanel(el)) return false;
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length !== 2) return false;
     const [roles, examples] = kids;
     if (contentImages3(roles).length || videos(roles).length || headings(roles).length || !textElements(roles).length) return false;
-    const lines = contentChildren(examples);
+    const lines = contentChildren2(examples);
     return lines.length >= 2 && lines.every(isIconLine);
   }
   function isStepTile(el) {
     if (!el || el.tagName === "SECTION") return false;
-    const kids = contentChildren(el);
+    const kids = contentChildren2(el);
     if (kids.length !== 2) return false;
     const [icon, text] = kids;
     const imgs = contentImages3(icon);
@@ -2929,30 +3077,46 @@ var CustomImportScript = (() => {
   }
   function previousContentSibling(el) {
     let n = el.previousElementSibling;
-    while (n && !hasContent6(n)) n = n.previousElementSibling;
+    while (n && !hasContent7(n)) n = n.previousElementSibling;
     return n;
   }
   function isStepRun(el) {
     if (!isStepTile(el) || isStepTile(previousContentSibling(el))) return false;
     let n = el.nextElementSibling;
-    while (n && !hasContent6(n)) n = n.nextElementSibling;
+    while (n && !hasContent7(n)) n = n.nextElementSibling;
     return isStepTile(n);
   }
   function isMediaTile(el) {
-    return !textOf11(el) && contentImages3(el).length + videos(el).length === 1;
+    return !textOf12(el) && contentImages3(el).length + videos(el).length === 1;
   }
   function isMediaColumns(el) {
     if (el.tagName === "SECTION" || !inMediaOnlyBand(el) || !videos(el).length) return false;
-    const cols = contentChildren(el);
+    const cols = contentChildren2(el);
     if (cols.length < 2 || flexDirection(el) !== "row") return false;
     return cols.every((c) => {
-      const tiles = contentChildren(c);
+      const tiles = contentChildren2(c);
       return tiles.length >= 2 && tiles.every(isMediaTile);
     });
   }
+  function unwrapRow(el) {
+    let node = el;
+    for (let kids = contentChildren2(node); kids.length === 1; kids = contentChildren2(node)) [node] = kids;
+    return node;
+  }
+  function isEndsRow(el) {
+    const kids = contentChildren2(unwrapRow(el));
+    return kids.length === 2 && kids.every((k) => !contentImages3(k).length && !videos(k).length && textElements(k).length >= 1 && textOf12(k).split(" ").length <= 20);
+  }
+  function isSpectrum(el) {
+    if (el.tagName === "SECTION") return false;
+    const rows = contentChildren2(el);
+    if (rows.length < 3) return false;
+    const scales = rows.filter((r) => !textOf12(r) && !videos(r).length && contentImages3(r).length === 1);
+    return scales.length === 1 && rows.filter(isEndsRow).length === rows.length - 1;
+  }
   function isLogoRow(el) {
     if (!isSideBySide(el)) return false;
-    const text = contentChildren(el).find((k) => !contentImages3(k).length);
+    const text = contentChildren2(el).find((k) => !contentImages3(k).length);
     return headings(text).length >= 1 || textElements(text).length >= 2;
   }
   var detectors = [
@@ -2961,22 +3125,24 @@ var CustomImportScript = (() => {
       name: "cards-swatch",
       test: (el) => isSwatchGrid(el) || isSwatchTile(el),
       // a lone tile: its container was rejected
-      validate: (el) => /hex/i.test(textOf11(el))
+      validate: (el) => /hex/i.test(textOf12(el))
     },
-    { name: "cards-contrast", test: (el) => isContrastGrid(el), validate: (el) => /background/i.test(textOf11(el)) },
-    { name: "columns-typeface", test: (el) => isTypefaceRow(el), validate: (el) => /\d{4}/.test(textOf11(el)) },
+    { name: "cards-contrast", test: (el) => isContrastGrid(el), validate: (el) => /background/i.test(textOf12(el)) },
+    { name: "columns-typeface", test: (el) => isTypefaceRow(el), validate: (el) => /\d{4}/.test(textOf12(el)) },
     { name: "columns-photos", test: (el) => isMediaColumns(el), validate: (el) => contentImages3(el).length >= 2 },
+    // the audience scale takes the video row after it, so it is tested before video-autoplay
+    { name: "columns-spectrum", test: (el) => isSpectrum(el), validate: (el) => isSpectrum(el) },
     { name: "video-autoplay", test: (el) => isVideoContainer(el), validate: (el) => videos(el).length >= 1 },
-    { name: "cards-tone", test: (el) => isToneGrid(el), validate: (el) => !!textOf11(el) },
-    { name: "columns-messaging", test: (el) => isMessagingPanel(el), validate: (el) => contentImages3(el).length >= 2 && !!textOf11(el) },
+    { name: "cards-tone", test: (el) => isToneGrid(el), validate: (el) => !!textOf12(el) },
+    { name: "columns-messaging", test: (el) => isMessagingPanel(el), validate: (el) => contentImages3(el).length >= 2 && !!textOf12(el) },
     { name: "cards-steps", test: (el) => isStepRun(el), validate: (el) => isStepTile(el) },
-    { name: "cards-misuse", test: (el) => isMisuseGrid(el), validate: (el) => contentImages3(el).length >= 2 && /don/i.test(textOf11(el)) },
+    { name: "cards-misuse", test: (el) => isMisuseGrid(el), validate: (el) => contentImages3(el).length >= 2 && /don/i.test(textOf12(el)) },
     {
       name: "cards-framed",
       test: (el, ctx) => isFramedGrid(el, ctx) || imageGridKind(el, ctx) === "cards-framed",
       validate: (el) => contentImages3(el).length >= 1
     },
-    { name: "columns-text-image", test: (el) => isLogoRow(el), validate: (el) => contentImages3(el).length >= 1 && !!textOf11(el) },
+    { name: "columns-text-image", test: (el) => isLogoRow(el), validate: (el) => contentImages3(el).length >= 1 && !!textOf12(el) },
     { name: "cards-logo", test: (el, ctx) => imageGridKind(el, ctx) === "cards-logo", validate: (el) => contentImages3(el).length >= 2 },
     { name: "cards-shape", test: (el, ctx) => imageGridKind(el, ctx) === "cards-shape", validate: (el) => contentImages3(el).length >= 2 },
     { name: "columns-photos", test: (el, ctx) => imageGridKind(el, ctx) === "columns-photos", validate: (el) => contentImages3(el).length >= 2 },
@@ -3097,6 +3263,12 @@ var CustomImportScript = (() => {
         "name": "cards-steps",
         "instances": [
           ".framer-1cc5wk8 .framer-17e6tnf"
+        ]
+      },
+      {
+        "name": "columns-spectrum",
+        "instances": [
+          "#lookup .framer-1io5j2u"
         ]
       }
     ],
@@ -3309,7 +3481,8 @@ var CustomImportScript = (() => {
     "columns-text-image": parse12,
     "cards-misuse": parse13,
     "columns-messaging": parse14,
-    "cards-steps": parse15
+    "cards-steps": parse15,
+    "columns-spectrum": parse16
   };
   var transformers = [
     transform,

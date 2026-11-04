@@ -322,6 +322,12 @@
           "instances": [
             "#color-6 .framer-1gtid9f"
           ]
+        },
+        {
+          "name": "banner-overlay",
+          "instances": [
+            "section#lookup-4"
+          ]
         }
       ],
       "sections": [
@@ -559,6 +565,12 @@
           "name": "cards-steps",
           "instances": [
             ".framer-1cc5wk8 .framer-17e6tnf"
+          ]
+        },
+        {
+          "name": "columns-spectrum",
+          "instances": [
+            "#lookup .framer-1io5j2u"
           ]
         }
       ],

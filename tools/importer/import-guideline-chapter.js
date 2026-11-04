@@ -17,6 +17,7 @@ import cardsPrincipleParser from "./parsers/cards-principle.js";
 import columnsVoiceParser from "./parsers/columns-voice.js";
 import columnsTermsParser from "./parsers/columns-terms.js";
 import cardsSocialParser from "./parsers/cards-social.js";
+import bannerOverlayParser from "./parsers/banner-overlay.js";
 import aobrandplaybookCleanupTransformer from "./transformers/aobrandplaybook-cleanup.js";
 import aobrandplaybookSectionsTransformer from "./transformers/aobrandplaybook-sections.js";
 import { detectors } from "./detectors/guideline-chapter.js";
@@ -150,6 +151,12 @@ const PAGE_TEMPLATE = {
       "name": "cards-social",
       "instances": [
         "#color-6 .framer-1gtid9f"
+      ]
+    },
+    {
+      "name": "banner-overlay",
+      "instances": [
+        "section#lookup-4"
       ]
     }
   ],
@@ -298,6 +305,7 @@ const parsers = {
   "columns-voice": columnsVoiceParser,
   "columns-terms": columnsTermsParser,
   "cards-social": cardsSocialParser,
+  "banner-overlay": bannerOverlayParser,
 };
 
 const transformers = [

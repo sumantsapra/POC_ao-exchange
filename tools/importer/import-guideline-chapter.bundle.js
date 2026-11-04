@@ -1133,7 +1133,13 @@ var CustomImportScript = (() => {
     const widths = rects.map((r) => r.width).sort((a, b) => a - b);
     const top = Math.min(...rects.map((r) => r.top));
     const firstRow = rects.filter((r) => r.top < top + Math.min(...rects.map((x) => x.height)) * 0.8);
-    return { median: widths[Math.floor(widths.length / 2)], cols: firstRow.length, left: Math.min(...firstRow.map((r) => r.left)) };
+    return {
+      median: widths[Math.floor(widths.length / 2)],
+      min: widths[0],
+      max: widths[widths.length - 1],
+      cols: firstRow.length,
+      left: Math.min(...firstRow.map((r) => r.left))
+    };
   }
   function isFramed(element) {
     for (let n = element, d = 0; n && d < 3 && n.tagName !== "SECTION"; n = n.parentElement, d += 1) {
@@ -1144,6 +1150,13 @@ var CustomImportScript = (() => {
         return rgb && luminance(rgb) < 0.3;
       });
       if (inner) return true;
+    }
+    return false;
+  }
+  function onLightCard(element) {
+    for (let n = element, d = 0; n && d < 4 && n.tagName !== "SECTION"; n = n.parentElement, d += 1) {
+      const rgb = rgbOf((styleOf(n) || {}).backgroundColor);
+      if (rgb && luminance(rgb) >= 0.9) return true;
     }
     return false;
   }
@@ -1201,6 +1214,7 @@ var CustomImportScript = (() => {
       const leftAligned = !!(layout && box && Math.abs(layout.left - box.left) <= 2);
       if (layout && layout.cols === 4 && layout.median >= 120 && leftAligned && !isFramed(element)) options.push("logos");
       else if (isFramed(element)) options.push("framed");
+      else if (layout && layout.cols === 5 && layout.min >= 150 && layout.max - layout.min <= 2 && onLightCard(element)) options.push("stickers");
     }
     if (half) {
       half.heading.remove();
@@ -1481,6 +1495,39 @@ var CustomImportScript = (() => {
       cells.push([img, textCell.length ? textCell : ""]);
     });
     const block = WebImporter.Blocks.createBlock(document, { name: "cards-social", cells });
+    element.replaceWith(block);
+  }
+
+  // tools/importer/parsers/banner-overlay.js
+  function imgSrc11(img) {
+    const src = img.getAttribute("src") || "";
+    return /framerusercontent\.com\/images\//.test(src) ? src.split("?")[0] : src;
+  }
+  function area3(img) {
+    if (typeof img.getBoundingClientRect === "function") {
+      const r = img.getBoundingClientRect();
+      if (r.width > 1 && r.height > 1) return r.width * r.height;
+    }
+    return /max\(100vw|^100vw/.test(img.getAttribute("sizes") || "") ? Infinity : 0;
+  }
+  function parse17(element, { document }) {
+    const seen = /* @__PURE__ */ new Set();
+    const sources = [...element.querySelectorAll("img")].filter((img) => {
+      const src = imgSrc11(img);
+      if (!src || src.startsWith("data:") && !src.startsWith("data:image/svg+xml") || seen.has(src)) return false;
+      seen.add(src);
+      return true;
+    });
+    if (!sources.length) return;
+    const base = sources.reduce((a, b) => area3(b) > area3(a) ? b : a, sources[0]);
+    const ordered = [base, ...sources.filter((s) => s !== base)];
+    const cells = ordered.map((source) => {
+      const img = document.createElement("img");
+      img.src = imgSrc11(source);
+      img.alt = source.getAttribute("alt") || "";
+      return [img];
+    });
+    const block = WebImporter.Blocks.createBlock(document, { name: "banner-overlay", cells });
     element.replaceWith(block);
   }
 
@@ -2339,7 +2386,12 @@ var CustomImportScript = (() => {
     const rects = [...el.querySelectorAll(withVideo ? "img, video" : "img")].map((img) => img.getBoundingClientRect()).filter((r) => r.width > 1 && r.height > 1);
     if (!rects.length) return null;
     const overlaps = rects.some((a, i) => rects.some((b, j) => j > i && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2));
-    if (overlaps) return false;
+    if (overlaps) {
+      const size = (r) => r.width * r.height;
+      const base = rects.reduce((a, b) => size(b) > size(a) ? b : a);
+      const inside = rects.every((r) => r === base || r.left >= base.left - 2 && r.right <= base.right + 2 && r.top >= base.top - 2 && r.bottom <= base.bottom + 2);
+      return inside && base.left <= 2 && base.right >= vw - 2;
+    }
     const left = Math.min(...rects.map((r) => r.left));
     const right = Math.max(...rects.map((r) => r.right));
     return left <= 2 && right >= vw - 2;
@@ -2400,18 +2452,46 @@ var CustomImportScript = (() => {
     const box = el.getBoundingClientRect();
     if (!box.width) return false;
     const cs = view.getComputedStyle(el);
-    const mid = (box.left + (parseFloat(cs.paddingLeft) || 0) + box.right - (parseFloat(cs.paddingRight) || 0)) / 2;
-    const texts = [...el.querySelectorAll(TEXT_SEL)].filter((t) => (t.textContent || "").trim() && !t.parentElement.closest(TEXT_SEL));
-    let measured = 0;
-    const ok = texts.every((t) => {
+    const left = box.left + (parseFloat(cs.paddingLeft) || 0);
+    const right = box.right - (parseFloat(cs.paddingRight) || 0);
+    const mid = (left + right) / 2;
+    const items = [...el.querySelectorAll(TEXT_SEL)].filter((t) => (t.textContent || "").trim() && !t.parentElement.closest(TEXT_SEL)).map((t) => {
       const range = document.createRange();
       range.selectNodeContents(t);
-      const r = range.getBoundingClientRect();
-      if (!r.width || !r.height) return true;
-      measured += 1;
-      return Math.abs((r.left + r.right) / 2 - mid) <= 24;
+      let align = "";
+      try {
+        align = view.getComputedStyle(t).textAlign;
+      } catch (e) {
+        align = "";
+      }
+      return { r: range.getBoundingClientRect(), end: /right|end/.test(align) };
+    }).filter(({ r }) => r.width && r.height);
+    const centred = items.filter(({ r }) => Math.abs((r.left + r.right) / 2 - mid) <= 24);
+    const mirrored = (a) => items.some((b) => {
+      if (b === a || a.end === b.end || a.r.top >= b.r.bottom || b.r.top >= a.r.bottom) return false;
+      const [start, end] = a.end ? [b.r, a.r] : [a.r, b.r];
+      return Math.abs(start.left - left - (right - end.right)) <= 24;
     });
-    return ok && measured > 0;
+    return centred.length > 0 && items.every((t) => centred.includes(t) || mirrored(t));
+  }
+  var DISPLAY_MIN = 80;
+  function displayHeading(document, el) {
+    const view = document.defaultView;
+    if (!view || typeof view.getComputedStyle !== "function") return null;
+    return [...el.querySelectorAll("h1, h2, h3, h4, h5, h6")].find((h) => {
+      if (!(h.textContent || "").trim() || typeof h.getBoundingClientRect !== "function") return false;
+      const r = h.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
+      try {
+        return parseFloat(view.getComputedStyle(h).fontSize) >= DISPLAY_MIN;
+      } catch (e) {
+        return false;
+      }
+    }) || null;
+  }
+  function hasColourValues(el) {
+    const t = (el.textContent || "").replace(/\s+/g, " ");
+    return /HEX\s*#?[0-9a-f]{6}/i.test(t) && /RGB\s*\d/i.test(t);
   }
   function siblingBands(sectionsList) {
     const parents = new Set(sectionsList.map((s) => s.parentElement).filter(Boolean));
@@ -2445,7 +2525,12 @@ var CustomImportScript = (() => {
         else full = hasVideo ? family && spans : spans;
         if (full) styles.push("full-width");
       }
-      if (isCenteredBand(document, el)) styles.push("centered");
+      const centred = isCenteredBand(document, el);
+      if (centred) styles.push("centered");
+      if (i > 0 && displayHeading(document, el)) {
+        if (centred) styles.push("intro");
+        else if (hasColourValues(el)) styles.push("colour-feature");
+      }
       const meta = {};
       if (styles.length) meta.style = styles.join(", ");
       return { el, meta, id: `structural-${i + 1}` };
@@ -2552,6 +2637,9 @@ var CustomImportScript = (() => {
   function contentChildren(el) {
     return [...el.children].filter(hasContent4);
   }
+  function isMediaOnly2(el) {
+    return !textOf14(el) && (contentImages(el).length > 0 || videos(el).length > 0);
+  }
   function isImageTile(el) {
     return !textOf14(el) && videos(el).length === 0 && contentImages(el).length === 1;
   }
@@ -2615,6 +2703,22 @@ var CustomImportScript = (() => {
       band = band.parentElement.closest("section");
     }
     return band;
+  }
+  function isLayeredBand(el) {
+    const band = el.tagName === "SECTION" ? el : bandOf2(el);
+    if (!band || !isMediaOnly2(band) || videos(band).length) return false;
+    const imgs = contentImages(el);
+    if (imgs.length < 2 || contentImages(band).length !== imgs.length) return false;
+    const rect = (n) => typeof n.getBoundingClientRect === "function" ? n.getBoundingClientRect() : null;
+    const box = rect(band);
+    const rects = imgs.map(rect);
+    if (box && box.width > 1 && rects.every((r) => r && r.width > 1 && r.height > 1)) {
+      const size = (r) => r.width * r.height;
+      const base = rects.reduce((a, b) => size(b) > size(a) ? b : a);
+      if (size(base) < 0.9 * box.width * box.height) return false;
+      return rects.every((r) => r === base || r.left >= base.left - 2 && r.right <= base.right + 2 && r.top >= base.top - 2 && r.bottom <= base.bottom + 2);
+    }
+    return imgs.filter((i) => imageInfo(i).fullBleed).length === 1;
   }
   function layerNames(el, root) {
     const names = [];
@@ -3003,6 +3107,8 @@ var CustomImportScript = (() => {
     return ok && kids3.filter((t) => /[@#]/.test(textOf14(t))).length >= kids3.length / 2;
   }
   var detectors = [
+    // a photo band with artwork laid over it (tested first: its images are not a photo row)
+    { name: "banner-overlay", test: (el) => isLayeredBand(el), validate: (el) => isLayeredBand(el) },
     {
       name: "cards-swatch",
       test: (el) => isSwatchGrid(el) || isSwatchTile(el),
@@ -3168,6 +3274,12 @@ var CustomImportScript = (() => {
         "instances": [
           "#color-6 .framer-1gtid9f"
         ]
+      },
+      {
+        "name": "banner-overlay",
+        "instances": [
+          "section#lookup-4"
+        ]
       }
     ],
     "sections": [
@@ -3313,7 +3425,8 @@ var CustomImportScript = (() => {
     "cards-principle": parse13,
     "columns-voice": parse14,
     "columns-terms": parse15,
-    "cards-social": parse16
+    "cards-social": parse16,
+    "banner-overlay": parse17
   };
   var transformers = [
     transform,

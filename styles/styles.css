@@ -324,6 +324,62 @@ main > .section:is(.royal-blue, .process-blue, .hits-different-blue, .navy, .dar
 }
 
 /*
+ * intro (/partner-guidelines "An invitation to play", with `centered`): display title, then the
+ * copy in a narrower centred column. Source: Sharp Sans No2 Bold 40/40 (375, 810) / 88/88
+ * (>= 1200); copy 600px wide from 810px, 912px from 1200px; 24px under the title on mobile,
+ * 40px from 810px; 28px above the "But first" sub-heading.
+ */
+main > .section.intro .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):first-child {
+  font-size: 40px;
+  line-height: 40px;
+  text-wrap: balance;
+}
+
+main > .section.intro .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):first-child + * {
+  margin-top: 24px;
+}
+
+main > .section.intro .default-content-wrapper > * + :is(h1, h2, h3, h4, h5, h6) {
+  margin-top: 28px;
+}
+
+main > .section.intro > .default-content-wrapper + div {
+  margin-top: 24px;
+}
+
+/* source: 80px above and below the band on mobile, 40 / 80 from 810px, 60 / 60 from 1200px */
+main > .hero-banner-container + .section.intro {
+  padding-block: 80px;
+}
+
+/*
+ * colour-feature (/partner-guidelines "Process Blue" band): the colour's name in display size
+ * between the intro copy and its values. Source: band 458px (375) / 497px (810) / 900px (>= 1200)
+ * tall; name Sharp Sans No2 Bold 48 / 110 / 146px; values Poppins 10/16 (375), 14/20 from
+ * 810px; intro copy 450px wide (810), 684px (>= 1200). Text is navy on Process Blue (white is
+ * below WCAG AA for the copy).
+ */
+main > .section.colour-feature {
+  padding-block: 40px;
+}
+
+main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
+  margin-top: 40px;
+  font-size: 48px;
+  line-height: 40px;
+}
+
+main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):first-child + * {
+  margin-top: 24px;
+}
+
+main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):not(:first-child) + p {
+  margin-top: 40px;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+/*
  * buttons (bold lone link = a.button, e.g. /logos "Download Logos"): source pill measured at
  * 1440 and 375: navy rgb(0, 12, 61), 218x50, 40px radius, 20px side padding, Poppins 600 18/28
  * white, 10px gap to an 18px glyph, centred in the content column; no hover change on the source.
@@ -387,6 +443,40 @@ main a.button[title*="download" i]::after {
   main > .section.full-width .default-content-wrapper img {
     height: 600px;
   }
+
+  main > .section.intro .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):first-child + * {
+    margin-top: 40px;
+  }
+
+  main > .section.intro .default-content-wrapper > p {
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  main > .section.intro > .default-content-wrapper + div {
+    margin-top: 40px;
+  }
+
+  main > .hero-banner-container + .section.intro {
+    padding-block: 40px 80px;
+  }
+
+  main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):first-child + * {
+    max-width: 450px;
+    margin-top: 20px;
+  }
+
+  main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
+    margin-top: 80px;
+    font-size: 110px;
+    line-height: 40px;
+  }
+
+  main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):not(:first-child) + p {
+    margin-top: 83px;
+    font-size: 14px;
+    line-height: 20px;
+  }
 }
 
 @media (width >= 900px) {
@@ -429,5 +519,37 @@ main a.button[title*="download" i]::after {
   body.has-nav-sidebar main > .section.full-width:not(.hero-banner-container) {
     margin-inline-start: -220px;
     padding-inline: 0;
+  }
+
+  main > .section.intro .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):first-child {
+    font-size: 88px;
+    line-height: 88px;
+  }
+
+  main > .section.intro .default-content-wrapper > p {
+    max-width: 912px;
+  }
+
+  main > .hero-banner-container + .section.intro {
+    padding-block: 60px;
+  }
+
+  /* 900px band: copy at the top, values at the bottom, the name centred between them */
+  main > .section.colour-feature {
+    padding-block: 159px;
+  }
+
+  main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):first-child + * {
+    max-width: 684px;
+  }
+
+  main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
+    margin-top: 94px;
+    font-size: 146px;
+    line-height: 209px;
+  }
+
+  main > .section.colour-feature .default-content-wrapper > :is(h1, h2, h3, h4, h5, h6):not(:first-child) + p {
+    margin-top: 93px;
   }
 }

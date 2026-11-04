@@ -223,6 +223,31 @@ function isMediaColumns(el) {
   });
 }
 
+/*
+ * columns-spectrum: an audience scale (/partner-guidelines "But first, who's your audience?"):
+ * rows of [start text | end text] (short, text only) around exactly one image-only row, the
+ * scale artwork between them. The parser also takes the [video | icon | video] row after it.
+ */
+function unwrapRow(el) {
+  let node = el;
+  for (let kids = contentChildren(node); kids.length === 1; kids = contentChildren(node)) [node] = kids;
+  return node;
+}
+
+function isEndsRow(el) {
+  const kids = contentChildren(unwrapRow(el));
+  return kids.length === 2 && kids.every((k) => !contentImages(k).length && !videos(k).length
+    && textElements(k).length >= 1 && textOf(k).split(' ').length <= 20);
+}
+
+function isSpectrum(el) {
+  if (el.tagName === 'SECTION') return false;
+  const rows = contentChildren(el);
+  if (rows.length < 3) return false;
+  const scales = rows.filter((r) => !textOf(r) && !videos(r).length && contentImages(r).length === 1);
+  return scales.length === 1 && rows.filter(isEndsRow).length === rows.length - 1;
+}
+
 /* columns-text-image: one logo per row, [logo tile | title + description] side by side */
 function isLogoRow(el) {
   if (!isSideBySide(el)) return false;
@@ -237,6 +262,8 @@ export const detectors = [
   { name: 'cards-contrast', test: (el) => isContrastGrid(el), validate: (el) => /background/i.test(textOf(el)) },
   { name: 'columns-typeface', test: (el) => isTypefaceRow(el), validate: (el) => /\d{4}/.test(textOf(el)) },
   { name: 'columns-photos', test: (el) => isMediaColumns(el), validate: (el) => contentImages(el).length >= 2 },
+  // the audience scale takes the video row after it, so it is tested before video-autoplay
+  { name: 'columns-spectrum', test: (el) => isSpectrum(el), validate: (el) => isSpectrum(el) },
   { name: 'video-autoplay', test: (el) => isVideoContainer(el), validate: (el) => videos(el).length >= 1 },
   { name: 'cards-tone', test: (el) => isToneGrid(el), validate: (el) => !!textOf(el) },
   { name: 'columns-messaging', test: (el) => isMessagingPanel(el), validate: (el) => contentImages(el).length >= 2 && !!textOf(el) },

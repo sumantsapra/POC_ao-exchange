@@ -372,3 +372,53 @@ main .section .cards-shape.framed .cards-shape-card-image img {
     row-gap: 80px;
   }
 }
+
+/*
+ * stickers (/opening-week "Stickers"): large artwork filling its grid column on the white card,
+ * centred in 184 x 190.5 cells. Source: 3 per row with 12px gaps inside 46px / 44px padding
+ * (375), 3 per row with 20px row / 40px column gaps inside 90px padding (810-1199), 5 per row with
+ * 20px gaps inside 90px padding (>= 1200).
+ */
+main .section .cards-shape.stickers {
+  display: block;
+  min-height: 0;
+  max-width: none;
+}
+
+main .section .cards-shape.stickers > ul {
+  padding: 46px 44px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  justify-items: stretch;
+  gap: 12px;
+}
+
+main .section .cards-shape.stickers > ul > li {
+  aspect-ratio: 184 / 190.5;
+  align-items: center;
+  justify-content: center;
+}
+
+main .section .cards-shape.stickers .cards-shape-card-image {
+  width: 100%;
+}
+
+main .section .cards-shape.stickers .cards-shape-card-image img {
+  width: 100%;
+  height: auto;
+}
+
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main .section .cards-shape.stickers > ul {
+    padding: 90px;
+    gap: 20px 40px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .section .cards-shape.stickers > ul {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+  }
+}

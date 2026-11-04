@@ -1,0 +1,83 @@
+/*
+ * banner-overlay: full-screen photo band with artwork laid over it (/graphic-elements second
+ * "Divider full screen" band). Source, measured at 375 / 810 / 1440 / 1920:
+ * - band 480px tall (< 810), 600px (810-1199), 900px (>= 1200); photo object-fit cover, centred;
+ * - artwork 356px wide (< 810), 657px (810-1199), 689px (>= 1200), centred across the band
+ *   (after the 220px sidebar column from 1200px, 40px from the right edge) with its centre
+ *   80px below the band centre (a 160px top inset in a centred frame).
+ * The band sits in a full-width section, which runs it edge to edge.
+ */
+main .banner-overlay {
+  position: relative;
+  overflow: hidden;
+  height: 480px;
+}
+
+main .banner-overlay .banner-overlay-background,
+main .banner-overlay .banner-overlay-background > div,
+main .banner-overlay .banner-overlay-background p {
+  height: 100%;
+  margin: 0;
+}
+
+main .banner-overlay .banner-overlay-background picture,
+main .banner-overlay .banner-overlay-background img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+main .banner-overlay .banner-overlay-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 160px var(--page-gutter-end) 0 var(--page-gutter);
+  pointer-events: none;
+}
+
+main .banner-overlay .banner-overlay-layer > div,
+main .banner-overlay .banner-overlay-layer p,
+main .banner-overlay .banner-overlay-layer picture {
+  display: contents;
+}
+
+main .banner-overlay .banner-overlay-layer img {
+  flex: none;
+  width: 356px;
+  max-width: none;
+  height: auto;
+}
+
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main .banner-overlay {
+    height: 600px;
+  }
+
+  main .banner-overlay .banner-overlay-layer img {
+    width: 657px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .banner-overlay {
+    height: 900px;
+  }
+
+  main .banner-overlay .banner-overlay-layer {
+    padding-inline: 0 40px;
+  }
+
+  /* the band runs under the fixed sidebar: the artwork is centred on the content column */
+  body.has-nav-sidebar main .banner-overlay .banner-overlay-layer {
+    padding-inline-start: 220px;
+  }
+
+  main .banner-overlay .banner-overlay-layer img {
+    width: 689px;
+  }
+}
