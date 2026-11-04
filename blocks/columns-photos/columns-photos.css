@@ -30,7 +30,8 @@ main .columns-photos .columns-photos-cell:empty {
 }
 
 main .columns-photos .columns-photos-cell picture,
-main .columns-photos .columns-photos-cell img {
+main .columns-photos .columns-photos-cell img,
+main .columns-photos .columns-photos-cell video {
   display: block;
   width: 100%;
   height: 100%;

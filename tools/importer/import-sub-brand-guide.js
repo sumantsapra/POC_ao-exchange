@@ -14,6 +14,8 @@ import columnsPhotosParser from "./parsers/columns-photos.js";
 import cardsFramedParser from "./parsers/cards-framed.js";
 import columnsTextImageParser from "./parsers/columns-text-image.js";
 import cardsMisuseParser from "./parsers/cards-misuse.js";
+import columnsMessagingParser from "./parsers/columns-messaging.js";
+import cardsStepsParser from "./parsers/cards-steps.js";
 import aobrandplaybookCleanupTransformer from "./transformers/aobrandplaybook-cleanup.js";
 import aobrandplaybookSectionsTransformer from "./transformers/aobrandplaybook-sections.js";
 import { detectors } from "./detectors/sub-brand-guide.js";
@@ -115,6 +117,18 @@ const PAGE_TEMPLATE = {
       "name": "cards-misuse",
       "instances": [
         "#color .framer-5e88u2"
+      ]
+    },
+    {
+      "name": "columns-messaging",
+      "instances": [
+        "#safe-zones-1 .framer-jr9524"
+      ]
+    },
+    {
+      "name": "cards-steps",
+      "instances": [
+        ".framer-1cc5wk8 .framer-17e6tnf"
       ]
     }
   ],
@@ -327,6 +341,8 @@ const parsers = {
   "cards-framed": cardsFramedParser,
   "columns-text-image": columnsTextImageParser,
   "cards-misuse": cardsMisuseParser,
+  "columns-messaging": columnsMessagingParser,
+  "cards-steps": cardsStepsParser,
 };
 
 const transformers = [
@@ -461,9 +477,68 @@ async function loadVideoMetadata(document) {
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 }
 
+/**
+ * Bands painted by a background texture image instead of a colour (/opening-week "Stickers":
+ * a blue paper texture behind the text and sticker card). The texture is page styling, not
+ * content: its average colour is stored on the band as data-excat-band-color (the sections
+ * transformer maps it to a section style) and the image layer is marked data-excat-band-layer
+ * (removed by the sections transformer). Layer = an absolutely positioned, text-free child
+ * (up to 2 levels down) holding one image that covers at least 90% of a band that has text.
+ * The image is sampled on a 32px canvas (framerusercontent.com sends CORS headers).
+ */
+function averageColour(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    const done = (v) => resolve(v);
+    img.onload = () => {
+      try {
+        const c = document.createElement("canvas");
+        c.width = 32; c.height = 32;
+        const g = c.getContext("2d");
+        g.drawImage(img, 0, 0, 32, 32);
+        const d = g.getImageData(0, 0, 32, 32).data;
+        const sum = [0, 0, 0]; let n = 0;
+        for (let i = 0; i < d.length; i += 4) {
+          if (d[i + 3] < 128) continue;
+          sum[0] += d[i]; sum[1] += d[i + 1]; sum[2] += d[i + 2]; n += 1;
+        }
+        done(n ? sum.map((s) => Math.round(s / n)) : null);
+      } catch (e) { done(null); }
+    };
+    img.onerror = () => done(null);
+    setTimeout(() => done(null), 8000);
+    const url = src.split("?")[0];
+    img.src = /framerusercontent\.com\/images\//.test(url) ? `${url}?width=64` : src;
+  });
+}
+
+async function measureBandTextures(document) {
+  const root = document.querySelector("#main") || document.body;
+  const bands = [...root.querySelectorAll("section")].filter((s) => !s.parentElement.closest("section"));
+  await Promise.all(bands.map(async (band) => {
+    if (!(band.textContent || "").replace(/\s+/g, "").length) return;
+    const box = band.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    const candidates = [...band.children, ...[...band.children].flatMap((c) => [...c.children])];
+    const layer = candidates.find((el) => {
+      if ((el.textContent || "").trim() || el.querySelectorAll("img").length !== 1) return false;
+      if (getComputedStyle(el).position !== "absolute") return false;
+      const r = el.getBoundingClientRect();
+      return r.width * r.height >= 0.9 * box.width * box.height;
+    });
+    if (!layer) return;
+    const rgb = await averageColour(layer.querySelector("img").currentSrc || layer.querySelector("img").src);
+    if (!rgb) return;
+    band.setAttribute("data-excat-band-color", `rgb(${rgb.join(", ")})`);
+    layer.setAttribute("data-excat-band-layer", "true");
+  }));
+}
+
 export default {
   onLoad: async ({ document }) => {
     try { await loadVideoMetadata(document); } catch (e) { console.warn("video metadata load failed", e); }
+    try { await measureBandTextures(document); } catch (e) { console.warn("band texture measure failed", e); }
   },
   transform: (payload) => {
     const { document, url, params } = payload;

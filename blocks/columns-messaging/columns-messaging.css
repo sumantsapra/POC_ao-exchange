@@ -1,0 +1,140 @@
+/*
+ * columns-messaging: /partner-guidelines "Partner copy and messaging" panel, measured at 375,
+ * 900 and 1440 on the source.
+ * Panel: #f8f8f8, 10px radius; padding 32px 20px 40px (375) / 40px (tablet) / 0 40px with a
+ *   600px min height (1440); 40px between the roles and the samples (60px at 1440).
+ * Roles: centred Sharp Sans No2 Medium 22/28.16 (375) / 28/35.84 (tablet) / 38/48.64 (1440),
+ *   labels Semibold, 10px apart (38px from the tablet layout), #2b2d3e.
+ * Samples: [30x38 icon | Poppins 10/16 (375) / 14/20 line], 20px apart; stacked 40px apart on
+ *   mobile, two 40px-apart columns from the tablet layout.
+ */
+main .columns-messaging {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding: 32px 20px 40px;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+  color: var(--text-color);
+}
+
+/* mobile: the source breaks each role before its bracket ("Contextual / (why you show up)") */
+main .columns-messaging .columns-messaging-roles {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  gap: 10px;
+  max-width: 230px;
+  text-align: center;
+}
+
+main .columns-messaging .columns-messaging-role,
+main .columns-messaging .columns-messaging-role p {
+  margin: 0;
+  font-family: var(--heading-font-medium);
+  font-size: 22px;
+  line-height: 28.16px;
+  font-synthesis: none;
+}
+
+main .columns-messaging .columns-messaging-role strong {
+  font-family: var(--heading-font-semibold);
+  font-weight: 400;
+}
+
+main .columns-messaging .columns-messaging-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+main .columns-messaging .columns-messaging-example {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+main .columns-messaging .columns-messaging-icon {
+  flex: none;
+  width: 30px;
+}
+
+main .columns-messaging .columns-messaging-icon img {
+  display: block;
+  width: 30px;
+  height: 38px;
+  object-fit: contain;
+}
+
+main .columns-messaging .columns-messaging-text,
+main .columns-messaging .columns-messaging-text p {
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: 10px;
+  line-height: 16px;
+}
+
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main .columns-messaging {
+    padding: 40px;
+  }
+
+  main .columns-messaging .columns-messaging-role,
+  main .columns-messaging .columns-messaging-role p {
+    font-size: 28px;
+    line-height: 35.84px;
+  }
+
+  /* the source keeps an empty 28px line between the two statements */
+  main .columns-messaging .columns-messaging-roles {
+    gap: 38px;
+    max-width: 413px;
+  }
+
+  main .columns-messaging .columns-messaging-examples {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  main .columns-messaging .columns-messaging-example {
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  main .columns-messaging .columns-messaging-text,
+  main .columns-messaging .columns-messaging-text p {
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+
+@media (width >= 1200px) {
+  main .columns-messaging {
+    min-height: 600px;
+    gap: 60px;
+    padding: 0 40px;
+  }
+
+  main .columns-messaging .columns-messaging-roles {
+    max-width: 705px;
+  }
+
+  main .columns-messaging .columns-messaging-role,
+  main .columns-messaging .columns-messaging-role p {
+    font-size: 38px;
+    line-height: 48.64px;
+  }
+
+  main .columns-messaging .columns-messaging-example {
+    gap: 20px;
+  }
+
+  main .columns-messaging .columns-messaging-text {
+    max-width: 460px;
+  }
+}

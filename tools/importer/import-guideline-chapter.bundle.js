@@ -270,26 +270,81 @@ var CustomImportScript = (() => {
     const src = img.getAttribute("src") || "";
     return /framerusercontent\.com\/images\//.test(src) ? src.split("?")[0] : src;
   }
+  var KEYWORDS = { 0: { x: "left", y: "top" }, 50: { x: "center", y: "center" }, 100: { x: "right", y: "bottom" } };
+  function percent(v) {
+    const t = (v || "").trim().toLowerCase();
+    if (t === "left" || t === "top") return 0;
+    if (t === "center") return 50;
+    if (t === "right" || t === "bottom") return 100;
+    const m = t.match(/^(-?[\d.]+)%$/);
+    return m ? parseFloat(m[1]) : null;
+  }
+  function positionOf(img) {
+    const style = img.getAttribute("style") || "";
+    const m = style.match(/object-position\s*:\s*([^;]+)/i);
+    if (!m) return "";
+    let parts = m[1].trim().toLowerCase().split(/\s+/);
+    if (parts.length === 1) parts = /^(top|bottom)$/.test(parts[0]) ? ["center", parts[0]] : [parts[0], "center"];
+    if (/^(top|bottom)$/.test(parts[0]) || /^(left|right)$/.test(parts[1])) parts = [parts[1], parts[0]];
+    const [x, y] = parts.map(percent);
+    if (x === null || y === null) return m[1].trim();
+    if (x === 50 && y === 50) return "";
+    const kx = KEYWORDS[x] && KEYWORDS[x].x;
+    const ky = KEYWORDS[y] && KEYWORDS[y].y;
+    if (kx && ky) return [ky === "center" ? "" : ky, kx === "center" ? "" : kx].filter(Boolean).join(" ");
+    return `${x}% ${y}%`;
+  }
+  function videoSrc(video) {
+    return video.getAttribute("src") || video.querySelector("source[src]") && video.querySelector("source[src]").getAttribute("src") || "";
+  }
+  function mediaColumns(element) {
+    if (!element.querySelector("video")) return null;
+    const hasMedia = (el) => !!el.querySelector("img, video") || /^(IMG|VIDEO)$/.test(el.tagName);
+    const cols = [...element.children].filter(hasMedia);
+    return cols.length >= 2 ? cols : null;
+  }
+  function cellOf(document, source, seen) {
+    if (source.tagName === "VIDEO") {
+      const src2 = videoSrc(source);
+      if (!src2 || seen.has(src2)) return null;
+      seen.add(src2);
+      const p = document.createElement("p");
+      const a = document.createElement("a");
+      a.href = src2;
+      a.textContent = src2;
+      p.append(a);
+      return p;
+    }
+    const src = imgSrc3(source);
+    if (!src || src.startsWith("data:") && !src.startsWith("data:image/svg+xml") || seen.has(src)) return null;
+    seen.add(src);
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = source.getAttribute("alt") || "";
+    const position = positionOf(source);
+    if (!position) return img;
+    const line = document.createElement("p");
+    line.textContent = `Position: ${position}`;
+    return [img, line];
+  }
   function parse3(element, { document }) {
     const seen = /* @__PURE__ */ new Set();
-    const photos = [];
-    element.querySelectorAll("img").forEach((source) => {
-      const src = imgSrc3(source);
-      if (!src || src.startsWith("data:") && !src.startsWith("data:image/svg+xml") || seen.has(src)) return;
-      seen.add(src);
-      const img = document.createElement("img");
-      img.src = src;
-      img.alt = source.getAttribute("alt") || "";
-      photos.push(img);
-    });
-    let perRow = photos.length;
-    if (photos.length === 4) perRow = 2;
-    else if (photos.length > 4) perRow = 3;
     const cells = [];
-    for (let i = 0; i < photos.length; i += perRow) {
-      const row = photos.slice(i, i + perRow);
-      while (row.length < perRow) row.push("");
-      cells.push(row);
+    const columns = mediaColumns(element);
+    if (columns) {
+      const stacks = columns.map((col) => [...col.querySelectorAll("img, video")].map((m) => cellOf(document, m, seen)).filter(Boolean));
+      const rows = Math.max(...stacks.map((st) => st.length));
+      for (let r = 0; r < rows; r += 1) cells.push(stacks.map((st) => st[r] || ""));
+    } else {
+      const photos = [...element.querySelectorAll("img")].map((m) => cellOf(document, m, seen)).filter(Boolean);
+      let perRow = photos.length;
+      if (photos.length === 4) perRow = 2;
+      else if (photos.length > 4) perRow = 3;
+      for (let i = 0; i < photos.length; i += perRow) {
+        const row = photos.slice(i, i + perRow);
+        while (row.length < perRow) row.push("");
+        cells.push(row);
+      }
     }
     if (!cells.length) cells.push([""]);
     const block = WebImporter.Blocks.createBlock(document, { name: "columns-photos", cells });
@@ -1014,32 +1069,145 @@ var CustomImportScript = (() => {
     const src = img.getAttribute("src") || "";
     return /framerusercontent\.com\/images\//.test(src) ? src.split("?")[0] : src;
   }
+  var CONTENT_IMG = 'img:not([src^="data:"]), img[src^="data:image/svg+xml"]';
+  var HEADING = "h1, h2, h3, h4, h5, h6";
   function tileOf3(img, root) {
     let node = img;
-    while (node.parentElement && node.parentElement !== root && node.parentElement.querySelectorAll('img:not([src^="data:"]), img[src^="data:image/svg+xml"]').length === 1) {
+    while (node.parentElement && node.parentElement !== root && node.parentElement.querySelectorAll(CONTENT_IMG).length === 1) {
       node = node.parentElement;
     }
     return node;
   }
+  function rectOf2(el) {
+    if (!el || typeof el.getBoundingClientRect !== "function") return null;
+    const r = el.getBoundingClientRect();
+    return r.width > 1 && r.height > 1 ? r : null;
+  }
+  function styleOf(el) {
+    const view = el.ownerDocument && el.ownerDocument.defaultView;
+    if (!view || typeof view.getComputedStyle !== "function") return null;
+    try {
+      return view.getComputedStyle(el);
+    } catch (e) {
+      return null;
+    }
+  }
+  function rgbOf(value) {
+    const m = (value || "").match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+))?/);
+    if (!m || m[4] !== void 0 && parseFloat(m[4]) === 0) return null;
+    return [m[1], m[2], m[3]].map((c) => parseInt(c, 10));
+  }
+  var luminance = (rgb) => (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255;
+  function backdropOf(element, imgs) {
+    const box = rectOf2(element);
+    if (!box || imgs.length < 3) return null;
+    return imgs.find((img) => {
+      const r = rectOf2(img);
+      return r && r.width * r.height >= 0.9 * box.width * box.height;
+    }) || null;
+  }
+  function halfGroupOf(element) {
+    let group = element;
+    while (group.parentElement && group.parentElement.tagName !== "SECTION" && group.parentElement.querySelectorAll(HEADING).length <= element.querySelectorAll(HEADING).length + 1 && group.parentElement.querySelectorAll(CONTENT_IMG).length === element.querySelectorAll(CONTENT_IMG).length) {
+      group = group.parentElement;
+    }
+    if (group === element) return null;
+    const heads = [...group.querySelectorAll(HEADING)].filter((h) => !element.contains(h) && textOf9(h));
+    if (heads.length !== 1) return null;
+    const row = group.parentElement;
+    const g = rectOf2(group);
+    const r = rectOf2(row);
+    if (!g || !r || g.width > 0.6 * r.width) return null;
+    const sibling = [...row.children].some((c) => {
+      if (c === group) return false;
+      const cr = rectOf2(c);
+      return cr && Math.abs(cr.top - g.top) < 4 && c.querySelector(HEADING) && c.querySelector(CONTENT_IMG);
+    });
+    if (!sibling) return null;
+    const caption = [...group.querySelectorAll("p")].filter((p) => !element.contains(p) && !p.parentElement.closest("p") && textOf9(p));
+    return { group, heading: heads[0], caption };
+  }
+  function layoutOf(imgs) {
+    const rects = imgs.map(rectOf2).filter(Boolean);
+    if (!rects.length) return null;
+    const widths = rects.map((r) => r.width).sort((a, b) => a - b);
+    const top = Math.min(...rects.map((r) => r.top));
+    const firstRow = rects.filter((r) => r.top < top + Math.min(...rects.map((x) => x.height)) * 0.8);
+    return { median: widths[Math.floor(widths.length / 2)], cols: firstRow.length, left: Math.min(...firstRow.map((r) => r.left)) };
+  }
+  function isFramed(element) {
+    for (let n = element, d = 0; n && d < 3 && n.tagName !== "SECTION"; n = n.parentElement, d += 1) {
+      const outer = rgbOf((styleOf(n) || {}).backgroundColor);
+      if (!outer || luminance(outer) < 0.9) continue;
+      const inner = [...n.children].find((c) => {
+        const rgb = rgbOf((styleOf(c) || {}).backgroundColor);
+        return rgb && luminance(rgb) < 0.3;
+      });
+      if (inner) return true;
+    }
+    return false;
+  }
   function parse12(element, { document }) {
     const cells = [];
     const seen = /* @__PURE__ */ new Set();
-    element.querySelectorAll("img").forEach((source) => {
+    const sources = [...element.querySelectorAll("img")].filter((source) => {
       const src = imgSrc9(source);
-      if (!src || src.startsWith("data:") && !src.startsWith("data:image/svg+xml") || seen.has(src)) return;
+      if (!src || src.startsWith("data:") && !src.startsWith("data:image/svg+xml") || seen.has(src)) return false;
       seen.add(src);
+      return true;
+    });
+    const backdrop = backdropOf(element, sources);
+    const half = halfGroupOf(element);
+    const options = [];
+    if (half) {
+      const h = document.createElement(half.heading.tagName.toLowerCase());
+      h.textContent = textOf9(half.heading);
+      cells.push([h]);
+      options.push("half");
+    }
+    const tiles = [];
+    const artworks = [];
+    sources.forEach((source) => {
       const img = document.createElement("img");
-      img.src = src;
+      img.src = imgSrc9(source);
       img.alt = source.getAttribute("alt") || "";
-      const name = textOf9(tileOf3(source, element));
+      if (source === backdrop) {
+        const line = document.createElement("p");
+        line.textContent = "Backdrop";
+        cells.push([img, line]);
+        return;
+      }
+      const tile = tileOf3(source, element);
+      tiles.push(tile);
+      artworks.push(source);
+      const name2 = textOf9(tile);
       let textCell = "";
-      if (name) {
+      if (name2) {
         textCell = document.createElement("p");
-        textCell.textContent = name;
+        textCell.textContent = name2;
       }
       cells.push([img, textCell]);
     });
-    const block = WebImporter.Blocks.createBlock(document, { name: "cards-shape", cells });
+    if (half && half.caption.length) {
+      cells.push([half.caption.map((p) => {
+        const out = document.createElement("p");
+        out.textContent = textOf9(p);
+        return out;
+      })]);
+    }
+    if (!half && !backdrop) {
+      const layout = layoutOf(artworks);
+      const box = rectOf2(element);
+      const leftAligned = !!(layout && box && Math.abs(layout.left - box.left) <= 2);
+      if (layout && layout.cols === 4 && layout.median >= 120 && leftAligned && !isFramed(element)) options.push("logos");
+      else if (isFramed(element)) options.push("framed");
+    }
+    if (half) {
+      half.heading.remove();
+      half.caption.forEach((p) => p.remove());
+    }
+    const name = options.length ? `cards-shape (${options.join(", ")})` : "cards-shape";
+    const block = WebImporter.Blocks.createBlock(document, { name, cells });
     element.replaceWith(block);
   }
 
@@ -2077,6 +2245,8 @@ var CustomImportScript = (() => {
   // tools/importer/transformers/aobrandplaybook-sections.js
   var MARKER = "data-excat-section-id";
   var META_ATTR = "data-excat-section-meta";
+  var BAND_COLOR_ATTR = "data-excat-band-color";
+  var BAND_LAYER_ATTR = "data-excat-band-layer";
   var HOMEPAGE_NAV_META = {
     "#intro": { anchor: "intro", "nav-label": "Intro" },
     "#brand-positioning": { anchor: "brand-positioning", "nav-label": "Who we are" },
@@ -2148,12 +2318,26 @@ var CustomImportScript = (() => {
   function isMediaOnly(el) {
     return !!el.querySelector("img, video, picture, source") && !(el.textContent || "").replace(/\s+/g, "").length;
   }
-  function spansViewport(document, el) {
+  function visibleRect(el) {
+    if (typeof el.getBoundingClientRect !== "function") return null;
+    const r = el.getBoundingClientRect();
+    return r.width > 1 && r.height > 1 ? r : null;
+  }
+  function isMediaWithOverlay(el) {
+    const media = [...el.querySelectorAll("video, img")].map(visibleRect).find((r) => r && r.width > 300);
+    if (!media) return false;
+    const texts = [...el.querySelectorAll("h1, h2, h3, h4, h5, h6, p")].filter((t) => (t.textContent || "").trim() && !t.parentElement.closest("h1, h2, h3, h4, h5, h6, p"));
+    return texts.length > 0 && texts.every((t) => {
+      const r = visibleRect(t);
+      return r && r.left < media.right && media.left < r.right && r.top < media.bottom && media.top < r.bottom;
+    });
+  }
+  function spansViewport(document, el, withVideo = false) {
     const view = document.defaultView;
     const vw = document.documentElement && document.documentElement.clientWidth;
-    if (!view || !vw || typeof el.getBoundingClientRect !== "function") return false;
-    const rects = [...el.querySelectorAll("img")].map((img) => img.getBoundingClientRect()).filter((r) => r.width > 1 && r.height > 1);
-    if (!rects.length) return false;
+    if (!view || !vw || typeof el.getBoundingClientRect !== "function") return null;
+    const rects = [...el.querySelectorAll(withVideo ? "img, video" : "img")].map((img) => img.getBoundingClientRect()).filter((r) => r.width > 1 && r.height > 1);
+    if (!rects.length) return null;
     const overlaps = rects.some((a, i) => rects.some((b, j) => j > i && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2));
     if (overlaps) return false;
     const left = Math.min(...rects.map((r) => r.left));
@@ -2180,6 +2364,8 @@ var CustomImportScript = (() => {
     return best ? best.style : null;
   }
   function bandStyle(document, el, inherit = false) {
+    const textured = parseRgb5(el.getAttribute(BAND_COLOR_ATTR));
+    if (textured) return paletteStyle(textured);
     const view = document.defaultView;
     if (!view || typeof view.getComputedStyle !== "function") return null;
     const hasText = !!(el.textContent || "").replace(/\s+/g, "").length;
@@ -2227,15 +2413,38 @@ var CustomImportScript = (() => {
     });
     return ok && measured > 0;
   }
+  function siblingBands(sectionsList) {
+    const parents = new Set(sectionsList.map((s) => s.parentElement).filter(Boolean));
+    const bands = [];
+    parents.forEach((parent) => {
+      [...parent.children].forEach((child) => {
+        if (child.tagName === "SECTION" || child.querySelector("section")) return;
+        if (/^(HEADER|NAV|FOOTER|SCRIPT|STYLE|HR)$/.test(child.tagName)) return;
+        if (!(child.textContent || "").replace(/\s+/g, "").length) return;
+        bands.push(child);
+      });
+    });
+    return bands;
+  }
   function resolveStructural(document, sections) {
     const root = document.querySelector("#main") || document.body;
-    const all = [...root.querySelectorAll("section")].filter((s) => !s.parentElement.closest("section")).filter((s) => !s.closest("header, nav, footer"));
+    const outer = [...root.querySelectorAll("section")].filter((s) => !s.parentElement.closest("section")).filter((s) => !s.closest("header, nav, footer"));
+    const all = [...outer, ...siblingBands(outer)].sort((a, b) => a.compareDocumentPosition(b) & 4 ? -1 : 1);
     const families = fullWidthFamilies(sections);
     return all.map((el, i) => {
       const styles = [];
-      const band = bandStyle(document, el, i > 0 || !isMediaOnly(el));
+      const heroBand = i === 0 && (isMediaOnly(el) || isMediaWithOverlay(el));
+      const band = bandStyle(document, el, !heroBand);
       if (band) styles.push(band);
-      if (isMediaOnly(el) && (el.id && families.has(idFamily(el.id)) || !el.querySelector("video") && spansViewport(document, el))) styles.push("full-width");
+      if (isMediaOnly(el)) {
+        const family = !!(el.id && families.has(idFamily(el.id)));
+        const hasVideo = !!el.querySelector("video");
+        const spans = spansViewport(document, el, hasVideo);
+        let full = false;
+        if (spans === null) full = family;
+        else full = hasVideo ? family && spans : spans;
+        if (full) styles.push("full-width");
+      }
       if (isCenteredBand(document, el)) styles.push("centered");
       const meta = {};
       if (styles.length) meta.style = styles.join(", ");
@@ -2272,6 +2481,8 @@ var CustomImportScript = (() => {
       } else {
         entries = resolveStructural(document, sections);
       }
+      document.querySelectorAll(`[${BAND_LAYER_ATTR}]`).forEach((layer) => layer.remove());
+      document.querySelectorAll(`[${BAND_COLOR_ATTR}]`).forEach((band) => band.removeAttribute(BAND_COLOR_ATTR));
       if (entries.length < 2 && !(entries[0] && Object.keys(entries[0].meta).length)) return;
       insertBreaks(document, entries);
     }

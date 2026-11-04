@@ -23,6 +23,10 @@
 
 const MARKER = 'data-excat-section-id';
 const META_ATTR = 'data-excat-section-meta';
+// set by the import script's onLoad on a band painted by a background texture image
+// (value: the image's average colour) and on that image layer (removed here: page styling)
+const BAND_COLOR_ATTR = 'data-excat-band-color';
+const BAND_LAYER_ATTR = 'data-excat-band-layer';
 
 // Homepage left page-nav metadata (authoring-analysis.json sectionMetadata).
 const HOMEPAGE_NAV_META = {
@@ -110,20 +114,43 @@ function isMediaOnly(el) {
     && !(el.textContent || '').replace(/\s+/g, '').length;
 }
 
+function visibleRect(el) {
+  if (typeof el.getBoundingClientRect !== 'function') return null;
+  const r = el.getBoundingClientRect();
+  return r.width > 1 && r.height > 1 ? r : null;
+}
+
 /**
- * Edge-to-edge image band (live browser only): the visible images of a media-only band tile the
- * full viewport width without overlapping, e.g. /graphic-elements "Divider full screen" 2 x 720
- * gallery and the 1440 "Application" photo. A logo laid over a band photo overlaps it, so such a
- * band is not treated as a gallery (its overlay would be stretched by the full-width style).
+ * Hero band whose only text is laid over its media (live browser only), e.g. the
+ * /partner-guidelines title over the banner video: the hero-banner block takes that text, so the
+ * band is full-bleed media like a media-only hero.
  */
-function spansViewport(document, el) {
+function isMediaWithOverlay(el) {
+  const media = [...el.querySelectorAll('video, img')].map(visibleRect).find((r) => r && r.width > 300);
+  if (!media) return false;
+  const texts = [...el.querySelectorAll('h1, h2, h3, h4, h5, h6, p')]
+    .filter((t) => (t.textContent || '').trim() && !t.parentElement.closest('h1, h2, h3, h4, h5, h6, p'));
+  return texts.length > 0 && texts.every((t) => {
+    const r = visibleRect(t);
+    return r && r.left < media.right && media.left < r.right && r.top < media.bottom && media.top < r.bottom;
+  });
+}
+
+/**
+ * Edge-to-edge media band (live browser only): the visible images (and videos, when `withVideo`)
+ * of a media-only band tile the full viewport width without overlapping, e.g. /graphic-elements
+ * "Divider full screen" 2 x 720 gallery and the 1440 "Application" photo. A logo laid over a band
+ * photo overlaps it, so such a band is not treated as a gallery (its overlay would be stretched by
+ * the full-width style). Returns null when nothing in the band has a layout (no live browser).
+ */
+function spansViewport(document, el, withVideo = false) {
   const view = document.defaultView;
   const vw = document.documentElement && document.documentElement.clientWidth;
-  if (!view || !vw || typeof el.getBoundingClientRect !== 'function') return false;
-  const rects = [...el.querySelectorAll('img')]
+  if (!view || !vw || typeof el.getBoundingClientRect !== 'function') return null;
+  const rects = [...el.querySelectorAll(withVideo ? 'img, video' : 'img')]
     .map((img) => img.getBoundingClientRect())
     .filter((r) => r.width > 1 && r.height > 1);
-  if (!rects.length) return false;
+  if (!rects.length) return null;
   const overlaps = rects.some((a, i) => rects.some((b, j) => j > i
     && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2
     && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2));
@@ -164,6 +191,10 @@ function paletteStyle(rgb) {
  * carry over. A light / white wrapper ends the search (no style).
  */
 function bandStyle(document, el, inherit = false) {
+  // colour of a textured background image behind the band's text, measured by the import
+  // script's onLoad (e.g. /opening-week "Stickers": blue paper texture ~ rgb(9, 123, 250))
+  const textured = parseRgb(el.getAttribute(BAND_COLOR_ATTR));
+  if (textured) return paletteStyle(textured);
   const view = document.defaultView;
   if (!view || typeof view.getComputedStyle !== 'function') return null;
   const hasText = !!(el.textContent || '').replace(/\s+/g, '').length;
@@ -218,23 +249,54 @@ function isCenteredBand(document, el) {
   return ok && measured > 0;
 }
 
+/**
+ * Text bands that are not <section>s: Framer sometimes builds a band as a plain layer next to the
+ * sections of the page stack (/partner-guidelines "Approval" steps after the "Partner copy and
+ * messaging" section). A sibling of an outermost section that holds text and no section is a band
+ * of its own, so it gets its own section (and style) instead of joining the previous one.
+ */
+function siblingBands(sectionsList) {
+  const parents = new Set(sectionsList.map((s) => s.parentElement).filter(Boolean));
+  const bands = [];
+  parents.forEach((parent) => {
+    [...parent.children].forEach((child) => {
+      if (child.tagName === 'SECTION' || child.querySelector('section')) return;
+      if (/^(HEADER|NAV|FOOTER|SCRIPT|STYLE|HR)$/.test(child.tagName)) return;
+      if (!(child.textContent || '').replace(/\s+/g, '').length) return;
+      bands.push(child);
+    });
+  });
+  return bands;
+}
+
 function resolveStructural(document, sections) {
   const root = document.querySelector('#main') || document.body;
-  const all = [...root.querySelectorAll('section')]
+  const outer = [...root.querySelectorAll('section')]
     .filter((s) => !s.parentElement.closest('section'))
     .filter((s) => !s.closest('header, nav, footer'));
+  // eslint-disable-next-line no-bitwise
+  const all = [...outer, ...siblingBands(outer)].sort((a, b) => (a.compareDocumentPosition(b) & 4 ? -1 : 1));
   const families = fullWidthFamilies(sections);
   return all.map((el, i) => {
     const styles = [];
     // a media-only first band (sub-brand hero) keeps no inherited page colour: it is
-    // full-bleed media; a hero with its title (/partner-guidelines) sits on the page colour
-    const band = bandStyle(document, el, i > 0 || !isMediaOnly(el));
+    // full-bleed media, also when its only text is a title laid over the media (/partner-guidelines)
+    const heroBand = i === 0 && (isMediaOnly(el) || isMediaWithOverlay(el));
+    const band = bandStyle(document, el, !heroBand);
     if (band) styles.push(band);
-    // full-width: media-only band whose id family is full-width in the template, or an image-only
-    // band whose images run edge to edge on the live page (video bands such as the sub-brand hero
-    // and intro animations are blocks with their own layout)
-    if (isMediaOnly(el) && ((el.id && families.has(idFamily(el.id)))
-      || (!el.querySelector('video') && spansViewport(document, el)))) styles.push('full-width');
+    // full-width: media-only band whose media run edge to edge on the live page; without a live
+    // layout, whose id family is full-width in the template. Video bands (the sub-brand hero, intro
+    // animations) are blocks with their own layout: only galleries of a full-width id family
+    // that really run edge to edge (e.g. /ao-one-point-slam photos + video) are full-width.
+    if (isMediaOnly(el)) {
+      const family = !!(el.id && families.has(idFamily(el.id)));
+      const hasVideo = !!el.querySelector('video');
+      const spans = spansViewport(document, el, hasVideo);
+      let full = false;
+      if (spans === null) full = family;
+      else full = hasVideo ? family && spans : spans;
+      if (full) styles.push('full-width');
+    }
     if (isCenteredBand(document, el)) styles.push('centered');
     const meta = {};
     if (styles.length) meta.style = styles.join(', ');
@@ -274,6 +336,9 @@ export default function transform(hookName, element, payload) {
     } else {
       entries = resolveStructural(document, sections);
     }
+    // background texture layers are page styling (their colour became the section style)
+    document.querySelectorAll(`[${BAND_LAYER_ATTR}]`).forEach((layer) => layer.remove());
+    document.querySelectorAll(`[${BAND_COLOR_ATTR}]`).forEach((band) => band.removeAttribute(BAND_COLOR_ATTR));
     if (entries.length < 2 && !(entries[0] && Object.keys(entries[0].meta).length)) return;
     insertBreaks(document, entries);
   }

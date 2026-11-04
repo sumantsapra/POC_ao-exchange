@@ -196,3 +196,179 @@ main .section:is(.royal-blue, .process-blue, .navy, .dark-navy) .cards-shape .ca
     height: 75px;
   }
 }
+
+/*
+ * half (/graphic-elements icon sets): [title | card | caption] groups two per row from the
+ * tablet layout (570px groups 40px apart at 1440, 400px at 900; 80px / 60px between rows),
+ * stacked 40px apart on mobile; title 20px above the card, caption 20px below.
+ */
+main .cards-shape-wrapper > .cards-shape-title > :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+}
+
+main .cards-shape-wrapper > .cards-shape-title {
+  margin-bottom: 20px;
+}
+
+main .cards-shape-wrapper > .cards-shape-caption {
+  margin-top: 20px;
+}
+
+main .cards-shape-wrapper > .cards-shape-caption > p {
+  margin: 0;
+}
+
+main .cards-shape-wrapper > .cards-shape-caption > p + p {
+  margin-top: 10px;
+}
+
+main .cards-shape.half {
+  max-width: none;
+}
+
+/*
+ * backdrop (/opening-week "Type Application"): artworks on a full-bleed halftone image, 10px
+ * radius, 30px padding; 2 per row (148x132 tiles, 40px row gap) on mobile, 3 per row
+ * (297x265 tiles, 70px column gap) from 900px.
+ */
+main .section .cards-shape.cards-shape-has-backdrop {
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  max-width: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+main .section .cards-shape.cards-shape-has-backdrop .cards-shape-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+main .section .cards-shape.cards-shape-has-backdrop .cards-shape-backdrop picture {
+  display: contents;
+}
+
+main .section .cards-shape.cards-shape-has-backdrop .cards-shape-backdrop img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+main .section .cards-shape.cards-shape-has-backdrop > ul {
+  position: relative;
+  padding: 30px 13px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-items: stretch;
+  gap: 40px 5px;
+}
+
+main .section .cards-shape.cards-shape-has-backdrop > ul > li {
+  align-items: center;
+  justify-content: center;
+}
+
+main .section .cards-shape.cards-shape-has-backdrop .cards-shape-card-image img {
+  width: 100%;
+  height: 132px;
+}
+
+/*
+ * logos (/ao-reserve "Product Logos"): wide lockups 2 per row (20px apart, 113px wide) on
+ * mobile, 4 per row (40px apart, 140px wide) from 900px; left aligned, bottom aligned per row.
+ */
+main .section .cards-shape.logos > ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  place-items: end start;
+  gap: 64px 20px;
+}
+
+main .section .cards-shape.logos > ul > li {
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+main .section .cards-shape.logos .cards-shape-card-image img {
+  width: 113px;
+  height: auto;
+}
+
+/*
+ * framed (/ao-reserve "Illustrative Icons"): icons on the dark band inside a 1px light outline,
+ * 10px radius; 3 per row on mobile (30px 20px padding), 6 per row from 900px (60px 30px
+ * padding, 40px row gap); 120px rows.
+ */
+main .section .cards-shape.framed {
+  box-shadow: inset 0 0 0 1px var(--ao-white);
+  border-radius: 10px;
+}
+
+main .section .cards-shape.framed > ul {
+  padding: 30px 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 120px;
+  gap: 0 10px;
+}
+
+main .section .cards-shape.framed .cards-shape-card-image img {
+  height: 42px;
+}
+
+@media (width >= 900px) {
+  main .section .cards-shape.cards-shape-has-backdrop > ul {
+    padding: 30px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 70px;
+  }
+
+  main .section .cards-shape.cards-shape-has-backdrop .cards-shape-card-image img {
+    height: 265px;
+  }
+
+  main .section .cards-shape.logos > ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 40px;
+  }
+
+  main .section .cards-shape.logos .cards-shape-card-image img {
+    width: 140px;
+  }
+
+  main .section .cards-shape.framed > ul {
+    padding: 60px 30px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: 120px;
+    gap: 40px 10px;
+  }
+
+  main .section .cards-shape.framed .cards-shape-card-image img {
+    height: 84px;
+  }
+}
+
+/* breakpoint-exception: the source (Framer) switches to its tablet layout at 810px */
+@media (width >= 810px) {
+  main > .section:has(> .cards-shape-wrapper > .cards-shape.half) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 60px 40px;
+    align-items: start;
+  }
+
+  main > .section:has(> .cards-shape-wrapper > .cards-shape.half) > div {
+    grid-column: 1 / -1;
+    margin-top: 0;
+  }
+
+  main > .section:has(> .cards-shape-wrapper > .cards-shape.half) > .cards-shape-wrapper:has(> .cards-shape.half) {
+    grid-column: auto;
+  }
+}
+
+@media (width >= 1200px) {
+  main > .section:has(> .cards-shape-wrapper > .cards-shape.half) {
+    row-gap: 80px;
+  }
+}
