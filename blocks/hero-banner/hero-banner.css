@@ -92,10 +92,16 @@ main .hero-banner.short .hero-banner-media video {
   main .hero-banner .hero-banner-content {
     inset: 100px 0 auto;
   }
+
+  /* tall: the source band fills the window at tablet widths (under the 69px bar) */
+  main .hero-banner.tall .hero-banner-media {
+    height: calc(100vh - var(--nav-height));
+  }
 }
 
 @media (width >= 1200px) {
-  main .hero-banner .hero-banner-media {
+  main .hero-banner .hero-banner-media,
+  main .hero-banner.tall .hero-banner-media {
     height: 800px;
   }
 

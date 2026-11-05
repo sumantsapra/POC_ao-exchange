@@ -127,6 +127,7 @@ var CustomImportScript = (() => {
     const bandRect = band && rectOf(band);
     const options = [];
     if (bandRect && bandRect.height < SHORT_MAX) options.push("short");
+    if (document2.body && document2.body.getAttribute("data-excat-hero-tablet-tall") === "true") options.push("tall");
     const text = [];
     const sources = [
       ...[...element.querySelectorAll("h1, h2, h3, h4, h5, h6, p")].filter((node) => !node.parentElement.closest("h1, h2, h3, h4, h5, h6, p")),
@@ -3649,12 +3650,48 @@ var CustomImportScript = (() => {
       })));
     });
   }
+  function probeTabletHero(document2) {
+    return __async(this, null, function* () {
+      const win = document2.defaultView;
+      if (!win || !document2.body) return;
+      const size = 900;
+      const frame = document2.createElement("iframe");
+      frame.setAttribute("aria-hidden", "true");
+      frame.style.cssText = `position:absolute;left:-10000px;top:0;width:${size}px;height:${size}px;border:0`;
+      frame.src = win.location.href;
+      const tall = yield new Promise((resolve) => {
+        const timer = setTimeout(() => resolve(false), 2e4);
+        frame.addEventListener("load", () => {
+          setTimeout(() => {
+            clearTimeout(timer);
+            try {
+              const media = [...frame.contentDocument.querySelectorAll("video, img")].find((m) => {
+                const r = m.getBoundingClientRect();
+                return r.height > 100 && r.width > size * 0.6 && r.top < 400;
+              });
+              resolve(!!media && media.getBoundingClientRect().height >= size * 0.95);
+            } catch (e) {
+              resolve(false);
+            }
+          }, 3e3);
+        });
+        document2.body.append(frame);
+      });
+      frame.remove();
+      if (tall) document2.body.setAttribute("data-excat-hero-tablet-tall", "true");
+    });
+  }
   var import_sub_brand_guide_default = {
     onLoad: (_0) => __async(null, [_0], function* ({ document: document2 }) {
       try {
         yield loadVideoMetadata(document2);
       } catch (e) {
         console.warn("video metadata load failed", e);
+      }
+      try {
+        yield probeTabletHero(document2);
+      } catch (e) {
+        console.warn("tablet hero probe failed", e);
       }
       try {
         yield measureBandTextures(document2);
