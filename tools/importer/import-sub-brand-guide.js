@@ -543,9 +543,45 @@ async function measureBandTextures(document) {
   }));
 }
 
+/**
+ * The importer renders the page at desktop width; at tablet widths (810-1199px) some sub-brand
+ * banners fill the window. Load the same page in a 900x900 same-origin frame and flag the body
+ * when the top banner media is at least as tall as the frame (hero-banner option "tall").
+ */
+async function probeTabletHero(document) {
+  const win = document.defaultView;
+  if (!win || !document.body) return;
+  const size = 900;
+  const frame = document.createElement("iframe");
+  frame.setAttribute("aria-hidden", "true");
+  frame.style.cssText = `position:absolute;left:-10000px;top:0;width:${size}px;height:${size}px;border:0`;
+  frame.src = win.location.href;
+  const tall = await new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(false), 20000);
+    frame.addEventListener("load", () => {
+      setTimeout(() => {
+        clearTimeout(timer);
+        try {
+          const media = [...frame.contentDocument.querySelectorAll("video, img")].find((m) => {
+            const r = m.getBoundingClientRect();
+            return r.height > 100 && r.width > size * 0.6 && r.top < 400;
+          });
+          resolve(!!media && media.getBoundingClientRect().height >= size * 0.95);
+        } catch (e) {
+          resolve(false);
+        }
+      }, 3000);
+    });
+    document.body.append(frame);
+  });
+  frame.remove();
+  if (tall) document.body.setAttribute("data-excat-hero-tablet-tall", "true");
+}
+
 export default {
   onLoad: async ({ document }) => {
     try { await loadVideoMetadata(document); } catch (e) { console.warn("video metadata load failed", e); }
+    try { await probeTabletHero(document); } catch (e) { console.warn("tablet hero probe failed", e); }
     try { await measureBandTextures(document); } catch (e) { console.warn("band texture measure failed", e); }
   },
   transform: (payload) => {

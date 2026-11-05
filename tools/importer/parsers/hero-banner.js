@@ -10,6 +10,10 @@
  * Option "short": the band is clearly shorter than the usual 800px desktop banner
  *   (/ao-reserve: 600px at >= 1200px, letterboxed under the bar on mobile). Measured on the live
  *   page (the importer renders at desktop width).
+ * Option "tall": at tablet widths (810-1199px) the band fills the window (/ao-reserve,
+ *   /ao-ballpark, /partner-guidelines). The importer renders at desktop width, so the import
+ *   script's onLoad measures the page in a 900x900 frame and flags the body
+ *   (data-excat-hero-tablet-tall).
  */
 const SHORT_MAX = 700; // px: usual banner 800px, short banner 600px
 
@@ -89,6 +93,7 @@ export default function parse(element, { document }) {
   const bandRect = band && rectOf(band);
   const options = [];
   if (bandRect && bandRect.height < SHORT_MAX) options.push('short');
+  if (document.body && document.body.getAttribute('data-excat-hero-tablet-tall') === 'true') options.push('tall');
 
   // optional text row: text inside the media wrapper, then band text laid over the media
   const text = [];

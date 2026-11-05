@@ -356,4 +356,13 @@ body {
   header .header-sidebar :is(.nav-brand a, .nav-sections a, .nav-meta p).is-on-colour {
     color: var(--header-ink);
   }
+
+  /* the blue marque disappears on the blue bands: it follows the text colour there */
+  header .header-sidebar .nav-brand a.is-on-colour img {
+    filter: brightness(0);
+  }
+
+  header .header-sidebar .nav-brand a.is-inverted img {
+    filter: brightness(0) invert(1);
+  }
 }
