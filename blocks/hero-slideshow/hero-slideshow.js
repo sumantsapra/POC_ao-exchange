@@ -26,7 +26,7 @@ function buildVideo(href) {
 
 /**
  * Hero slideshow: stacked photos fade out one by one to reveal a looping background video.
- * Row 1: pictures (last one on top) + optional video link. Row 2: title + scroll/skip links.
+ * Row 1: pictures (first one on top) + optional video link. Row 2: title + scroll/skip links.
  * @param {Element} block
  */
 export default function decorate(block) {
@@ -49,13 +49,18 @@ export default function decorate(block) {
     });
   }
   if (video) media.append(video);
-  // as on the source, the last authored picture sits on top and fades out first
-  layers.reverse();
+  // the first authored picture sits on top and fades out first
   layers.forEach((layer, i) => {
     layer.style.zIndex = String(layers.length - i);
     media.append(layer);
   });
   optimizePictures(media);
+  // the top photo is the page's largest paint: fetch it first
+  const top = layers[0] && layers[0].querySelector('img');
+  if (top) {
+    top.loading = 'eager';
+    top.fetchPriority = 'high';
+  }
 
   const content = document.createElement('div');
   content.className = 'hero-slideshow-content';
