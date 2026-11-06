@@ -63,6 +63,7 @@ var CustomImportScript = (() => {
   }
   function parse(element, { document }) {
     const mediaCell = [];
+    const photos = [];
     element.querySelectorAll("img").forEach((img) => {
       const src = img.getAttribute("src") || "";
       if (!src || src.startsWith("data:")) return;
@@ -70,8 +71,9 @@ var CustomImportScript = (() => {
       const pic = document.createElement("img");
       pic.src = imgSrc(img);
       pic.alt = img.getAttribute("alt") || "";
-      mediaCell.push(pic);
+      photos.push(pic);
     });
+    mediaCell.push(...photos.reverse());
     const mp4 = videoSrc(element);
     if (mp4) {
       const p = document.createElement("p");

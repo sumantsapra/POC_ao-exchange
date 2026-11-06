@@ -34,6 +34,7 @@ function videoSrc(el) {
 export default function parse(element, { document }) {
   // media row
   const mediaCell = [];
+  const photos = [];
   element.querySelectorAll('img').forEach((img) => {
     const src = img.getAttribute('src') || '';
     if (!src || src.startsWith('data:')) return;
@@ -41,8 +42,11 @@ export default function parse(element, { document }) {
     const pic = document.createElement('img');
     pic.src = imgSrc(img);
     pic.alt = img.getAttribute('alt') || '';
-    mediaCell.push(pic);
+    photos.push(pic);
   });
+  // the source DOM lists the top photo last; author them top first, so the photo that shows
+  // first is also the page's first image (loaded eagerly by Edge Delivery)
+  mediaCell.push(...photos.reverse());
   const mp4 = videoSrc(element);
   if (mp4) {
     const p = document.createElement('p');
